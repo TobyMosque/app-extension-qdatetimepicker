@@ -16,18 +16,20 @@ import {
   QTime
 } from Quasar
 
+console.log(QField)
+
 export default Vue.extend({
   name: 'QDatetimePicker',
   mixins: [ QField ],
   props: {
+    value: String,
     lang: String,
-    date: {
-      type: Boolean | Object,
-      default: true
-    },
-    time: {
-      time: Boolean | Object,
-      default: false
+    date: Boolean | Object,
+    time: Boolean | Object
+  },
+  data () {
+    return {
+      maskedValue: ''
     }
   },
   watch: {
@@ -37,10 +39,10 @@ export default Vue.extend({
   },
   computed: {
     dateIntlOptions () {
-      if (!this.date) {
+      if (!this.date && !!this.time) {
         return {}
       }
-      if (this.date === true) {
+      if (!this.date || this.date === true) {
         return { day: '2-digit', month: '2-digit', year: 'numeric', }
       }
       return this.date
@@ -65,8 +67,22 @@ export default Vue.extend({
     }
   },
   render (h) {
+    let that = this
     return h('div', {}, [
-      h(QInput, { ref: 'input' }, [])
+      h(QInput, { 
+        ref: 'input',
+        domProps: {
+          value: self.maskedValue
+        },
+        on: {
+          input () { self.maskedValue = event.target.value }
+        },
+        scopedSlots: {
+          append (props) {
+            return []
+          }
+        }
+      }, [])
     ])
   }
 })
