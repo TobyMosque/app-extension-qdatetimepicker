@@ -1,0 +1,15 @@
+{
+  "name": "quasar-app-extension-app-extension-datetimepicker",
+  "version": "0.0.1",
+  "description": "QDateTimePicker for Quasar ",
+  "author": "Tobias Mesquita <tobias.mesquita@gmail.com>",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"No test specified\" && exit 0"
+  },
+  "engines": {
+    "node": ">= 8.9.0",
+    "npm": ">= 5.6.0",
+    "yarn": ">= 1.6.0"
+  }
+}
