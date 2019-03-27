@@ -13,12 +13,95 @@ import {
   QTab,
   QTabPanels,
   QTabPanel,
-  Qdate,
+  QDate,
   QTime
 } from 'quasar'
 
 const fields = Object.keys(QField.options.props).filter(field => ['value'].indexOf(field) === -1)
-console.log(fields)
+const renderDate = function (self, h) {
+  return [
+    h(QDate, {
+      props: {
+        dark: self.dark,
+        color: self.color,
+        value: self.dateValue
+      },
+      on: {
+        input (event) { self.dateValue = event.target.value }
+      }
+    }, [])
+  ]
+}
+
+const renderTime = function (self, h) {
+  return [
+    h(QTime, {
+      props: {
+        dark: self.dark,
+        color: self.color,
+        value: self.timeValue,
+        format24h: true
+      },
+      on: {
+        input (event) { self.timeValue = event.target.value }
+      }
+    }, [])
+  ]
+}
+
+const renderDateTime = function (self, h) {
+  return [
+    h(QTabs, {
+      class: `bg-${self.color || 'primary'} text-white`,
+      props: {
+        value: self.tab,
+        'narrow-indicator': true,
+        dense: true
+      },
+      on: {
+        input (value) {
+          self.tab = value
+        }
+      }
+    }, [
+      h(QTab, {
+        props: {
+          name: 'date',
+          icon: 'date_range',
+          label: 'Date'
+        }
+      }, []),
+      h(QTab, {
+        props: {
+          name: 'time',
+          icon: 'access_time',
+          label: 'Time'
+        }
+      }, [])
+    ]),
+    h(QTabPanels, {
+      props: {
+        value: self.tab
+      },
+      on: {
+        input (event) {
+          self.tab = event.target.value
+        }
+      }
+    }, [
+      h(QTabPanel, {
+        props: {
+          name: 'date'
+        }
+      }, renderDate(self, h)),
+      h(QTabPanel, {
+        props: {
+          name: 'time'
+        }
+      }, renderTime(self, h))
+    ])
+  ]
+}
 
 export default Vue.extend({
   name: 'QDatetimePicker',
@@ -31,7 +114,10 @@ export default Vue.extend({
   },
   data () {
     return {
-      masked: ''
+      tab: 'date',
+      masked: '',
+      dateValue: '',
+      timeValue: ''
     }
   },
   watch: {
@@ -77,14 +163,24 @@ export default Vue.extend({
     }
   },
   render (h) {
-    let that = this
+    let self = this
+
+    let renderContent = renderDate;
+    if (!self.date && !!self.time) {
+      renderContent = renderTime
+    }
+    if (!!self.date && !!self.time) {
+      renderContent = renderDateTime
+    }
 
     let inputFields = fields.reduce((props, field) => {
-      props[field] = that[field]
+      props[field] = self[field]
       return props
     }, {})
 
-    return h('div', {}, [
+    return h('div', {
+      class: 'q-datetimepicker'
+    }, [
       h(QInput, { 
         ref: 'input',
         props: {
@@ -92,7 +188,7 @@ export default Vue.extend({
           value: self.masked
         },
         on: {
-          input () { self.masked = event.target.value }
+          input (event) { self.masked = event.target.value }
         },
         scopedSlots: {
           append (props) {
@@ -105,31 +201,36 @@ export default Vue.extend({
               }, [
                 h(QPopupProxy, {
                   ref: 'popup',
-                  class: 'q-date-popup',
                   on: {
-                    'before-show': that.onOpen,
+                    'before-show': self.onOpen,
                     name: 'event'
                   }
                 }, [
                   h(QCard, {
                     ref: 'card',
-                    class: 'q-date-popup',
+                    class: 'q-datetimepicker',
+                    props: {
+                      dark: self.dark
+                    },
                     on: {
-                      'before-show': that.onOpen,
+                      'before-show': self.onOpen,
                       name: 'event'
                     }
                   }, [
-                    h(QCardSection, {}, [
-                      
-                    ]),
-                    h(QCardActions, {}, [
+                    h(QCardSection, {}, renderContent(self, h)),
+                    h(QCardActions, {
+                      props: {
+                        dark: self.dark
+                      }
+                    }, [
                       h(QBtn, {
                         props: {
+                          dark: self.dark,
                           flat: true,
                           color: 'default'
                         },
                         on: {
-                          click () { that.$refs.popup.hide() }
+                          click () { self.$refs.popup.hide() }
                         },
                         scopedSlots: {
                           default (props) {
@@ -139,11 +240,12 @@ export default Vue.extend({
                       }, [])
                       ,h(QBtn, {
                         props: {
+                          dark: self.dark,
                           flat: true,
-                          color: 'primary'
+                          color: self.color || 'primary'
                         },
                         on: {
-                          click: that.onSetClick
+                          click: self.onSetClick
                         },
                         scopedSlots: {
                           default (props) {
