@@ -27,7 +27,7 @@ const renderDate = function (self, h) {
         value: self.values.date
       },
       on: {
-        input (event) { self.values.date = event.target.value }
+        input (value) { self.values.date = value }
       }
     }, [])
   ]
@@ -43,7 +43,7 @@ const renderTime = function (self, h) {
         format24h: true
       },
       on: {
-        input (event) { self.values.time = event.target.value }
+        input (value) { self.values.time = value }
       }
     }, [])
   ]
@@ -84,8 +84,8 @@ const renderDateTime = function (self, h) {
         value: self.tab
       },
       on: {
-        input (event) {
-          self.tab = event.target.value
+        input (value) {
+          self.tab = value
         }
       }
     }, [
@@ -116,6 +116,10 @@ export default Vue.extend({
     return {
       tab: 'date',
       masked: '',
+      inputs: {
+        date: '',
+        time: ''
+      },
       values: {
         date: '',
         time: ''
@@ -144,6 +148,19 @@ export default Vue.extend({
     'values.time' () {
       this.onTimeChange()
       this.onSetClick()
+    },
+    masked () {
+      if (this.masks.date && this.masks.time) {
+        if (this.masked.indexOf(' ') !== -1) {
+          var [ date, time ] = this.masked.split(' ')
+          this.onInputDate(date)
+          this.onInputTime(time)
+        }
+      } else if (this.masks.date) {
+        this.onInputDate(this.masked)
+      } else {
+        this.onInputTime(this.masked)
+      }
     }
   },
   computed: {
@@ -180,11 +197,27 @@ export default Vue.extend({
       } else {
         return this.masks.date || this.masks.time
       }
-    }
+    }    
   },
   methods: {
     onOpen () {
       console.log('on open')
+    },
+    onInputDate (date) {
+      if (this.inputs.date !== date) {
+        this.inputs.date = date
+        if (date.length === this.masks.date.length) {
+          console.log('date', date)
+        }
+      }
+    },
+    onInputTime (time) {
+      if (this.inputs.time !== time) {
+        this.inputs.time = time
+        if (time.length === this.masks.time.length) {
+          console.log('time', time)
+        }
+      }
     },
     onSetClick () {
       if (this.date && this.time && this.tab === 'date') {
@@ -228,13 +261,14 @@ export default Vue.extend({
           cases: 2,
           order: 0
         }
+        var limit = [ meta.year, meta.month, meta.day ].filter(meta => meta.pos !== -1).length
 
         var _index = 0
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < limit; i++) {
           if (meta.day.pos == _index) {
             meta.day.order = i
             mask = mask + ''.padStart(meta.day.cases, '#')
-            if (i < 2) {
+            if (i < limit - 1) {
               _index += meta.day.cases
               meta.separator = formatted.substring(_index, ++_index)
               mask = mask + meta.separator
@@ -242,7 +276,7 @@ export default Vue.extend({
           } else if (meta.month.pos == _index) {
             meta.month.order = i
             mask = mask + ''.padStart(meta.month.cases, '#')
-            if (i < 2) {
+            if (i < limit - 1) {
               _index += meta.month.cases
               meta.separator = formatted.substring(_index, ++_index)
               mask = mask + meta.separator
@@ -251,7 +285,7 @@ export default Vue.extend({
           } else if (meta.year.pos == _index) {
             meta.year.order = i
             mask = mask + ''.padStart(meta.year.cases, '#')
-            if (i < 2) {
+            if (i < limit - 1) {
               _index += meta.year.cases
               meta.separator = formatted.substring(_index, ++_index)
               mask = mask + meta.separator
@@ -267,7 +301,7 @@ export default Vue.extend({
       let meta = {}
       let mask = ''
       if (this.time) {
-        var formatter = new Intl.DateTimeFormat(this.language, this.dateTimeOptions)
+        var formatter = new Intl.DateTimeFormat(this.language, this.timeIntlOptions)
         let date = new Date(2011, 11, 11, 12, 24, 48)
         let formatted = formatter.format(date)
         meta.separator = ''
@@ -286,13 +320,14 @@ export default Vue.extend({
           cases: 2,
           order: 0
         }
+        var limit = [ meta.hour, meta.minute, meta.second ].filter(meta => meta.pos !== -1).length
         
         var _index = 0
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < limit; i++) {
           if (meta.hour.pos == _index) {
             meta.hour.order = i
             mask = mask + ''.padStart(meta.hour.cases, '#')
-            if (i < 2) {
+            if (i < limit - 1) {
               _index += meta.hour.cases
               meta.separator = formatted.substring(_index, ++_index)
               mask = mask + meta.separator
@@ -300,7 +335,7 @@ export default Vue.extend({
           } else if (meta.minute.pos == _index) {
             meta.minute.order = i
             mask = mask + ''.padStart(meta.minute.cases, '#')
-            if (i < 2) {
+            if (i < limit - 1) {
               _index += meta.minute.cases
               meta.separator = formatted.substring(_index, ++_index)
               mask = mask + meta.separator
@@ -309,7 +344,7 @@ export default Vue.extend({
           } else if (meta.second.pos == _index) {
             meta.second.order = i
             mask = mask + ''.padStart(meta.second.cases, '#')
-            if (i < 2) {
+            if (i < limit - 1) {
               _index += meta.ysecondear.cases
               meta.separator = formatted.substring(_index, ++_index)
               mask = mask + meta.separator
@@ -317,6 +352,8 @@ export default Vue.extend({
           }
         }
       }
+
+      console.log({ mask, meta })
       this.$set(this.masks, 'time', mask)
       this.$set(this.metas, 'time', meta)
     }
@@ -344,10 +381,13 @@ export default Vue.extend({
         ref: 'input',
         props: {
           ...inputFields,
+          mask: self.mask,
           value: self.masked
         },
         on: {
-          input (event) { self.masked = event.target.value }
+          input (value) {
+            self.masked = value
+          }
         },
         scopedSlots: {
           append (props) {
