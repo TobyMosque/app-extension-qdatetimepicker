@@ -147,6 +147,7 @@ export default Vue.extend({
     language: {
       immediate: true,
       handler () {
+        console.log(this.$q.lang)
         this.updateMetadata()
       }
     },
@@ -468,7 +469,7 @@ export default Vue.extend({
                         },
                         scopedSlots: {
                           default (props) {
-                            return 'Cancel'
+                            return self.$q.lang.label.cancel || 'Cancel'
                           }
                         }
                       }, [])
@@ -483,7 +484,7 @@ export default Vue.extend({
                         },
                         scopedSlots: {
                           default (props) {
-                            return 'Set'
+                            return self.$q.lang.label.set || 'Set'
                           }
                         }
                       }, [])
