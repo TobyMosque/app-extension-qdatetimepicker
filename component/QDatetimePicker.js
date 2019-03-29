@@ -40,7 +40,7 @@ const renderTime = function (self, h) {
         dark: self.dark,
         color: self.color,
         value: self.values.time,
-        format24h: true
+        format24h: self.format24h
       },
       on: {
         input (value) { self.values.time = value }
@@ -110,7 +110,16 @@ export default Vue.extend({
     value: String,
     lang: String,
     date: Boolean | Object,
-    time: Boolean | Object
+    time: Boolean | Object,
+    format24h: {
+      type: Boolean,
+      default: true
+    }
+  },
+  mounted () {
+    this.$watch(() => this.$q.lang.isoName, () => {
+      console.log('m1: ', this.$q.lang.isoName)
+    })
   },
   data () {
     return {
@@ -122,7 +131,7 @@ export default Vue.extend({
       },
       values: {
         date: '',
-        time: ''
+        time: '00:00:00'
       },
       masks: {
         date: '##/##/####',
@@ -135,19 +144,14 @@ export default Vue.extend({
     }
   },
   watch: {
-    intlFormatter: {
+    language: {
       immediate: true,
       handler () {
         this.updateMetadata()
       }
     },
-    'values.date' () {
-      this.onDateChange()
-      this.onSetClick()
-    },
-    'values.time' () {
-      this.onTimeChange()
-      this.onSetClick()
+    intlOptions () {
+      this.updateMetadata()
     },
     masked () {
       if (this.masks.date && this.masks.time) {
@@ -178,13 +182,13 @@ export default Vue.extend({
         return {}
       }
       if (this.time === true) {
-        return { hour: '2-digit', minute: '2-digit', }
+        return { hour: '2-digit', minute: '2-digit', hour12: !this.format24h }
       }
       return this.time
     },
     intlOptions () {
       return { ...this.dateIntlOptions, ...this.timeIntlOptions }
-    },
+    },    
     language () {
       return (this.lang || this.$q.lang.isoName || navigator.language) + '-u-nu-latn'
     },
@@ -201,13 +205,18 @@ export default Vue.extend({
   },
   methods: {
     onOpen () {
-      console.log('on open')
+      this.tab = 'date'
     },
     onInputDate (date) {
       if (this.inputs.date !== date) {
         this.inputs.date = date
         if (date.length === this.masks.date.length) {
-          console.log('date', date)
+          let meta = this.metas.date
+          let parts = date.split(meta.separator)
+          let year = meta.year.order === -1 ? '2000' : parts[meta.year.order]
+          let month = meta.month.order === -1 ? '01' : parts[meta.month.order]
+          let day = meta.day.order === -1 ? '01' : parts[meta.day.order]
+          this.values.date = `${year}/${month}/${day}`
         }
       }
     },
@@ -215,22 +224,49 @@ export default Vue.extend({
       if (this.inputs.time !== time) {
         this.inputs.time = time
         if (time.length === this.masks.time.length) {
-          console.log('time', time)
+          let meta = this.metas.time
+          let parts = time.split(meta.separator)
+          let hour = meta.hour.order === -1 ? '00' : parts[meta.hour.order]
+          let minute = meta.minute.order === -1 ? '00' : parts[meta.minute.order]
+          let second = meta.second.order === -1 ? '00' : parts[meta.second.order]
+          this.values.time = `${hour}:${minute}:${second}`
         }
       }
     },
     onSetClick () {
+      if (this.tab === 'date') {
+        this.onDateChange()
+      } else {
+        this.onTimeChange()
+      }
       if (this.date && this.time && this.tab === 'date') {
         this.tab = 'time'
       } else {
         this.$refs.popup.hide()
       }
     },
+    parseIntFromArray (list, index, defaultValue) {
+      return list.length > index && list[index] ? parseInt(list[index]) : (defaultValue || 0)
+    },
     onDateChange () {
-
+      this.onChange()
     },
     onTimeChange () {
+      this.onChange()
+    },
+    onChange () {
+      let date = this.values.date.split('/')
+      let year = this.parseIntFromArray(date, 0, 2000)
+      let month = this.parseIntFromArray(date, 1, 1) - 1
+      let day = this.parseIntFromArray(date, 2, 1)
 
+      let time = this.values.time.split(':')
+      let hour = this.parseIntFromArray(time, 0, 0)
+      let minute = this.parseIntFromArray(time, 1, 0)
+      let second = this.parseIntFromArray(time, 2, 0)
+      
+      var dateObj = new Date(year, month, day, hour, minute, second)
+      this.masked = this.intlFormatter.format(dateObj)
     },
     updateMetadata () {
       this.updateDateMetadata()
@@ -249,17 +285,17 @@ export default Vue.extend({
         meta.year = {
           pos: yearCases === 4 ? formatted.indexOf('2048') : formatted.indexOf('48'),
           cases: yearCases,
-          order: 0
+          order: -1
         }
         meta.month = {
           pos: formatted.indexOf('12'),
           cases: 2,
-          order: 0
+          order: -1
         }
         meta.day = {
           pos: formatted.indexOf('24'),
           cases: 2,
-          order: 0
+          order: -1
         }
         var limit = [ meta.year, meta.month, meta.day ].filter(meta => meta.pos !== -1).length
 
@@ -308,17 +344,17 @@ export default Vue.extend({
         meta.hour = {
           pos: formatted.indexOf('12'),
           cases: 2,
-          order: 0
+          order: -1
         }
         meta.minute = {
           pos: formatted.indexOf('24'),
           cases: 2,
-          order: 0
+          order: -1
         }
         meta.second = {
           pos: formatted.indexOf('48'),
           cases: 2,
-          order: 0
+          order: -1
         }
         var limit = [ meta.hour, meta.minute, meta.second ].filter(meta => meta.pos !== -1).length
         
@@ -353,7 +389,6 @@ export default Vue.extend({
         }
       }
 
-      console.log({ mask, meta })
       this.$set(this.masks, 'time', mask)
       this.$set(this.metas, 'time', meta)
     }
