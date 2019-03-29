@@ -24,10 +24,10 @@ const renderDate = function (self, h) {
       props: {
         dark: self.dark,
         color: self.color,
-        value: self.dateValue
+        value: self.values.date
       },
       on: {
-        input (event) { self.dateValue = event.target.value }
+        input (event) { self.values.date = event.target.value }
       }
     }, [])
   ]
@@ -39,11 +39,11 @@ const renderTime = function (self, h) {
       props: {
         dark: self.dark,
         color: self.color,
-        value: self.timeValue,
+        value: self.values.time,
         format24h: true
       },
       on: {
-        input (event) { self.timeValue = event.target.value }
+        input (event) { self.values.time = event.target.value }
       }
     }, [])
   ]
@@ -116,14 +116,35 @@ export default Vue.extend({
     return {
       tab: 'date',
       masked: '',
-      dateValue: '',
-      timeValue: ''
+      values: {
+        date: '',
+        time: ''
+      },
+      masks: {
+        date: '##/##/####',
+        time: '##:##'
+      },
+      metas: {
+        date: {},
+        time: {}
+      }
     }
   },
   watch: {
-    language (val) {
-      // change lang
+    intlFormatter: {
+      immediate: true,
+      handler () {
+        this.updateMetadata()
+      }
     },
+    'values.date' () {
+      this.onDateChange()
+      this.onSetClick()
+    },
+    'values.time' () {
+      this.onTimeChange()
+      this.onSetClick()
+    }
   },
   computed: {
     dateIntlOptions () {
@@ -152,6 +173,13 @@ export default Vue.extend({
     },
     intlFormatter () {
       return new Intl.DateTimeFormat(this.language, this.intlOptions)
+    },
+    mask () {
+      if (this.masks.date && this.masks.time) {
+        return `${this.masks.date} ${this.masks.time}`
+      } else {
+        return this.masks.date || this.masks.time
+      }
     }
   },
   methods: {
@@ -159,7 +187,138 @@ export default Vue.extend({
       console.log('on open')
     },
     onSetClick () {
-      console.log('set click')
+      if (this.date && this.time && this.tab === 'date') {
+        this.tab = 'time'
+      } else {
+        this.$refs.popup.hide()
+      }
+    },
+    onDateChange () {
+
+    },
+    onTimeChange () {
+
+    },
+    updateMetadata () {
+      this.updateDateMetadata()
+      this.updateTimeMetadata()
+    },
+    updateDateMetadata () {
+      let meta = {}
+      let mask = ''
+      if (this.date || !this.time) {
+        var formatter = new Intl.DateTimeFormat(this.language, this.dateIntlOptions)
+
+        let date = new Date(2048, 11, 24)
+        let formatted = formatter.format(date)
+        let yearCases = formatted.indexOf('2048') !== -1 ? 4 : 2
+        meta.separator = '',
+        meta.year = {
+          pos: yearCases === 4 ? formatted.indexOf('2048') : formatted.indexOf('48'),
+          cases: yearCases,
+          order: 0
+        }
+        meta.month = {
+          pos: formatted.indexOf('12'),
+          cases: 2,
+          order: 0
+        }
+        meta.day = {
+          pos: formatted.indexOf('24'),
+          cases: 2,
+          order: 0
+        }
+
+        var _index = 0
+        for (var i = 0; i < 3; i++) {
+          if (meta.day.pos == _index) {
+            meta.day.order = i
+            mask = mask + ''.padStart(meta.day.cases, '#')
+            if (i < 2) {
+              _index += meta.day.cases
+              meta.separator = formatted.substring(_index, ++_index)
+              mask = mask + meta.separator
+            }
+          } else if (meta.month.pos == _index) {
+            meta.month.order = i
+            mask = mask + ''.padStart(meta.month.cases, '#')
+            if (i < 2) {
+              _index += meta.month.cases
+              meta.separator = formatted.substring(_index, ++_index)
+              mask = mask + meta.separator
+            }
+            continue
+          } else if (meta.year.pos == _index) {
+            meta.year.order = i
+            mask = mask + ''.padStart(meta.year.cases, '#')
+            if (i < 2) {
+              _index += meta.year.cases
+              meta.separator = formatted.substring(_index, ++_index)
+              mask = mask + meta.separator
+            }
+          }
+        }
+      }
+      
+      this.$set(this.masks, 'date', mask)
+      this.$set(this.metas, 'date', meta)
+    },
+    updateTimeMetadata () {
+      let meta = {}
+      let mask = ''
+      if (this.time) {
+        var formatter = new Intl.DateTimeFormat(this.language, this.dateTimeOptions)
+        let date = new Date(2011, 11, 11, 12, 24, 48)
+        let formatted = formatter.format(date)
+        meta.separator = ''
+        meta.hour = {
+          pos: formatted.indexOf('12'),
+          cases: 2,
+          order: 0
+        }
+        meta.minute = {
+          pos: formatted.indexOf('24'),
+          cases: 2,
+          order: 0
+        }
+        meta.second = {
+          pos: formatted.indexOf('48'),
+          cases: 2,
+          order: 0
+        }
+        
+        var _index = 0
+        for (var i = 0; i < 3; i++) {
+          if (meta.hour.pos == _index) {
+            meta.hour.order = i
+            mask = mask + ''.padStart(meta.hour.cases, '#')
+            if (i < 2) {
+              _index += meta.hour.cases
+              meta.separator = formatted.substring(_index, ++_index)
+              mask = mask + meta.separator
+            }
+          } else if (meta.minute.pos == _index) {
+            meta.minute.order = i
+            mask = mask + ''.padStart(meta.minute.cases, '#')
+            if (i < 2) {
+              _index += meta.minute.cases
+              meta.separator = formatted.substring(_index, ++_index)
+              mask = mask + meta.separator
+            }
+            continue
+          } else if (meta.second.pos == _index) {
+            meta.second.order = i
+            mask = mask + ''.padStart(meta.second.cases, '#')
+            if (i < 2) {
+              _index += meta.ysecondear.cases
+              meta.separator = formatted.substring(_index, ++_index)
+              mask = mask + meta.separator
+            }
+          }
+        }
+      }
+      this.$set(this.masks, 'time', mask)
+      this.$set(this.metas, 'time', meta)
     }
   },
   render (h) {
