@@ -103,6 +103,24 @@ const renderDateTime = function (self, h) {
   ]
 }
 
+const timeFormat = new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
+const toTimezoneISOString = function (date, base) {
+  if (!date || !date.getTimezoneOffset) {
+    return null
+  }
+  base = base || date
+  var offset = base.getTimezoneOffset() * -1
+  date = new Date(date.getTime() + offset * 60000)
+  date = date.toISOString().replace('Z', '')
+
+  var time = new Date(1970, 1, 1).getTime()
+  time = new Date(time + Math.abs(offset) * 60000)
+  time = timeFormat.format(time).substring(0, 5)
+
+  var signal = offset > 0 ? '+' : '-'
+  return date + signal + time
+}
+
 export default Vue.extend({
   name: 'QDatetimePicker',
   mixins: [ QField ],
@@ -117,9 +135,7 @@ export default Vue.extend({
     }
   },
   mounted () {
-    this.$watch(() => this.$q.lang.isoName, () => {
-      console.log('m1: ', this.$q.lang.isoName)
-    })
+    this.updateMetadata()
   },
   data () {
     return {
@@ -144,37 +160,73 @@ export default Vue.extend({
     }
   },
   watch: {
-    language: {
-      immediate: true,
-      handler () {
-        console.log(this.$q.lang)
-        this.updateMetadata()
-      }
+    language() {
+      this.updateMetadata()
+      this.onChange()
     },
     intlOptions () {
       this.updateMetadata()
+      this.onChange()
     },
     masked () {
-      if (this.masks.date && this.masks.time) {
-        if (this.masked.indexOf(' ') !== -1) {
-          var [ date, time ] = this.masked.split(' ')
-          this.onInputDate(date)
-          this.onInputTime(time)
+      this.onInput()
+    },
+    value: {
+      immediate: true,
+      handler (value) {
+        if (!value) {
+          return
         }
-      } else if (this.masks.date) {
-        this.onInputDate(this.masked)
-      } else {
-        this.onInputTime(this.masked)
+
+        let isoSeparator = value.indexOf('T')
+        let tzSeparator = -1
+        if (isoSeparator !== -1) {
+          let tzPositive = value.indexOf('+', isoSeparator)
+          let tzNegative = value.indexOf('-', isoSeparator)
+          tzSeparator = tzPositive !== -1 ? tzPositive : tzNegative
+        }
+        
+        let date = null
+        if (tzSeparator === -1) {
+          if (isoSeparator === -1) {
+            if (!this.date && !!this.time) {
+              value = '1970-01-01T' + value
+            } else {
+              value = value + 'T00:00:00'
+            }
+          }
+          date = new Date(value)
+          this.cValue = toTimezoneISOString(date, new Date())
+        } else {
+          date = new Date(value.substring(0, tzSeparator))
+          let timezone = value.substring(tzSeparator)
+          let operator = timezone.substring(0, 1) === '+' ? 1 : -1
+          let [ minutes, seconds ] = timezone.substring(1).split(':')
+          let offsetRemote = (parseInt(minutes) * 60 + parseInt(seconds)) * operator
+          let offsetLocal = date.getTimezoneOffset() * -1
+          let offset = offsetLocal - offsetRemote
+          date = new Date(date.getTime() + offset * 60000)
+        }
+        this.format(date)
+        this.$nextTick().then(() => {
+          this.onInput()
+        })
       }
-    }
+    },
   },
   computed: {
+    cValue: {
+      get () { return this.value },
+      set (value) {
+        this.$emit('input', value)
+      }
+    },
     dateIntlOptions () {
       if (!this.date && !!this.time) {
         return {}
       }
       if (!this.date || this.date === true) {
-        return { day: '2-digit', month: '2-digit', year: 'numeric', }
+        return { day: '2-digit', month: '2-digit', year: 'numeric' }
       }
       return this.date
     },
@@ -193,8 +245,11 @@ export default Vue.extend({
     language () {
       return (this.lang || this.$q.lang.isoName || navigator.language) + '-u-nu-latn'
     },
-    intlFormatter () {
-      return new Intl.DateTimeFormat(this.language, this.intlOptions)
+    intlDateFormatter () {
+      return new Intl.DateTimeFormat(this.language, this.dateIntlOptions)
+    },
+    intlTimeFormatter () {
+      return new Intl.DateTimeFormat(this.language, this.timeIntlOptions)
     },
     mask () {
       if (this.masks.date && this.masks.time) {
@@ -208,16 +263,31 @@ export default Vue.extend({
     onOpen () {
       this.tab = 'date'
     },
+    onInput () {
+      if (this.masks.date && this.masks.time) {
+        if (this.masked.indexOf(' ') !== -1) {
+          var [ date, time ] = this.masked.split(' ')
+          this.onInputTime(time)
+          this.onInputDate(date)
+        }
+      } else if (this.masks.date) {
+        this.onInputDate(this.masked)
+      } else {
+        this.onInputTime(this.masked)
+      }
+    },
     onInputDate (date) {
       if (this.inputs.date !== date) {
         this.inputs.date = date
         if (date.length === this.masks.date.length) {
           let meta = this.metas.date
           let parts = date.split(meta.separator)
-          let year = meta.year.order === -1 ? '2000' : parts[meta.year.order]
+          let year = meta.year.order === -1 ? '1970' : parts[meta.year.order]
           let month = meta.month.order === -1 ? '01' : parts[meta.month.order]
           let day = meta.day.order === -1 ? '01' : parts[meta.day.order]
-          this.values.date = `${year}/${month}/${day}`
+          this.$nextTick().then(() => {
+            this.values.date = `${year}/${month}/${day}`
+          })
         }
       }
     },
@@ -230,7 +300,9 @@ export default Vue.extend({
           let hour = meta.hour.order === -1 ? '00' : parts[meta.hour.order]
           let minute = meta.minute.order === -1 ? '00' : parts[meta.minute.order]
           let second = meta.second.order === -1 ? '00' : parts[meta.second.order]
-          this.values.time = `${hour}:${minute}:${second}`
+          this.$nextTick().then(() => {
+            this.values.time = `${hour}:${minute}:${second}`
+          })
         }
       }
     },
@@ -255,9 +327,18 @@ export default Vue.extend({
     onTimeChange () {
       this.onChange()
     },
+    format (date) {
+      if (!!this.date && !!this.time) {
+        this.masked = this.intlDateFormatter.format(date) + ' ' + this.intlTimeFormatter.format(date)
+      } else if (!this.date && !!this.time) {
+        this.masked = this.intlTimeFormatter.format(date)
+      } else  {
+        this.masked = this.intlDateFormatter.format(date)
+      }
+    },
     onChange () {
       let date = this.values.date.split('/')
-      let year = this.parseIntFromArray(date, 0, 2000)
+      let year = this.parseIntFromArray(date, 0, 1970)
       let month = this.parseIntFromArray(date, 1, 1) - 1
       let day = this.parseIntFromArray(date, 2, 1)
 
@@ -267,7 +348,8 @@ export default Vue.extend({
       let second = this.parseIntFromArray(time, 2, 0)
       
       var dateObj = new Date(year, month, day, hour, minute, second)
-      this.masked = this.intlFormatter.format(dateObj)
+      this.format(dateObj)
+      this.cValue = toTimezoneISOString(dateObj, !this.date && !!this.time ? new Date() : null)
     },
     updateMetadata () {
       this.updateDateMetadata()
