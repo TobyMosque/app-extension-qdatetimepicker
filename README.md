@@ -42,7 +42,7 @@ We need help translating the language files. They are all currently using Englis
 
 ---
 
-# QMediaPlayer Vue Properties
+# QDatetimePicker Vue Properties
 | Vue&nbsp;Property | Type	|  Description |
 |---|---|---|
 | label | String | A text label that will “float” up above the input field, once the field gets focus |
