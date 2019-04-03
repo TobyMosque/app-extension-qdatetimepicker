@@ -45,10 +45,10 @@ We need help translating the language files. They are all currently using Englis
 # QDatetimePicker Vue Properties
 | Vue&nbsp;Property | Type	|  Description |
 |---|---|---|
-| label | String | A text label that will “float” up above the input field, once the field gets focus |
+| label | String | A text label that will 'float' up above the input field, once the field gets focus |
 | stack-label | Boolean | Label will be always shown above the field regardless of field content (if any) |
 | hint | String | Helper (hint) text which gets placed below your wrapped form component |
-| hide-hint | Boolean | Hide the helper (hint) text when field doesn't has focus |
+| hide-hint | Boolean | Hide the helper (hint) text when field is not focused |
 | prefix | String | Prefix |
 | suffix | String | Suffix |
 | color | String | Color name from Quasar Color Palette; Overrides default dynamic color |
@@ -62,7 +62,7 @@ We need help translating the language files. They are all currently using Englis
 | borderless | Boolean | Use 'borderless' design for the field |
 | standout | Boolean | Use 'standout' design for the field |
 | bottom-slots | Boolean | Enables bottom slots ('error', 'hint', 'counter') |
-| counter | Boolean | Show an automatic counter on bottom right |
+| counter | Boolean | Show an automatic counter on the bottom right |
 | rounded | Boolean | Applies a small standard border-radius for a squared shape of the component |
 | square | Boolean | Remove border-radius so borders are squared; Overrides 'rounded' prop |
 | dense | Boolean | Dense mode; occupies less space |
@@ -70,9 +70,9 @@ We need help translating the language files. They are all currently using Englis
 | disable | Boolean | Put component in disabled mode |
 | readonly | Boolean | Put component in readonly mode |
 | lang | Boolean | Language identifier (default: $q.lang.isoName) |
-| date | Boolean or Object | if that prop had value, so the datepicker will be showed. is the value is a object, so that will be used as the options to format the date. see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat |
-| time | Boolean or Object | if that prop had value, so the timepicker will be showed. is the value is a object, so that will be used as the options to format the time. see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat |
-| format24h | Boolean | show the timepicker in the format with 24 hours |
+| date | Boolean or Object | If this prop has a value, the datepicker will be shown. If the value is an object, it will be used as the option to format the date. see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat |
+| time | Boolean or Object | If this prop has a value, the timepicker will be shown. If the value is an object, it will be used as the options to format the time. see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat |
+| format24h | Boolean | Show the timepicker in 24 hour format |
 
 # Patreon
 If you like (and use) this App Extension, please consider becoming a Quasar [Patreon](https://www.patreon.com/quasarframework).

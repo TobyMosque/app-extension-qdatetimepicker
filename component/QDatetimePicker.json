@@ -3,7 +3,7 @@
   "props": {
     "label": {
       "type": "String",
-      "desc": "A text label that will “float” up above the input field, once the field gets focus",
+      "desc": "A text label that will 'float' up above the input field, once the field gets focus",
       "examples": [ "Username" ]
     },
     "stack-label": {
@@ -13,11 +13,11 @@
     "hint": {
       "type": "String",
       "desc": "Helper (hint) text which gets placed below your wrapped form component",
-      "examples": [ "Fill in between 3 and 12 characters" ]
+      "examples": [ "Use between 3 and 12 characters" ]
     },
     "hide-hint": {
       "type": "Boolean",
-      "desc": "Hide the helper (hint) text when field doesn't has focus"
+      "desc": "Hide the helper (hint) text when field is not focused"
     },
     "prefix": {
       "type": "String",
@@ -72,7 +72,7 @@
     },
     "counter": {
       "type": "Boolean",
-      "desc": "Show an automatic counter on bottom right"
+      "desc": "Show an automatic counter on the bottom right"
     },
     "rounded": {
       "extends": "rounded"
@@ -101,19 +101,19 @@
     },
     "date": {
       "type": [ "Boolean", "Object" ],
-      "desc": "if that prop had value, so the datepicker will be showed. is the value is a object, so that will be used as the options to format the date. see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat",
+      "desc": "If this prop has a value, the datepicker will be shown. If the value is an object, it will be used as the option to format the date. see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat",
       "default": "true",
       "examples": [ "true", "false", "{ day: '2-digit', month: '2-digit', year: 'numeric' }" ]
     },
     "time": {
       "type": [ "Boolean", "Object" ],
-      "desc": "if that prop had value, so the timepicker will be showed. is the value is a object, so that will be used as the options to format the time. see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat",
+      "desc": "If this prop has a value, the timepicker will be shown. If the value is an object, it will be used as the options to format the time. see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat",
       "default": "true",
       "examples": [ "true", "false", "{ hour: '2-digit', minute: '2-digit', hour12: false }" ]
     },
     "format24h": {
       "type": "Boolean",
-      "desc": "show the timepicker in the format with 24 hours",
+      "desc": "Show the timepicker in 24 hour format",
       "default": "true"
     }
   }
