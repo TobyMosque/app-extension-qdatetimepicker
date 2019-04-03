@@ -135,8 +135,8 @@ export default Vue.extend({
     }
   },
   mounted () {
-    this.updateMetadata()
-    this.setupLanguage()
+    this.__updateMetadata()
+    this.__setupLanguage()
   },
   data () {
     return {
@@ -166,16 +166,16 @@ export default Vue.extend({
   },
   watch: {
     language() {
-      this.updateMetadata()
-      this.setupLanguage()
-      this.onChange()
+      this.__updateMetadata()
+      this.__setupLanguage()
+      this.__onChange()
     },
     intlOptions () {
-      this.updateMetadata()
-      this.onChange()
+      this.__updateMetadata()
+      this.__onChange()
     },
     masked () {
-      this.onInput()
+      this.__onInput()
     },
     value: {
       immediate: true,
@@ -213,9 +213,9 @@ export default Vue.extend({
           let offset = offsetLocal - offsetRemote
           date = new Date(date.getTime() + offset * 60000)
         }
-        this.format(date)
+        this.__intlFormat(date)
         this.$nextTick().then(() => {
-          this.onInput()
+          this.__onInput()
         })
       }
     },
@@ -266,11 +266,11 @@ export default Vue.extend({
     }    
   },
   methods: {
-    onOpen () {
+    __onOpen () {
       this.tab = 'date'
     },
-    setupLanguage () {
-      let isoName = this.$q.lang.isoName || 'en-us'
+    __setupLanguage () {
+      let isoName = this.lang || this.$q.lang.isoName || navigator.language
       let lang
       try {
         lang = require(`./lang/${isoName}`)
@@ -279,20 +279,20 @@ export default Vue.extend({
       }
       this.$set(this, 'isoLang', lang.default)
     },
-    onInput () {
+    __onInput () {
       if (this.masks.date && this.masks.time) {
         if (this.masked.indexOf(' ') !== -1) {
           var [ date, time ] = this.masked.split(' ')
-          this.onInputTime(time)
-          this.onInputDate(date)
+          this.__onInputTime(time)
+          this.__onInputDate(date)
         }
       } else if (this.masks.date) {
-        this.onInputDate(this.masked)
+        this.__onInputDate(this.masked)
       } else {
-        this.onInputTime(this.masked)
+        this.__onInputTime(this.masked)
       }
     },
-    onInputDate (date) {
+    __onInputDate (date) {
       if (this.inputs.date !== date) {
         this.inputs.date = date
         if (date.length === this.masks.date.length) {
@@ -307,7 +307,7 @@ export default Vue.extend({
         }
       }
     },
-    onInputTime (time) {
+    __onInputTime (time) {
       if (this.inputs.time !== time) {
         this.inputs.time = time
         if (time.length === this.masks.time.length) {
@@ -322,11 +322,11 @@ export default Vue.extend({
         }
       }
     },
-    onSetClick () {
+    __onSetClick () {
       if (this.tab === 'date') {
-        this.onDateChange()
+        this.__onDateChange()
       } else {
-        this.onTimeChange()
+        this.__onTimeChange()
       }
       if (this.date && this.time && this.tab === 'date') {
         this.tab = 'time'
@@ -334,16 +334,16 @@ export default Vue.extend({
         this.$refs.popup.hide()
       }
     },
-    parseIntFromArray (list, index, defaultValue) {
+    __parseIntFromArray (list, index, defaultValue) {
       return list.length > index && list[index] ? parseInt(list[index]) : (defaultValue || 0)
     },
-    onDateChange () {
-      this.onChange()
+    __onDateChange () {
+      this.__onChange()
     },
-    onTimeChange () {
-      this.onChange()
+    __onTimeChange () {
+      this.__onChange()
     },
-    format (date) {
+    __intlFormat (date) {
       if (!!this.date && !!this.time) {
         this.masked = this.intlDateFormatter.format(date) + ' ' + this.intlTimeFormatter.format(date)
       } else if (!this.date && !!this.time) {
@@ -352,26 +352,26 @@ export default Vue.extend({
         this.masked = this.intlDateFormatter.format(date)
       }
     },
-    onChange () {
+    __onChange () {
       let date = this.values.date.split('/')
-      let year = this.parseIntFromArray(date, 0, 1970)
-      let month = this.parseIntFromArray(date, 1, 1) - 1
-      let day = this.parseIntFromArray(date, 2, 1)
+      let year = this.__parseIntFromArray(date, 0, 1970)
+      let month = this.__parseIntFromArray(date, 1, 1) - 1
+      let day = this.__parseIntFromArray(date, 2, 1)
 
       let time = this.values.time.split(':')
-      let hour = this.parseIntFromArray(time, 0, 0)
-      let minute = this.parseIntFromArray(time, 1, 0)
-      let second = this.parseIntFromArray(time, 2, 0)
+      let hour = this.__parseIntFromArray(time, 0, 0)
+      let minute = this.__parseIntFromArray(time, 1, 0)
+      let second = this.__parseIntFromArray(time, 2, 0)
       
       var dateObj = new Date(year, month, day, hour, minute, second)
-      this.format(dateObj)
+      this.__intlFormat(dateObj)
       this.cValue = toTimezoneISOString(dateObj, !this.date && !!this.time ? new Date() : null)
     },
-    updateMetadata () {
-      this.updateDateMetadata()
-      this.updateTimeMetadata()
+    __updateMetadata () {
+      this.__updateDateMetadata()
+      this.__updateTimeMetadata()
     },
-    updateDateMetadata () {
+    __updateDateMetadata () {
       let meta = {}
       let mask = ''
       if (this.date || !this.time) {
@@ -432,7 +432,7 @@ export default Vue.extend({
       this.$set(this.masks, 'date', mask)
       this.$set(this.metas, 'date', meta)
     },
-    updateTimeMetadata () {
+    __updateTimeMetadata () {
       let meta = {}
       let mask = ''
       if (this.time) {
@@ -535,7 +535,7 @@ export default Vue.extend({
                 h(QPopupProxy, {
                   ref: 'popup',
                   on: {
-                    'before-show': self.onOpen,
+                    'before-show': self.__onOpen,
                     name: 'event'
                   }
                 }, [
@@ -546,7 +546,7 @@ export default Vue.extend({
                       dark: self.dark
                     },
                     on: {
-                      'before-show': self.onOpen,
+                      'before-show': self.__onOpen,
                       name: 'event'
                     }
                   }, [
@@ -578,7 +578,7 @@ export default Vue.extend({
                           color: self.color || 'primary'
                         },
                         on: {
-                          click: self.onSetClick
+                          click: self.__onSetClick
                         },
                         scopedSlots: {
                           default (props) {
