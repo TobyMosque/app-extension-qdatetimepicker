@@ -2,6 +2,6 @@ export default {
   lang: 'en-us',
   dateTimePicker: {
     date: 'Date',
-    time: 'time'
+    time: 'Time'
   }
 }

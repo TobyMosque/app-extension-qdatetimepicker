@@ -1,7 +1,7 @@
 export default {
   lang: 'fr',
   dateTimePicker: {
-    date: 'Date',
-    time: 'l\'heure'
+    date: 'L\'date',
+    time: 'L\'heure'
   }
 }
