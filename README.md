@@ -1,4 +1,4 @@
-QDatetimePicker (quasar-app-extension-datetimepicker)
+QDatetimePicker (quasar-app-extension-qdatetimepicker)
 ===
 
 QDatetimePicker is an `UI App Extension` for [Quasar Framework v1](https://v1.quasar-framework.org/). It will not work with legacy versions of Quasar Framework.
@@ -8,7 +8,7 @@ This work is currently in `alpha` and there are expected changes while things ge
 # Installation
 To add this App Extension to your Quasar application, run the following (in your Quasar app folder):
 ```
-quasar ext add datetimepicker
+quasar ext add qdatetimepicker
 ```
 
 # Describe
