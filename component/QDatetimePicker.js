@@ -68,14 +68,14 @@ const renderDateTime = function (self, h) {
         props: {
           name: 'date',
           icon: 'date_range',
-          label: 'Date'
+          label: self.isoLang.dateTimePicker.date
         }
       }, []),
       h(QTab, {
         props: {
           name: 'time',
           icon: 'access_time',
-          label: 'Time'
+          label: self.isoLang.dateTimePicker.time
         }
       }, [])
     ]),
@@ -136,6 +136,7 @@ export default Vue.extend({
   },
   mounted () {
     this.updateMetadata()
+    this.setupLanguage()
   },
   data () {
     return {
@@ -156,12 +157,17 @@ export default Vue.extend({
       metas: {
         date: {},
         time: {}
+      },
+      isoLang: {
+        lang: '',
+        dateTimePicker: {}
       }
     }
   },
   watch: {
     language() {
       this.updateMetadata()
+      this.setupLanguage()
       this.onChange()
     },
     intlOptions () {
@@ -262,6 +268,16 @@ export default Vue.extend({
   methods: {
     onOpen () {
       this.tab = 'date'
+    },
+    setupLanguage () {
+      let isoName = this.$q.lang.isoName || 'en-us'
+      let lang
+      try {
+        lang = require(`./lang/${isoName}`)
+      } catch (e) {
+        lang = require(`./lang/en-us`)
+      }
+      this.$set(this, 'isoLang', lang.default)
     },
     onInput () {
       if (this.masks.date && this.masks.time) {
