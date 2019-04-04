@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex flex-center">
     <div class="full-width row q-pa-md">
-      <div class="col col-12 q-mb-md">
+      <div class="col col-12 q-pa-md">
         <q-select
             outlined
             v-model="language"
