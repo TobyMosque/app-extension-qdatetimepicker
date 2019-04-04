@@ -1,8 +1,8 @@
 {
-  "datetimepicker": {},
   "@quasar/testing": {
     "harnesses": [
       "unit-jest"
     ]
-  }
+  },
+  "qdatetimepicker": {}
 }

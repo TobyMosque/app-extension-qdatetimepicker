@@ -14,6 +14,9 @@ quasar ext add qdatetimepicker
 # Describe
 You can use `quasar describe QDatetimePicker`
 
+# Demo
+Can be found [here](https://qmediaplayer.netlify.com).
+
 # Example Code
 ```html
 <q-datetime-picker label="Standard Date Picker" v-model="date"></q-datetime-picker>
