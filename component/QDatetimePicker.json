@@ -113,8 +113,8 @@
     },
     "format24h": {
       "type": "Boolean",
-      "desc": "Show the timepicker in 24 hour format",
-      "default": "true"
+      "desc": "Show the timepicker in 24 hour format. The masked value will not be affected.",
+      "default": "false"
     }
   }
 }

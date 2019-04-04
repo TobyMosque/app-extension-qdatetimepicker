@@ -72,7 +72,7 @@ We need help translating the language files. They are all currently using Englis
 | lang | Boolean | Language identifier (default: $q.lang.isoName) |
 | date | Boolean or Object | If this prop has a value, the datepicker will be shown. If the value is an object, it will be used as the option to format the date. see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat |
 | time | Boolean or Object | If this prop has a value, the timepicker will be shown. If the value is an object, it will be used as the options to format the time. see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat |
-| format24h | Boolean | Show the timepicker in 24 hour format |
+| format24h | Boolean | Show the timepicker in 24 hour format. The masked value will not be affected. |
 
 # Patreon
 If you like (and use) this App Extension, please consider becoming a Quasar [Patreon](https://www.patreon.com/quasarframework).
