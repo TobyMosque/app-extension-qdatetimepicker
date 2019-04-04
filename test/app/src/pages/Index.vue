@@ -14,7 +14,7 @@
             @input="onLanguageInput">
         </q-select>
       </div>
-      <div class="col col-4 q-pa-md">
+      <div class="col col-md-4 col-12 q-pa-md">
         <q-card>
           <q-card-section>
             <div class="text-h6">Input Types</div>
@@ -28,7 +28,7 @@
           </q-card-section>
         </q-card>
       </div>
-      <div class="col col-4 q-pa-md">
+      <div class="col col-md-4 col-12 q-pa-md">
         <q-card dark class="bg-grey-10">
           <q-card-section>
             <div class="text-h6">Dark Mode</div>
@@ -42,7 +42,7 @@
           </q-card-section>
         </q-card>
       </div>
-      <div class="col col-4 q-pa-md">
+      <div class="col col-md-4 col-12 q-pa-md">
         <q-card>
           <q-card-section>
             <div class="text-h6">Light Mode</div>
@@ -56,11 +56,42 @@
           </q-card-section>
         </q-card>
       </div>
+      <div class="col col-md-6 col-12 q-pa-md">
+        <q-banner class="bg-primary text-white">
+          <template v-slot:avatar>
+            <q-avatar>
+              <img src="https://cdn.quasar-framework.org/logo/svg/quasar-logo.svg">
+            </q-avatar>
+          </template>
+          New to Quasar? Don't miss the change to know the best Framework based on Vue
+          <template v-slot:action>
+            <a href="https://v1.quasar-framework.org">
+              <q-btn flat color="white" label="Show me" />
+            </a>
+          </template>
+        </q-banner>
+      </div>
+      <div class="col col-md-6 col-12 q-pa-md">
+        <q-banner class="bg-grey-8 text-white">
+          <template v-slot:avatar>
+            <q-avatar>
+              <img src="statics/git-octupus.png">
+            </q-avatar>
+          </template>
+          Quasar App Extension QDatetimePicker Repository
+          <template v-slot:action>
+            <a href="https://github.com/TobyMosque/app-extension-qdatetimepicker">
+              <q-btn flat color="white" label="Show me" />
+            </a>
+          </template>
+        </q-banner>
+      </div>
     </div>
   </q-page>
 </template>
 
 <style>
+
 </style>
 
 <script>
