@@ -72,7 +72,7 @@
         </q-banner>
       </div>
       <div class="col col-md-6 col-12 q-pa-md">
-        <q-banner rounded class="bg-grey-8 text-white">
+        <q-banner rounded class="bg-grey-10 text-white">
           <template v-slot:avatar>
             <q-avatar>
               <img src="statics/git-octupus.png">
