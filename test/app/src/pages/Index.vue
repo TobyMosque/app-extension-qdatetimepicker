@@ -63,7 +63,7 @@
               <img src="https://cdn.quasar-framework.org/logo/svg/quasar-logo.svg">
             </q-avatar>
           </template>
-          New to Quasar? Don't miss the change to know the best Framework based on Vue
+          New to Quasar? Don't miss the chance to know the best Framework based on Vue
           <template v-slot:action>
             <a href="https://v1.quasar-framework.org">
               <q-btn flat color="white" label="Show me" />
