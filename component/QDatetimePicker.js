@@ -103,22 +103,15 @@ const renderDateTime = function (self, h) {
   ]
 }
 
-const timeFormat = new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
-const toTimezoneISOString = function (date, base) {
+const toISOString = function (date) {
   if (!date || !date.getTimezoneOffset) {
     return null
   }
-  base = base || date
-  var offset = base.getTimezoneOffset() * -1
+  var offset = date.getTimezoneOffset() * -1
   date = new Date(date.getTime() + offset * 60000)
   date = date.toISOString().replace('Z', '')
 
-  var time = new Date(1970, 1, 1).getTime()
-  time = new Date(time + Math.abs(offset) * 60000)
-  time = timeFormat.format(time).substring(0, 5)
-
-  var signal = offset > 0 ? '+' : '-'
-  return date + signal + time
+  return date
 }
 
 export default Vue.extend({
@@ -131,7 +124,7 @@ export default Vue.extend({
     time: Boolean | Object,
     format24h: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
   mounted () {
@@ -185,34 +178,17 @@ export default Vue.extend({
         }
 
         let isoSeparator = value.indexOf('T')
-        let tzSeparator = -1
-        if (isoSeparator !== -1) {
-          let tzPositive = value.indexOf('+', isoSeparator)
-          let tzNegative = value.indexOf('-', isoSeparator)
-          tzSeparator = tzPositive !== -1 ? tzPositive : tzNegative
-        }
-        
         let date = null
-        if (tzSeparator === -1) {
-          if (isoSeparator === -1) {
-            if (!this.date && !!this.time) {
-              value = '1970-01-01T' + value
-            } else {
-              value = value + 'T00:00:00'
-            }
+        if (isoSeparator === -1) {
+          if (!this.date && !!this.time) {
+            value = '1970-01-01T' + value
+          } else {
+            value = value + 'T00:00:00'
           }
-          date = new Date(value)
-          this.cValue = toTimezoneISOString(date, new Date())
-        } else {
-          date = new Date(value.substring(0, tzSeparator))
-          let timezone = value.substring(tzSeparator)
-          let operator = timezone.substring(0, 1) === '+' ? 1 : -1
-          let [ minutes, seconds ] = timezone.substring(1).split(':')
-          let offsetRemote = (parseInt(minutes) * 60 + parseInt(seconds)) * operator
-          let offsetLocal = date.getTimezoneOffset() * -1
-          let offset = offsetLocal - offsetRemote
-          date = new Date(date.getTime() + offset * 60000)
         }
+        date = new Date(value)
+        this.cValue = toISOString(date)
+
         this.__intlFormat(date)
         this.$nextTick().then(() => {
           this.__onInput()
@@ -241,7 +217,7 @@ export default Vue.extend({
         return {}
       }
       if (this.time === true) {
-        return { hour: '2-digit', minute: '2-digit', hour12: !this.format24h }
+        return { hour: '2-digit', minute: '2-digit', hour12: false /*!this.format24h*/ }
       }
       return this.time
     },
@@ -281,9 +257,15 @@ export default Vue.extend({
     },
     __onInput () {
       if (this.masks.date && this.masks.time) {
-        if (this.masked.indexOf(' ') !== -1) {
-          var [ date, time ] = this.masked.split(' ')
-          this.__onInputTime(time)
+        if (this.masked.length > this.masks.date.length) {
+          let separator = this.masked.substring(this.masks.date.length, this.masks.date.length + 1)
+          if (separator == ' ') {
+            let date = this.masked.substring(0, this.masks.date.length)
+            let time = this.masked.substring(this.masks.date.length + 1)
+            this.__onInputTime(time)
+            this.__onInputDate(date)
+          }
+        } else {
           this.__onInputDate(date)
         }
       } else if (this.masks.date) {
@@ -365,7 +347,7 @@ export default Vue.extend({
       
       var dateObj = new Date(year, month, day, hour, minute, second)
       this.__intlFormat(dateObj)
-      this.cValue = toTimezoneISOString(dateObj, !this.date && !!this.time ? new Date() : null)
+      this.cValue = toISOString(dateObj)
     },
     __updateMetadata () {
       this.__updateDateMetadata()
@@ -397,7 +379,14 @@ export default Vue.extend({
           order: -1
         }
         var limit = [ meta.year, meta.month, meta.day ].filter(meta => meta.pos !== -1).length
-
+        var getNextIndex = (index) => {
+          var next = [meta.day, meta.month, meta.year].filter(part => part.pos > index).sort((partA, partB) => partA.pos - partB.pos)[0]
+          if (next) {
+            return next.pos
+          } else {
+            return formatted.length
+          }
+        }
         var _index = 0
         for (var i = 0; i < limit; i++) {
           if (meta.day.pos == _index) {
@@ -405,7 +394,9 @@ export default Vue.extend({
             mask = mask + ''.padStart(meta.day.cases, '#')
             if (i < limit - 1) {
               _index += meta.day.cases
-              meta.separator = formatted.substring(_index, ++_index)
+              var nextIndex = getNextIndex(_index)
+              meta.separator = formatted.substring(_index, nextIndex)
+              _index = nextIndex
               mask = mask + meta.separator
             }
           } else if (meta.month.pos == _index) {
@@ -413,7 +404,9 @@ export default Vue.extend({
             mask = mask + ''.padStart(meta.month.cases, '#')
             if (i < limit - 1) {
               _index += meta.month.cases
-              meta.separator = formatted.substring(_index, ++_index)
+              var nextIndex = getNextIndex(_index)
+              meta.separator = formatted.substring(_index, nextIndex)
+              _index = nextIndex
               mask = mask + meta.separator
             }
             continue
@@ -422,13 +415,14 @@ export default Vue.extend({
             mask = mask + ''.padStart(meta.year.cases, '#')
             if (i < limit - 1) {
               _index += meta.year.cases
-              meta.separator = formatted.substring(_index, ++_index)
+              var nextIndex = getNextIndex(_index)
+              meta.separator = formatted.substring(_index, nextIndex)
+              _index = nextIndex
               mask = mask + meta.separator
             }
           }
         }
       }
-      
       this.$set(this.masks, 'date', mask)
       this.$set(this.metas, 'date', meta)
     },

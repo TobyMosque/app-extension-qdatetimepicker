@@ -35,10 +35,10 @@
           </q-card-section>
           <q-separator dark inset />
           <q-card-section class="">
-            <q-datetime-picker class="q-mb-md" outlined label="Date Picker" color="negative" dark v-model="date"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="Date Picker" color="negative" dark v-model="date" readonly></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" outlined label="Time Picker" :time="true" color="negative" dark v-model="time"></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" outlined label="DateTime Picker" :date="true" :time="true" color="negative" dark v-model="datetime"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" :date="true" :time="true" color="negative" dark v-model="datetime"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" :date="true" :time="true" color="negative" dark v-model="datetime" :format24h="false"></q-datetime-picker>
           </q-card-section>
         </q-card>
       </div>
@@ -52,7 +52,7 @@
             <q-datetime-picker class="q-mb-md" outlined label="Date Picker" color="positive" v-model="date"></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" outlined label="Time Picker" :time="true" color="positive" v-model="time"></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" outlined label="DateTime Picker" :date="true" :time="true" color="positive" v-model="datetime"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" :date="true" :time="true" color="positive" v-model="datetime"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" :date="true" :time="true" color="positive" v-model="datetime" :format24h="false"></q-datetime-picker>
           </q-card-section>
         </q-card>
       </div>
