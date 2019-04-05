@@ -225,7 +225,7 @@ export default Vue.extend({
       return { ...this.dateIntlOptions, ...this.timeIntlOptions }
     },    
     language () {
-      return (this.lang || this.$q.lang.isoName || navigator.language) + '-u-nu-latn'
+      return (this.lang || this.$q.lang.isoName || navigator.language) + '-u-ca-gregory-nu-latn'
     },
     intlDateFormatter () {
       return new Intl.DateTimeFormat(this.language, this.dateIntlOptions)
@@ -285,6 +285,7 @@ export default Vue.extend({
           let day = meta.day.order === -1 ? '01' : parts[meta.day.order]
           this.$nextTick().then(() => {
             this.values.date = `${year}/${month}/${day}`
+            this.__onDateChange()
           })
         }
       }
@@ -300,6 +301,7 @@ export default Vue.extend({
           let second = meta.second.order === -1 ? '00' : parts[meta.second.order]
           this.$nextTick().then(() => {
             this.values.time = `${hour}:${minute}:${second}`
+            this.__onTimeChange()
           })
         }
       }
@@ -521,13 +523,18 @@ export default Vue.extend({
           append (props) {
             return [
               h(QIcon, {
+                class: {
+                  'cursor-pointer': true
+                },
                 props: {
-                  class: 'cursor-pointer',
                   name: 'event'
                 }
               }, [
                 h(QPopupProxy, {
                   ref: 'popup',
+                  props: {
+                    breakpoint: 600,
+                  },
                   on: {
                     'before-show': self.__onOpen,
                     name: 'event'
