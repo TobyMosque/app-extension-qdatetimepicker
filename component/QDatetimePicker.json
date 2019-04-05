@@ -99,21 +99,14 @@
       "desc": "Language identifier",
       "examples": [ "en", "pt" ]
     },
-    "date": {
-      "type": [ "Boolean", "Object" ],
-      "desc": "If this prop has a value, the datepicker will be shown. If the value is an object, it will be used as the option to format the date. see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat",
-      "default": "true",
-      "examples": [ "true", "false", "{ day: '2-digit', month: '2-digit', year: 'numeric' }" ]
-    },
-    "time": {
-      "type": [ "Boolean", "Object" ],
-      "desc": "If this prop has a value, the timepicker will be shown. If the value is an object, it will be used as the options to format the time. see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat",
-      "default": "true",
-      "examples": [ "true", "false", "{ hour: '2-digit', minute: '2-digit', hour12: false }" ]
+    "mode": {
+      "type": "String",
+      "desc": "Display mode ('date', 'time', 'datetime') (default: 'date')",
+      "default": "date"
     },
     "format24h": {
       "type": "Boolean",
-      "desc": "Show the timepicker in 24 hour format. The masked value will not be affected.",
+      "desc": "Show the time picker in 24 hour format. The masked value will not be affected.",
       "default": "false"
     }
   }

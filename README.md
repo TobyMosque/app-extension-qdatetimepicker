@@ -21,8 +21,8 @@ Can be found [here](https://qdatetimepicker.netlify.com).
 ```html
 <q-datetime-picker label="Standard Date Picker" v-model="date"></q-datetime-picker>
 <q-datetime-picker outlined label="Outlined Date Picker" v-model="date"></q-datetime-picker>
-<q-datetime-picker outlined label="Outlined Dark Time Picker" :time="true" color="negative" dark v-model="time"></q-datetime-picker>
-<q-datetime-picker standout label="Standout DateTime Picker" :date="true" :time="true" color="positive" dark v-model="datetime"></q-datetime-picker>
+<q-datetime-picker outlined label="Outlined Dark Time Picker" mode="time" color="negative" dark v-model="time"></q-datetime-picker>
+<q-datetime-picker standout label="Standout DateTime Picker" mode="datetime" color="positive" dark v-model="datetime" format24h></q-datetime-picker>
 ```
 and the data...
 ```js
@@ -73,8 +73,7 @@ We need help translating the language files. They are all currently using Englis
 | disable | Boolean | Put component in disabled mode |
 | readonly | Boolean | Put component in readonly mode |
 | lang | Boolean | Language identifier (default: $q.lang.isoName) |
-| date | Boolean or Object | If this prop has a value, the datepicker will be shown. If the value is an object, it will be used as the option to format the date. see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat |
-| time | Boolean or Object | If this prop has a value, the timepicker will be shown. If the value is an object, it will be used as the options to format the time. see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat |
+| mode | String | Display Mode ('date', 'time', 'datetime') (default: 'date') |
 | format24h | Boolean | Show the timepicker in 24 hour format. The masked value will not be affected. |
 
 # Patreon

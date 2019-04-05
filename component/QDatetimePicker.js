@@ -120,8 +120,13 @@ export default Vue.extend({
   props: {
     value: String,
     lang: String,
-    date: Boolean | Object,
-    time: Boolean | Object,
+    mode: {
+      type: String,
+      default: "date",
+      validation (value) {
+        return ["date", "time", "datetime"].indexOf(value) !== -1
+      }
+    },
     format24h: {
       type: Boolean,
       default: false
@@ -180,7 +185,7 @@ export default Vue.extend({
         let isoSeparator = value.indexOf('T')
         let date = null
         if (isoSeparator === -1) {
-          if (!this.date && !!this.time) {
+          if (!this.date) {
             value = '1970-01-01T' + value
           } else {
             value = value + 'T00:00:00'
@@ -203,23 +208,17 @@ export default Vue.extend({
         this.$emit('input', value)
       }
     },
+    date () {
+      return ["date", "datetime"].indexOf(this.mode) !== -1
+    },
+    time () {
+      return ["time", "datetime"].indexOf(this.mode) !== -1
+    },
     dateIntlOptions () {
-      if (!this.date && !!this.time) {
-        return {}
-      }
-      if (!this.date || this.date === true) {
-        return { day: '2-digit', month: '2-digit', year: 'numeric' }
-      }
-      return this.date
+      return this.date ? { day: '2-digit', month: '2-digit', year: 'numeric' } : {}
     },
     timeIntlOptions () {
-      if (!this.time) {
-        return {}
-      }
-      if (this.time === true) {
-        return { hour: '2-digit', minute: '2-digit', hour12: false /*!this.format24h*/ }
-      }
-      return this.time
+      return this.time ? { hour: '2-digit', minute: '2-digit', hour12: false /*!this.format24h*/ } : {}
     },
     intlOptions () {
       return { ...this.dateIntlOptions, ...this.timeIntlOptions }
@@ -328,9 +327,9 @@ export default Vue.extend({
       this.__onChange()
     },
     __intlFormat (date) {
-      if (!!this.date && !!this.time) {
+      if (this.date && this.time) {
         this.masked = this.intlDateFormatter.format(date) + ' ' + this.intlTimeFormatter.format(date)
-      } else if (!this.date && !!this.time) {
+      } else if (!this.date) {
         this.masked = this.intlTimeFormatter.format(date)
       } else  {
         this.masked = this.intlDateFormatter.format(date)
@@ -358,7 +357,7 @@ export default Vue.extend({
     __updateDateMetadata () {
       let meta = {}
       let mask = ''
-      if (this.date || !this.time) {
+      if (this.date) {
         var formatter = new Intl.DateTimeFormat(this.language, this.dateIntlOptions)
 
         let date = new Date(2048, 11, 24)
