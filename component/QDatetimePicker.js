@@ -262,7 +262,9 @@ export default Vue.extend({
       this.$set(this, 'isoLang', lang.default)
     },
     __onInput () {
-      if (this.masks.date && this.masks.time) {
+      if (this.clearable && this.masked.length === 0) {
+        this.cValue = null
+      } else if (this.masks.date && this.masks.time) {
         let value = this.masked.trim()
         if (value.length === this.mask.length) {
           let date = this.masked.substring(0, this.masks.date.length)
