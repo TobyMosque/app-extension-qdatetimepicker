@@ -38,7 +38,7 @@
             <q-datetime-picker class="q-mb-md" outlined label="Date Picker" color="negative" dark v-model="date"></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" outlined label="Time Picker" mode="time" color="negative" dark v-model="time"></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" outlined label="DateTime Picker" mode="datetime" color="negative" dark v-model="datetime"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" mode="datetime" color="negative" dark v-model="datetime" format24h></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" mode="datetime" color="negative" dark v-model="datetime" format24h clearable></q-datetime-picker>
           </q-card-section>
         </q-card>
       </div>
@@ -52,7 +52,7 @@
             <q-datetime-picker class="q-mb-md" outlined label="Date Picker" color="positive" v-model="date"></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" outlined label="Time Picker" mode="time" color="positive" v-model="time"></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" outlined label="DateTime Picker" mode="datetime" color="positive" v-model="datetime"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" mode="datetime" color="positive" v-model="datetime" format24h></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" mode="datetime" color="positive" v-model="datetime" format24h clearable></q-datetime-picker>
           </q-card-section>
         </q-card>
       </div>
@@ -103,6 +103,12 @@ export default {
     return {
       date: '2018-11-02',
       time: '15:46',
+      rules: [
+        (val) => {
+          console.log(val)
+          return !val || 'Date is required'
+        }
+      ],
       datetime: '2018-11-02T15:46',
       language: this.$q.lang.isoName,
       languages

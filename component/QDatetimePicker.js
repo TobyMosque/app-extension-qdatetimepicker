@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { debounce } from 'quasar'
 
 import {
   QField,
@@ -17,7 +18,9 @@ import {
   QTime
 } from 'quasar'
 
-const fields = Object.keys(QField.options.props).filter(field => ['value'].indexOf(field) === -1)
+const fields = Object.keys(QField.options.props)
+  .filter(field => [ 'error', 'errorMessage', 'noErrorIcon', 'rules', 'lazyRules', 'value' ].indexOf(field) === -1)
+
 const renderDate = function (self, h) {
   return [
     h(QDate, {
@@ -178,26 +181,7 @@ export default Vue.extend({
     value: {
       immediate: true,
       handler (value) {
-        if (!value) {
-          return
-        }
-
-        let isoSeparator = value.indexOf('T')
-        let date = null
-        if (isoSeparator === -1) {
-          if (!this.date) {
-            value = '1970-01-01T' + value
-          } else {
-            value = value + 'T00:00:00'
-          }
-        }
-        date = new Date(value)
-        this.cValue = toISOString(date)
-
-        this.__intlFormat(date)
-        this.$nextTick().then(() => {
-          this.__onInput()
-        })
+        this.__onValueUpdated(value)
       }
     },
   },
@@ -244,6 +228,29 @@ export default Vue.extend({
     __onOpen () {
       this.tab = 'date'
     },
+    __onValueUpdated (value) {
+      if (!value) {
+        this.masked = ''
+        return
+      }
+
+      let isoSeparator = value.indexOf('T')
+      let date = null
+      if (isoSeparator === -1) {
+        if (!this.date) {
+          value = '1970-01-01T' + value
+        } else {
+          value = value + 'T00:00:00'
+        }
+      }
+      date = new Date(value)
+      this.cValue = toISOString(date)
+
+      this.__intlFormat(date)
+      this.$nextTick().then(() => {
+        this.__onInput()
+      })
+    },
     __setupLanguage () {
       let isoName = this.lang || this.$q.lang.isoName || navigator.language
       let lang
@@ -256,15 +263,11 @@ export default Vue.extend({
     },
     __onInput () {
       if (this.masks.date && this.masks.time) {
-        if (this.masked.length > this.masks.date.length) {
-          let separator = this.masked.substring(this.masks.date.length, this.masks.date.length + 1)
-          if (separator == ' ') {
-            let date = this.masked.substring(0, this.masks.date.length)
-            let time = this.masked.substring(this.masks.date.length + 1)
-            this.__onInputTime(time)
-            this.__onInputDate(date)
-          }
-        } else {
+        let value = this.masked.trim()
+        if (value.length === this.mask.length) {
+          let date = this.masked.substring(0, this.masks.date.length)
+          let time = this.masked.substring(this.masks.date.length + 1)
+          this.__onInputTime(time)
           this.__onInputDate(date)
         }
       } else if (this.masks.date) {
@@ -516,6 +519,10 @@ export default Vue.extend({
         on: {
           input (value) {
             self.masked = value
+          },
+          blur () {
+            let value = '' + (self.value || '')
+            self.__onValueUpdated(value)
           }
         },
         scopedSlots: {
