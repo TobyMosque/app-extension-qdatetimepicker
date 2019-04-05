@@ -19,7 +19,7 @@ import {
 } from 'quasar'
 
 const fields = Object.keys(QField.options.props)
-  .filter(field => [ 'error', 'errorMessage', 'noErrorIcon', 'rules', 'lazyRules', 'value' ].indexOf(field) === -1)
+  .filter(field => [ 'value' ].indexOf(field) === -1)
 
 const renderDate = function (self, h) {
   return [
@@ -525,6 +525,14 @@ export default Vue.extend({
       props[field] = self[field]
       return props
     }, {})
+
+    if (self.rules) {
+      inputFields.rules = self.rules.map(rule => {
+        return (val) => {
+          return rule(self.value)
+        }
+      })
+    }
 
     return h('div', {
       class: 'q-datetimepicker'

@@ -14,48 +14,57 @@
             @input="onLanguageInput">
         </q-select>
       </div>
-      <div class="col col-md-4 col-12 q-pa-md">
+      <q-form ref="form1" @submit="onSubmit($refs.form1)" class="col col-md-4 col-12 q-pa-md" >
         <q-card>
           <q-card-section>
             <div class="text-h6">Input Types</div>
           </q-card-section>
           <q-separator inset />
           <q-card-section>
-            <q-datetime-picker class="q-mb-md" label="Standard Date Picker" v-model="date"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="Outlined Date Picker" v-model="date"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" filled label="Filled Date Picker" v-model="date"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" standout label="Standout Date Picker" v-model="date"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" label="Standard Date Picker" v-model="date" :rules="rules"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="Outlined Date Picker" v-model="date" :rules="rules"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" filled label="Filled Date Picker" v-model="date" :rules="rules"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" standout label="Standout Date Picker" v-model="date" :rules="rules"></q-datetime-picker>
           </q-card-section>
+          <q-card-actions>
+            <q-btn label="Submit" type="submit" color="positive" class="full-width" />
+          </q-card-actions>
         </q-card>
-      </div>
-      <div class="col col-md-4 col-12 q-pa-md">
+      </q-form>
+      <q-form ref="form2" @submit="onSubmit($refs.form2)" class="col col-md-4 col-12 q-pa-md" >
         <q-card dark class="bg-grey-10">
           <q-card-section>
             <div class="text-h6">Dark Mode</div>
           </q-card-section>
           <q-separator dark inset />
           <q-card-section class="">
-            <q-datetime-picker class="q-mb-md" outlined label="Date Picker" color="negative" dark v-model="date"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="Time Picker" mode="time" color="negative" dark v-model="time"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="DateTime Picker" mode="datetime" color="negative" dark v-model="datetime"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" mode="datetime" color="negative" dark v-model="datetime" format24h clearable></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="Date Picker" color="negative" dark v-model="date" :rules="rules"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="Time Picker" mode="time" color="negative" dark v-model="time" :rules="rules"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="DateTime Picker" mode="datetime" color="negative" dark v-model="datetime" :rules="rules"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" mode="datetime" color="negative" dark v-model="datetime" format24h clearable :rules="rules"></q-datetime-picker>
           </q-card-section>
+          <q-card-actions>
+            <q-btn label="Submit" type="submit" dark color="negative" class="full-width" />
+          </q-card-actions>
         </q-card>
-      </div>
-      <div class="col col-md-4 col-12 q-pa-md">
+      </q-form>
+      <q-form ref="form3" @submit="onSubmit($refs.form3)" class="col col-md-4 col-12 q-pa-md" >
         <q-card>
           <q-card-section>
             <div class="text-h6">Light Mode</div>
           </q-card-section>
           <q-separator inset />
           <q-card-section>
-            <q-datetime-picker class="q-mb-md" outlined label="Date Picker" color="positive" v-model="date"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="Time Picker" mode="time" color="positive" v-model="time"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="DateTime Picker" mode="datetime" color="positive" v-model="datetime"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" mode="datetime" color="positive" v-model="datetime" format24h clearable></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="Date Picker" color="positive" v-model="date" :rules="rules"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="Time Picker" mode="time" color="positive" v-model="time" :rules="rules"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="DateTime Picker" mode="datetime" color="positive" v-model="datetime" :rules="rules"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" mode="datetime" color="positive" v-model="datetime" format24h clearable :rules="rules"></q-datetime-picker>
           </q-card-section>
+          <q-card-actions>
+            <q-btn label="Submit" type="submit" color="positive" class="full-width" />
+          </q-card-actions>
         </q-card>
-      </div>
+      </q-form>
       <div class="col col-md-6 col-12 q-pa-md">
         <q-banner rounded class="bg-primary text-white">
           <template v-slot:avatar>
@@ -97,6 +106,7 @@
 <script>
 // import something here
 import languages from 'quasar/lang/index.json'
+import { throttle } from 'quasar'
 export default {
   name: 'PageIndex',
   data () {
@@ -104,10 +114,7 @@ export default {
       date: '2018-11-02',
       time: '15:46',
       rules: [
-        (val) => {
-          console.log(val)
-          return !val || 'Date is required'
-        }
+        (val) => !!val || 'Date is required'
       ],
       datetime: '2018-11-02T15:46',
       language: this.$q.lang.isoName,
@@ -138,7 +145,19 @@ export default {
     async onLanguageInput () {
       let lang = await import(`quasar/lang/${this.language}`)
       this.$q.lang.set(lang.default)
-    }
+    },
+    onSubmit: throttle(function (form) {
+      form.validate().then(success => {
+        if (success) {
+          this.$q.notify({
+            color: 'green-4',
+            textColor: 'white',
+            icon: 'fas fa-check-circle',
+            message: 'Submitted'
+          })
+        }
+      })
+    }, 250)
   }
 }
 </script>

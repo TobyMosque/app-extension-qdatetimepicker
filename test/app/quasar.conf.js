@@ -26,6 +26,7 @@ module.exports = function (ctx) {
       // all: true, // --- includes everything; for dev only!
 
       components: [
+        'QForm',
         'QBanner',
         'QAvatar',
         'QLayout',
@@ -43,6 +44,7 @@ module.exports = function (ctx) {
         'QItemLabel',
         'QCard',
         'QCardSection',
+        'QCardActions',
         'QSelect',
         'QSeparator'
       ],
