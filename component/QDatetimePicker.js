@@ -110,9 +110,18 @@ const toISOString = function (date) {
   if (!date || !date.getTimezoneOffset) {
     return null
   }
+
   var offset = date.getTimezoneOffset() * -1
-  date = new Date(date.getTime() + offset * 60000)
-  date = date.toISOString().replace('Z', '')
+  if (offset % 30 === 0)
+  {
+    date = new Date(date.getTime() + offset * 60000)
+    date = date.toISOString().replace('Z', '')
+  }
+  else 
+  {
+    date = new Date(date.getTime() + offset * 60000)
+    date = date.toISOString().replace('Z', '').substring(0, 16)
+  }
 
   return date
 }
@@ -228,9 +237,16 @@ export default Vue.extend({
     __onOpen () {
       this.tab = 'date'
     },
+    __resetValues () {
+      this.masked = ''
+      this.inputs.date = ''
+      this.inputs.time = ''
+      this.values.date = ''
+      this.values.time = ''
+    },
     __onValueUpdated (value) {
       if (!value) {
-        this.masked = ''
+        this.__resetValues()
         return
       }
 
@@ -262,7 +278,7 @@ export default Vue.extend({
       this.$set(this, 'isoLang', lang.default)
     },
     __onInput () {
-      if (this.clearable && this.masked.length === 0) {
+      if (this.clearable && (this.masked || '').length === 0) {
         this.cValue = null
       } else if (this.masks.date && this.masks.time) {
         let value = this.masked.trim()
@@ -271,6 +287,8 @@ export default Vue.extend({
           let time = this.masked.substring(this.masks.date.length + 1)
           this.__onInputTime(time)
           this.__onInputDate(date)
+        } else if (value.length === this.masks.date.length) {
+          this.__onInputDate(value)
         }
       } else if (this.masks.date) {
         this.__onInputDate(this.masked)
