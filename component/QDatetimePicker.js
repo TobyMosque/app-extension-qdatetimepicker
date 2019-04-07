@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { debounce } from 'quasar'
+import { dom, debounce } from 'quasar'
 
 import {
   QField,
@@ -147,11 +147,21 @@ export default Vue.extend({
   mounted () {
     this.__updateMetadata()
     this.__setupLanguage()
+
+    var self = this
+    self.onResizeEvent = () => self.__updatePosition()
+    window.addEventListener('resize', self.onResizeEvent)
+    window.addEventListener('scroll', self.onResizeEvent)
+  },
+  destroyed () {
+    window.removeEventListener('resize', self.onResizeEvent)
+    window.removeEventListener('resize', self.onResizeEvent)
   },
   data () {
     return {
       tab: 'date',
       masked: '',
+      popup: false,
       inputs: {
         date: '',
         time: ''
@@ -234,7 +244,29 @@ export default Vue.extend({
     }    
   },
   methods: {
-    __onOpen () {
+    __sleep (delay) {
+      return new Promise(resolve => window.setTimeout(resolve, delay))
+    },
+    async __updatePosition () {
+      await this.$nextTick()
+      if (this.popup) {
+        let height = Math.round(dom.height(this.$refs.card.$el))
+        await this.__sleep(10)
+        var offset = dom.offset(this.$refs.card.$parent.$el)
+        if (offset.top + height > window.innerHeight) {
+          let top = (height + 50) > window.innerHeight ? 25 : window.innerHeight - height - 25
+          this.$refs.card.$parent.$el.style.top = top + 'px'
+        }
+      }
+    },
+    async __onOpen () {
+      this.popup = true
+      this.__updatePosition()
+      this.tab = 'date'
+    },
+    async __onClose () {
+      this.popup = false
+      this.__updatePosition()
       this.tab = 'date'
     },
     __resetValues () {
@@ -571,6 +603,7 @@ export default Vue.extend({
                   },
                   on: {
                     'before-show': self.__onOpen,
+                    'before-hide': self.__onClose,
                     name: 'event'
                   }
                 }, [
