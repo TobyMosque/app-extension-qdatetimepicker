@@ -201,6 +201,9 @@ export default Vue.extend({
               }, [
                 h(QPopupProxy, {
                   ref: 'popup',
+                  props: {
+                    breakpoint: 600
+                  },
                   on: {
                     'before-show': self.onOpen,
                     name: 'event'
