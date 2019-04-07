@@ -1,1 +1,113 @@
-{}
+{
+  "type": "component",
+  "props": {
+    "label": {
+      "type": "String",
+      "desc": "A text label that will 'float' up above the input field, once the field gets focus",
+      "examples": [ "Username" ]
+    },
+    "stack-label": {
+      "type": "Boolean",
+      "desc": "Label will be always shown above the field regardless of field content (if any)"
+    },
+    "hint": {
+      "type": "String",
+      "desc": "Helper (hint) text which gets placed below your wrapped form component",
+      "examples": [ "Use between 3 and 12 characters" ]
+    },
+    "hide-hint": {
+      "type": "Boolean",
+      "desc": "Hide the helper (hint) text when field is not focused"
+    },
+    "prefix": {
+      "type": "String",
+      "desc": "Prefix",
+      "examples": [ "$" ]
+    },
+    "suffix": {
+      "type": "String",
+      "desc": "Suffix",
+      "examples": [ "@gmail.com" ]
+    },
+    "color": {
+      "extends": "color"
+    },
+    "bg-color": {
+      "extends": "color"
+    },
+    "dark": {
+      "extends": "dark"
+    },
+    "loading": {
+      "type": "Boolean",
+      "desc": "Signals the user a process is in progress by displaying a spinner; Spinner can be customized by using the 'loading' slot."
+    },
+    "clearable": {
+      "type": "Boolean",
+      "desc": "Appends clearable icon when a value (not undefined or null) is set; When clicked, model becomes null"
+    },
+    "clear-icon": {
+      "type": "Boolean",
+      "desc": "Custom icon to use for the clear button when using along with 'clearable' prop"
+    },
+    "filled": {
+      "type": "Boolean",
+      "desc": "Use 'filled' design for the field"
+    },
+    "outlined": {
+      "type": "Boolean",
+      "desc": "Use 'outlined' design for the field"
+    },
+    "borderless": {
+      "type": "Boolean",
+      "desc": "Use 'borderless' design for the field"
+    },
+    "standout": {
+      "type": "Boolean",
+      "desc": "Use 'standout' design for the field"
+    },
+    "bottom-slots": {
+      "type": "Boolean",
+      "desc": "Enables bottom slots ('error', 'hint', 'counter')"
+    },
+    "counter": {
+      "type": "Boolean",
+      "desc": "Show an automatic counter on the bottom right"
+    },
+    "rounded": {
+      "extends": "rounded"
+    },
+    "square": {
+      "type": "Boolean",
+      "desc": "Remove border-radius so borders are squared; Overrides 'rounded' prop"
+    },
+    "dense": {
+      "extends": "dense"
+    },
+    "items-aligned": {
+      "type": "Boolean",
+      "desc": "Align content to match QItem"
+    },
+    "disable": {
+      "extends": "disable"
+    },
+    "readonly": {
+      "extends": "readonly"
+    },
+    "lang": {
+      "type": "String",
+      "desc": "Language identifier",
+      "examples": [ "en", "pt" ]
+    },
+    "mode": {
+      "type": "String",
+      "desc": "Display mode ('date', 'time', 'datetime') (default: 'date')",
+      "default": "date"
+    },
+    "format24h": {
+      "type": "Boolean",
+      "desc": "Show the time picker in 24 hour format. The masked value will not be affected.",
+      "default": "false"
+    }
+  }
+}

@@ -1,0 +1,4 @@
+[build]
+  base    = "test/app"
+  command = "quasar build"
+  publish = "test/app/dist/spa"
