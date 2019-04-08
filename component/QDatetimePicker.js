@@ -106,6 +106,48 @@ const renderDateTime = function (self, h) {
   ]
 }
 
+const renderInput = function (self, h, inputFields, scopedSlots) {
+  return h(QInput, { 
+    ref: 'input',
+    props: {
+      ...inputFields,
+      mask: self.mask,
+      value: self.masked
+    },
+    on: {
+      input (value) {
+        self.masked = value
+      },
+      blur () {
+        let value = '' + (self.value || '')
+        self.__onValueUpdated(value)
+      }
+    },
+    scopedSlots: scopedSlots
+  }, [])
+}
+
+const renderReadonlyInput = function (self, h, inputFields, scopedSlots) {
+  return h(QField, { 
+    ref: 'input',
+    props: {
+      ...inputFields,
+      stackLabel: true
+    },
+    scopedSlots: scopedSlots
+  }, [
+    h('input', { 
+      class: {
+        'q-field__native': true
+      },
+      attrs: {
+        readonly: true,
+        value: self.display
+      }
+    }, [])
+  ])
+}
+
 const toISOString = function (date) {
   if (!date || !date.getTimezoneOffset) {
     return null
@@ -142,6 +184,10 @@ export default Vue.extend({
     format24h: {
       type: Boolean,
       default: false
+    },
+    displayFunc: {
+      type: [ Boolean, Function ],
+      default: false
     }
   },
   mounted () {
@@ -161,6 +207,7 @@ export default Vue.extend({
     return {
       tab: 'date',
       masked: '',
+      display: '',
       popup: false,
       inputs: {
         date: '',
@@ -235,6 +282,10 @@ export default Vue.extend({
     intlTimeFormatter () {
       return new Intl.DateTimeFormat(this.language, this.timeIntlOptions)
     },
+    intlDisplayFormatter () {
+      let lang = this.language.replace('-u-ca-gregory-nu-latn', '')
+      return new Intl.DateTimeFormat(lang, { ...this.dateIntlOptions, ...this.timeIntlOptions })
+    },
     mask () {
       if (this.masks.date && this.masks.time) {
         return `${this.masks.date} ${this.masks.time}`
@@ -271,6 +322,7 @@ export default Vue.extend({
     },
     __resetValues () {
       this.masked = ''
+      this.display = ''
       this.inputs.date = ''
       this.inputs.time = ''
       this.values.date = ''
@@ -382,6 +434,15 @@ export default Vue.extend({
       this.__onChange()
     },
     __intlFormat (date) {
+      if (typeof this.displayFunc === 'function') {
+        this.display = this.displayFunc(this.value)
+      } else {
+        if (this.displayFunc) {
+          this.display = this.intlDisplayFormatter.format(date)
+        } else {
+          this.display = ''
+        }
+      }
       if (this.date && this.time) {
         this.masked = this.intlDateFormatter.format(date) + ' ' + this.intlTimeFormatter.format(date)
       } else if (!this.date) {
@@ -566,102 +627,86 @@ export default Vue.extend({
       })
     }
 
+    var _renderInput = self.displayFunc ? renderReadonlyInput : renderInput
     return h('div', {
       class: 'q-datetimepicker'
     }, [
-      h(QInput, { 
-        ref: 'input',
-        props: {
-          ...inputFields,
-          mask: self.mask,
-          value: self.masked
-        },
-        on: {
-          input (value) {
-            self.masked = value
-          },
-          blur () {
-            let value = '' + (self.value || '')
-            self.__onValueUpdated(value)
-          }
-        },
-        scopedSlots: {
-          append (props) {
-            return [
-              h(QIcon, {
-                class: {
-                  'cursor-pointer': true
-                },
+      _renderInput(self, h, inputFields, {
+        append (props) {
+          return [
+            h(QIcon, {
+              class: {
+                'cursor-pointer': true
+              },
+              props: {
+                name: 'event'
+              }
+            }, [
+              h(QPopupProxy, {
+                ref: 'popup',
                 props: {
+                  breakpoint: 600
+                },
+                on: {
+                  'before-show': self.__onOpen,
+                  'before-hide': self.__onClose,
                   name: 'event'
                 }
               }, [
-                h(QPopupProxy, {
-                  ref: 'popup',
+                h(QCard, {
+                  ref: 'card',
+                  class: 'q-datetimepicker',
                   props: {
-                    breakpoint: 600
+                    dark: self.dark
                   },
                   on: {
                     'before-show': self.__onOpen,
-                    'before-hide': self.__onClose,
                     name: 'event'
                   }
                 }, [
-                  h(QCard, {
-                    ref: 'card',
-                    class: 'q-datetimepicker',
+                  h(QCardSection, {}, renderContent(self, h)),
+                  h(QCardActions, {
                     props: {
                       dark: self.dark
-                    },
-                    on: {
-                      'before-show': self.__onOpen,
-                      name: 'event'
                     }
                   }, [
-                    h(QCardSection, {}, renderContent(self, h)),
-                    h(QCardActions, {
+                    h(QBtn, {
                       props: {
-                        dark: self.dark
+                        dark: self.dark,
+                        flat: true,
+                        color: 'default'
+                      },
+                      on: {
+                        click () { self.$refs.popup.hide() }
+                      },
+                      scopedSlots: {
+                        default (props) {
+                          return self.$q.lang.label.cancel || 'Cancel'
+                        }
                       }
-                    }, [
-                      h(QBtn, {
-                        props: {
-                          dark: self.dark,
-                          flat: true,
-                          color: 'default'
-                        },
-                        on: {
-                          click () { self.$refs.popup.hide() }
-                        },
-                        scopedSlots: {
-                          default (props) {
-                            return self.$q.lang.label.cancel || 'Cancel'
-                          }
+                    }, [])
+                    ,h(QBtn, {
+                      props: {
+                        dark: self.dark,
+                        flat: true,
+                        color: self.color || 'primary'
+                      },
+                      on: {
+                        click: self.__onSetClick
+                      },
+                      scopedSlots: {
+                        default (props) {
+                          return self.$q.lang.label.set || 'Set'
                         }
-                      }, [])
-                      ,h(QBtn, {
-                        props: {
-                          dark: self.dark,
-                          flat: true,
-                          color: self.color || 'primary'
-                        },
-                        on: {
-                          click: self.__onSetClick
-                        },
-                        scopedSlots: {
-                          default (props) {
-                            return self.$q.lang.label.set || 'Set'
-                          }
-                        }
-                      }, [])
-                    ])
+                      }
+                    }, [])
                   ])
                 ])
               ])
-            ]
-          }
+            ])
+          ]
         }
-      }, [])
+      })
     ])
   }
 })

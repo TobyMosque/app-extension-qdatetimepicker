@@ -14,7 +14,7 @@
             @input="onLanguageInput">
         </q-select>
       </div>
-      <q-form ref="form1" @submit="onSubmit($refs.form1)" class="col col-md-4 col-12 q-pa-md" >
+      <q-form ref="form1" @submit="onSubmit($refs.form1)" class="col col-lg-3 col-md-6 col-12 q-pa-md" >
         <q-card>
           <q-card-section>
             <div class="text-h6">Input Types</div>
@@ -31,7 +31,7 @@
           </q-card-actions>
         </q-card>
       </q-form>
-      <q-form ref="form2" @submit="onSubmit($refs.form2)" class="col col-md-4 col-12 q-pa-md" >
+      <q-form ref="form2" @submit="onSubmit($refs.form2)" class="col col-lg-3 col-md-6 col-12 q-pa-md" >
         <q-card dark class="bg-grey-10">
           <q-card-section>
             <div class="text-h6">Dark Mode</div>
@@ -48,7 +48,7 @@
           </q-card-actions>
         </q-card>
       </q-form>
-      <q-form ref="form3" @submit="onSubmit($refs.form3)" class="col col-md-4 col-12 q-pa-md" >
+      <q-form ref="form3" @submit="onSubmit($refs.form3)" class="col col-lg-3 col-md-6 col-12 q-pa-md" >
         <q-card>
           <q-card-section>
             <div class="text-h6">Light Mode</div>
@@ -62,6 +62,23 @@
           </q-card-section>
           <q-card-actions>
             <q-btn label="Submit" type="submit" color="positive" class="full-width" />
+          </q-card-actions>
+        </q-card>
+      </q-form>
+      <q-form ref="form4" @submit="onSubmit($refs.form4)" class="col col-lg-3 col-md-6 col-12 q-pa-md" >
+        <q-card dark class="bg-grey-10">
+          <q-card-section>
+            <div class="text-h6">Display Function</div>
+          </q-card-section>
+          <q-separator dark inset />
+          <q-card-section class="">
+            <q-datetime-picker class="q-mb-md" outlined label="Date Picker" color="negative" dark v-model="date" :rules="rules" display-func></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="Time Picker" mode="time" color="negative" dark v-model="time" :rules="rules" display-func></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="DateTime Picker" mode="datetime" color="negative" dark v-model="datetime" :rules="rules" display-func></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" mode="datetime" color="negative" dark v-model="datetime" format24h clearable :rules="rules" :display-func="displayFunc"></q-datetime-picker>
+          </q-card-section>
+          <q-card-actions>
+            <q-btn label="Submit" type="submit" dark color="negative" class="full-width" />
           </q-card-actions>
         </q-card>
       </q-form>
@@ -110,6 +127,7 @@ import { throttle } from 'quasar'
 export default {
   name: 'PageIndex',
   data () {
+    var self = this
     return {
       date: '2018-11-02',
       time: '15:46',
@@ -117,6 +135,9 @@ export default {
         (val) => !!val || 'Date is required'
       ],
       datetime: '2018-11-02T15:46',
+      displayFunc: (date) => {
+        return `iso: ${date} | i18m: ${new Date(date).toLocaleString(self.language)}`
+      },
       language: this.$q.lang.isoName,
       languages
     }
