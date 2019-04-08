@@ -37,10 +37,13 @@ data () {
 
 # Language Files
 
-We need help translating the language files. They are all currently using English. If you know another language, please PR and help us out.
+We need help translating the language files. Below are listed the available ones. If you know another language, please PR and help us out.
 
 ## Completed languages
+- German
 - English
+- French
+- Italian
 - Portuguese
 
 ---
