@@ -24,7 +24,7 @@
             <q-datetime-picker class="q-mb-md" label="Standard Date Picker" v-model="date" :rules="rules"></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" outlined label="Outlined Date Picker" v-model="date" :rules="rules"></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" filled label="Filled Date Picker" v-model="date" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" standout label="Standout Date Picker" v-model="date" :rules="rules"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" standout label="Standout Date Picker" v-model="date" :rules="rules" icon="date_range"></q-datetime-picker>
           </q-card-section>
           <q-card-actions>
             <q-btn label="Submit" type="submit" color="positive" class="full-width" />
@@ -41,7 +41,7 @@
             <q-datetime-picker class="q-mb-md" outlined label="Date Picker" color="negative" dark v-model="date" :rules="rules"></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" outlined label="Time Picker" mode="time" color="negative" dark v-model="time" :rules="rules"></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" outlined label="DateTime Picker" mode="datetime" color="negative" dark v-model="datetime" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" mode="datetime" color="negative" dark v-model="datetime" format24h clearable :rules="rules"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" mode="datetime" color="negative" dark v-model="datetime" format24h clearable :rules="rules" icon="date_range"></q-datetime-picker>
           </q-card-section>
           <q-card-actions>
             <q-btn label="Submit" type="submit" dark color="negative" class="full-width" />
@@ -58,7 +58,7 @@
             <q-datetime-picker class="q-mb-md" outlined label="Date Picker" color="positive" v-model="date" :rules="rules"></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" outlined label="Time Picker" mode="time" color="positive" v-model="time" :rules="rules"></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" outlined label="DateTime Picker" mode="datetime" color="positive" v-model="datetime" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" mode="datetime" color="positive" v-model="datetime" format24h clearable :rules="rules"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" mode="datetime" color="positive" v-model="datetime" format24h clearable :rules="rules" icon="date_range"></q-datetime-picker>
           </q-card-section>
           <q-card-actions>
             <q-btn label="Submit" type="submit" color="positive" class="full-width" />
@@ -72,10 +72,10 @@
           </q-card-section>
           <q-separator dark inset />
           <q-card-section class="">
-            <q-datetime-picker class="q-mb-md" outlined label="Date Picker" color="negative" dark v-model="date" :rules="rules" display-func></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="Time Picker" mode="time" color="negative" dark v-model="time" :rules="rules" display-func></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="DateTime Picker" mode="datetime" color="negative" dark v-model="datetime" :rules="rules" lang="ar-EG" display-func></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" mode="datetime" color="negative" dark v-model="datetime" format24h clearable :rules="rules" :display-func="displayFunc"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="Date Picker" color="negative" dark v-model="date" :rules="rules" lang="ar-EG" display-value></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="Time Picker" mode="time" color="negative" dark v-model="time" :rules="rules" lang="ar-EG" display-value></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="DateTime Picker" mode="datetime" color="negative" dark v-model="datetime" :rules="rules" :display-value="datetime | displayFilter('ar-EG')"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" mode="datetime" color="negative" dark v-model="datetime" format24h clearable :rules="rules" :display-value="displayValue" icon="date_range"></q-datetime-picker>
           </q-card-section>
           <q-card-actions>
             <q-btn label="Submit" type="submit" dark color="negative" class="full-width" />
@@ -127,7 +127,6 @@ import { throttle } from 'quasar'
 export default {
   name: 'PageIndex',
   data () {
-    var self = this
     return {
       date: '2018-11-02',
       time: '15:46',
@@ -135,9 +134,6 @@ export default {
         (val) => !!val || 'Date is required'
       ],
       datetime: '2018-11-02T15:46',
-      displayFunc: (date) => {
-        return `iso: ${date} | i18m: ${new Date(date).toLocaleString(self.language)}`
-      },
       language: this.$q.lang.isoName,
       languages
     }
@@ -160,6 +156,16 @@ export default {
       handler () {
         console.log('datetime: ', this.datetime)
       }
+    }
+  },
+  filters: {
+    displayFilter (value, language) {
+      return `iso: ${value} | ${language}: ${new Date(value).toLocaleString(language)}`
+    }
+  },
+  computed: {
+    displayValue () {
+      return `iso: ${this.datetime} | i18n: ${new Date(this.datetime).toLocaleString(this.language)}`
     }
   },
   methods: {

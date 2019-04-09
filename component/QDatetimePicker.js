@@ -70,7 +70,7 @@ const renderDateTime = function (self, h) {
       h(QTab, {
         props: {
           name: 'date',
-          icon: 'date_range',
+          icon: 'event',
           label: self.isoLang.dateTimePicker.date
         }
       }, []),
@@ -185,10 +185,11 @@ export default Vue.extend({
       type: Boolean,
       default: false
     },
-    displayFunc: {
-      type: [ Boolean, Function ],
+    displayValue: {
+      type: [ Boolean, String ],
       default: false
-    }
+    },
+    icon: String
   },
   mounted () {
     this.__updateMetadata()
@@ -434,10 +435,10 @@ export default Vue.extend({
       this.__onChange()
     },
     __intlFormat (date) {
-      if (typeof this.displayFunc === 'function') {
-        this.display = this.displayFunc(this.value)
+      if (typeof this.displayValue === 'string') {
+        this.display = this.displayValue
       } else {
-        if (this.displayFunc) {
+        if (this.displayValue) {
           this.display = this.intlDisplayFormatter.format(date)
         } else {
           this.display = ''
@@ -627,7 +628,7 @@ export default Vue.extend({
       })
     }
 
-    var _renderInput = self.displayFunc ? renderReadonlyInput : renderInput
+    var _renderInput = self.displayValue !== false ? renderReadonlyInput : renderInput
     return h('div', {
       class: 'q-datetimepicker'
     }, [
@@ -639,7 +640,7 @@ export default Vue.extend({
                 'cursor-pointer': true
               },
               props: {
-                name: 'event'
+                name: self.icon || (self.mode === 'time' ? 'access_time' : 'event' )
               }
             }, [
               h(QPopupProxy, {

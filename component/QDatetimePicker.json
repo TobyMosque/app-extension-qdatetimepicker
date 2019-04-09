@@ -110,8 +110,8 @@
       "default": "false"
     },
     "display-func": {
-      "type": [ "Boolean", "Function" ],
-      "desc": "if the value is `true` or a `function` que internal QInput will be readonly. if value is `true` the calendar and numeric system used to format the date will not be forced to be gregory calendar and latin nu. if value is a `function`, that function will be used to format the value, the first argument is a string in ISO format without the timezone separator (Z) (default: `false`)",
+      "type": [ "Boolean", "String" ],
+      "desc": "if the value is `true` or a `function` que internal QInput will be readonly. if value is `true` the calendar and numeric system used to format the date will not be forced to be gregory calendar and latin nu. if value is a `string`, the format function will be ignored and the `display-value` will be used directly in the `input` (default: `false`)",
       "default": "false"
     }
   }
