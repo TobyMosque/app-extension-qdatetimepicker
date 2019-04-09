@@ -85,6 +85,18 @@ data () {
 <q-datetime-picker label="Format the date using a filter" v-model="date" display-value="date | filter('args')"></q-datetime-picker>
 ```
 
+## landscape
+```html
+<q-datetime-picker landscape mode="date" label="Landscape Date Mode" v-model="date"></q-datetime-picker>
+<q-datetime-picker landscape mode="time" label="Landscape Time Mode" v-model="time"></q-datetime-picker>
+<q-datetime-picker landscape mode="datetime" label="Landscape Date & Time Mode" v-model="datetime"></q-datetime-picker>
+```
+
+## today-btn
+```html
+<q-datetime-picker today-btn mode="date" label="Disabled Today Button" v-model="date"></q-datetime-picker>
+```
+
 # Language Files
 
 We need help translating the language files. Below are listed the available ones. If you know another language, please PR and help us out.
@@ -130,6 +142,8 @@ We need help translating the language files. Below are listed the available ones
 | format24h | Boolean | Show the timepicker in 24 hour format. The masked value will not be affected. |
 | display-value | Boolean or String | if the value is `true` or a `string` que internal QInput will be readonly. if value is `true` the calendar and numeric system used to format the date will not be forced to be gregory calendar and latin nu. if value is a `string`, the format function will be ignored and the `display-value` will be used directly in the `input` (default: `false`) |
 | icon | String | The icon of the picker (default: `access_time` when the mode is `time`, otherwise `event`) |
-
+| landscape | Boolean | Show the picker in landscape mode (default: false) |
+| today-btn | Boolean | Display a button that selects the current day (`date` and `datetime` modes only) (default: false) |
+\\
 # Patreon
 If you like (and use) this App Extension, please consider becoming a Quasar [Patreon](https://www.patreon.com/quasarframework).

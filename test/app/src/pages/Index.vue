@@ -55,10 +55,10 @@
           </q-card-section>
           <q-separator inset />
           <q-card-section>
-            <q-datetime-picker class="q-mb-md" outlined label="Date Picker" color="positive" v-model="date" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="Time Picker" mode="time" color="positive" v-model="time" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="DateTime Picker" mode="datetime" color="positive" v-model="datetime" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" mode="datetime" color="positive" v-model="datetime" format24h clearable :rules="rules" icon="date_range"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined landscape label="Date Picker" color="positive" v-model="date" :rules="rules"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined landscape label="Time Picker" mode="time" color="positive" v-model="time" :rules="rules"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined landscape label="DateTime Picker" mode="datetime" color="positive" v-model="datetime" :rules="rules"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" standout landscape label="Standout DateTime Picker" mode="datetime" color="positive" v-model="datetime" format24h clearable :rules="rules" icon="date_range"></q-datetime-picker>
           </q-card-section>
           <q-card-actions>
             <q-btn label="Submit" type="submit" color="positive" class="full-width" />

@@ -117,6 +117,14 @@
     "display-icon": {
       "type": [ "String" ],
       "desc": "The icon of the picker (default: `access_time` when the mode is `time`, otherwise `event`)"
+    },
+    "landscape": {
+      "type": [ "Boolean" ],
+      "desc": "Show the picker in landscape mode (default: `false`)"
+    },
+    "today-btn": {
+      "type": [ "Boolean" ],
+      "desc": "Display a button that selects the current day (`date` and `datetime` modes only) (default: `false`)"
     }
   }
 }

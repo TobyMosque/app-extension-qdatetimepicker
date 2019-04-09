@@ -2,6 +2,7 @@ import Vue from 'vue'
 import { dom, debounce } from 'quasar'
 
 import {
+  QSplitter,
   QField,
   QInput,
   QIcon,
@@ -27,7 +28,9 @@ const renderDate = function (self, h) {
       props: {
         dark: self.dark,
         color: self.color,
-        value: self.values.date
+        value: self.values.date,
+        landscape: self.landscape,
+        todayBtn: self.todayBtn
       },
       on: {
         input (value) { self.values.date = value }
@@ -43,6 +46,7 @@ const renderTime = function (self, h) {
         dark: self.dark,
         color: self.color,
         value: self.values.time,
+        landscape: self.landscape,
         format24h: self.format24h
       },
       on: {
@@ -52,57 +56,86 @@ const renderTime = function (self, h) {
   ]
 }
 
+const renderTabsTitle = function (self, h) {
+  return h(QTabs, {
+    class: `bg-${self.color || 'primary'} text-white${self.landscape ? ' tabs-landscape' : ''}`,
+    props: {
+      value: self.tab,
+      vertical: self.landscape,
+      'narrow-indicator': !self.landscape,
+      dense: true
+    },
+    on: {
+      input (value) {
+        self.tab = value
+      }
+    }
+  }, [
+    h(QTab, {
+      props: {
+        name: 'date',
+        icon: 'event',
+        label: self.isoLang.dateTimePicker.date
+      }
+    }, []),
+    h(QTab, {
+      props: {
+        name: 'time',
+        icon: 'access_time',
+        label: self.isoLang.dateTimePicker.time
+      }
+    }, [])
+  ])
+}
+
+const renderTabPabels = function (self, h) {
+  return h(QTabPanels, {
+    props: {
+      value: self.tab
+    },
+    on: {
+      input (value) {
+        self.tab = value
+      }
+    }
+  }, [
+    h(QTabPanel, {
+      props: {
+        name: 'date'
+      }
+    }, renderDate(self, h)),
+    h(QTabPanel, {
+      props: {
+        name: 'time'
+      }
+    }, renderTime(self, h))
+  ])
+}
+
+const renderVerticalDateTime = function (self, h) {
+  return [
+    h('div', {
+      class: { 'row': true }
+    }, [
+      h('div', {
+        class: { 'col-auto': true },
+        style: { 'min-width': '75px' }
+      }, [
+        renderTabsTitle(self, h)
+      ]),
+      h('div', {
+        class: { 'col': true },
+      }, [
+        renderTabPabels(self, h)
+      ])
+    ])
+  ]
+}
+
 const renderDateTime = function (self, h) {
   return [
-    h(QTabs, {
-      class: `bg-${self.color || 'primary'} text-white`,
-      props: {
-        value: self.tab,
-        'narrow-indicator': true,
-        dense: true
-      },
-      on: {
-        input (value) {
-          self.tab = value
-        }
-      }
-    }, [
-      h(QTab, {
-        props: {
-          name: 'date',
-          icon: 'event',
-          label: self.isoLang.dateTimePicker.date
-        }
-      }, []),
-      h(QTab, {
-        props: {
-          name: 'time',
-          icon: 'access_time',
-          label: self.isoLang.dateTimePicker.time
-        }
-      }, [])
-    ]),
-    h(QTabPanels, {
-      props: {
-        value: self.tab
-      },
-      on: {
-        input (value) {
-          self.tab = value
-        }
-      }
-    }, [
-      h(QTabPanel, {
-        props: {
-          name: 'date'
-        }
-      }, renderDate(self, h)),
-      h(QTabPanel, {
-        props: {
-          name: 'time'
-        }
-      }, renderTime(self, h))
-    ])
+    renderTabsTitle(self, h),
+    renderTabPabels(self, h)
   ]
 }
 
@@ -189,7 +222,9 @@ export default Vue.extend({
       type: [ Boolean, String ],
       default: false
     },
-    icon: String
+    icon: String,
+    landscape: Boolean,
+    todayBtn: Boolean
   },
   mounted () {
     this.__updateMetadata()
@@ -612,7 +647,8 @@ export default Vue.extend({
       renderContent = renderTime
     }
     if (!!self.date && !!self.time) {
-      renderContent = renderDateTime
+      // renderContent = renderDateTime
+      renderContent = self.landscape ? renderVerticalDateTime : renderDateTime
     }
 
     let inputFields = fields.reduce((props, field) => {
@@ -668,6 +704,7 @@ export default Vue.extend({
                   h(QCardSection, {}, renderContent(self, h)),
                   h(QCardActions, {
                     props: {
+                      align: 'right',
                       dark: self.dark
                     }
                   }, [
