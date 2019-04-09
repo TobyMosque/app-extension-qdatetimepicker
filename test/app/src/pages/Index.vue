@@ -22,7 +22,7 @@
           <q-separator inset />
           <q-card-section>
             <q-datetime-picker class="q-mb-md" label="Standard Date Picker" v-model="date" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="Outlined Date Picker" v-model="date" :rules="rules"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="Outlined Date Picker" v-model="date" :rules="rules" self-proxy></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" filled label="Filled Date Picker" v-model="date" :rules="rules"></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" standout label="Standout Date Picker" v-model="date" :rules="rules" icon="date_range"></q-datetime-picker>
           </q-card-section>

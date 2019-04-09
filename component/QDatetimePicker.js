@@ -25,6 +25,7 @@ const fields = Object.keys(QField.options.props)
 const renderDate = function (self, h) {
   return [
     h(QDate, {
+      class: { 'full-width': self.selfProxy },
       props: {
         dark: self.dark,
         color: self.color,
@@ -42,6 +43,7 @@ const renderDate = function (self, h) {
 const renderTime = function (self, h) {
   return [
     h(QTime, {
+      class: { 'full-width': self.selfProxy },
       props: {
         dark: self.dark,
         color: self.color,
@@ -139,7 +141,7 @@ const renderDateTime = function (self, h) {
   ]
 }
 
-const renderInput = function (self, h, inputFields, scopedSlots) {
+const renderInput = function (self, h, inputFields, scopedSlots, children) {
   return h(QInput, { 
     ref: 'input',
     props: {
@@ -157,10 +159,20 @@ const renderInput = function (self, h, inputFields, scopedSlots) {
       }
     },
     scopedSlots: scopedSlots
-  }, [])
+  }, children || [])
 }
 
-const renderReadonlyInput = function (self, h, inputFields, scopedSlots) {
+const renderReadonlyInput = function (self, h, inputFields, scopedSlots, children) {
+  children = children || []
+  children.unshift(h('input', { 
+    class: {
+      'q-field__native': true
+    },
+    attrs: {
+      readonly: true,
+      value: self.display
+    }
+  }, []))
   return h(QField, { 
     ref: 'input',
     props: {
@@ -168,17 +180,88 @@ const renderReadonlyInput = function (self, h, inputFields, scopedSlots) {
       stackLabel: true
     },
     scopedSlots: scopedSlots
-  }, [
-    h('input', { 
-      class: {
-        'q-field__native': true
-      },
+  }, children)
+}
+
+const renderPopupProxy = function (self, h) {
+  let renderContent = renderDate;
+  if (!self.date && !!self.time) {
+    renderContent = renderTime
+  }
+  if (!!self.date && !!self.time) {
+    // renderContent = renderDateTime
+    renderContent = self.landscape ? renderVerticalDateTime : renderDateTime
+  }
+
+  return [
+    h(QPopupProxy, {
+      ref: 'popup',
       attrs: {
-        readonly: true,
-        value: self.display
+        fit: self.fit,
+        cover: self.cover,
+        anchor: self.anchor || (self.selfProxy ? 'top left' : '')
+      },
+      props: {
+        breakpoint: 600
+      },
+      on: {
+        'before-show': self.__onOpen,
+        'before-hide': self.__onClose,
+        name: 'event'
       }
-    }, [])
-  ])
+    }, [
+      h(QCard, {
+        ref: 'card',
+        class: 'q-datetimepicker',
+        props: {
+          dark: self.dark
+        },
+        on: {
+          'before-show': self.__onOpen,
+          name: 'event'
+        }
+      }, [
+        h(QCardSection, {}, renderContent(self, h)),
+        h(QCardActions, {
+          props: {
+            align: 'right',
+            dark: self.dark
+          }
+        }, [
+          h(QBtn, {
+            props: {
+              dark: self.dark,
+              flat: true,
+              color: 'default'
+            },
+            on: {
+              click () { self.$refs.popup.hide() }
+            },
+            scopedSlots: {
+              default (props) {
+                return self.$q.lang.label.cancel || 'Cancel'
+              }
+            }
+          }, [])
+          ,h(QBtn, {
+            props: {
+              dark: self.dark,
+              flat: true,
+              color: self.color || 'primary'
+            },
+            on: {
+              click: self.__onSetClick
+            },
+            scopedSlots: {
+              default (props) {
+                return self.$q.lang.label.set || 'Set'
+              }
+            }
+          }, [])
+        ])
+      ])
+    ])
+  ]
 }
 
 const toISOString = function (date) {
@@ -224,7 +307,14 @@ export default Vue.extend({
     },
     icon: String,
     landscape: Boolean,
-    todayBtn: Boolean
+    todayBtn: Boolean,
+    cover: {
+      type: Boolean,
+      default: true
+    },
+    fit: Boolean,
+    anchor: String,
+    selfProxy: Boolean
   },
   mounted () {
     this.__updateMetadata()
@@ -340,6 +430,12 @@ export default Vue.extend({
         let height = Math.round(dom.height(this.$refs.card.$el))
         await this.__sleep(10)
         var offset = dom.offset(this.$refs.card.$parent.$el)
+        if (this.selfProxy) {
+          var minWidth = dom.style(this.$refs.card.$parent.$el, "min-width")
+          this.$refs.card.$parent.$el.style.maxWidth = minWidth
+        } else {
+          this.$refs.card.$parent.$el.style.maxWidth = null
+        }
         if (offset.top + height > window.innerHeight) {
           let top = (height + 50) > window.innerHeight ? 25 : window.innerHeight - height - 25
           this.$refs.card.$parent.$el.style.top = top + 'px'
@@ -641,16 +737,6 @@ export default Vue.extend({
   },
   render (h) {
     let self = this
-
-    let renderContent = renderDate;
-    if (!self.date && !!self.time) {
-      renderContent = renderTime
-    }
-    if (!!self.date && !!self.time) {
-      // renderContent = renderDateTime
-      renderContent = self.landscape ? renderVerticalDateTime : renderDateTime
-    }
-
     let inputFields = fields.reduce((props, field) => {
       props[field] = self[field]
       return props
@@ -664,7 +750,7 @@ export default Vue.extend({
       })
     }
 
-    var _renderInput = self.displayValue !== false ? renderReadonlyInput : renderInput
+    var _renderInput = self.selfProxy || self.displayValue !== false ? renderReadonlyInput : renderInput
     return h('div', {
       class: 'q-datetimepicker'
     }, [
@@ -678,73 +764,10 @@ export default Vue.extend({
               props: {
                 name: self.icon || (self.mode === 'time' ? 'access_time' : 'event' )
               }
-            }, [
-              h(QPopupProxy, {
-                ref: 'popup',
-                props: {
-                  breakpoint: 600
-                },
-                on: {
-                  'before-show': self.__onOpen,
-                  'before-hide': self.__onClose,
-                  name: 'event'
-                }
-              }, [
-                h(QCard, {
-                  ref: 'card',
-                  class: 'q-datetimepicker',
-                  props: {
-                    dark: self.dark
-                  },
-                  on: {
-                    'before-show': self.__onOpen,
-                    name: 'event'
-                  }
-                }, [
-                  h(QCardSection, {}, renderContent(self, h)),
-                  h(QCardActions, {
-                    props: {
-                      align: 'right',
-                      dark: self.dark
-                    }
-                  }, [
-                    h(QBtn, {
-                      props: {
-                        dark: self.dark,
-                        flat: true,
-                        color: 'default'
-                      },
-                      on: {
-                        click () { self.$refs.popup.hide() }
-                      },
-                      scopedSlots: {
-                        default (props) {
-                          return self.$q.lang.label.cancel || 'Cancel'
-                        }
-                      }
-                    }, [])
-                    ,h(QBtn, {
-                      props: {
-                        dark: self.dark,
-                        flat: true,
-                        color: self.color || 'primary'
-                      },
-                      on: {
-                        click: self.__onSetClick
-                      },
-                      scopedSlots: {
-                        default (props) {
-                          return self.$q.lang.label.set || 'Set'
-                        }
-                      }
-                    }, [])
-                  ])
-                ])
-              ])
-            ])
+            }, self.selfProxy ? [] : renderPopupProxy(self, h))
           ]
         }
-      })
+      }, self.selfProxy ? renderPopupProxy(self, h) : [])
     ])
   }
 })
