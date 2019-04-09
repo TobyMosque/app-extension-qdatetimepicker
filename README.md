@@ -35,6 +35,56 @@ data () {
 }
 ```
 
+# Other Examples
+
+## styles
+```html
+<q-datetime-picker label="Standard Date Picker" v-model="date"></q-datetime-picker>
+<q-datetime-picker outlined label="Outlined Date Picker" v-model="date"></q-datetime-picker>
+<q-datetime-picker filled label="Filled Date Picker" v-model="date"></q-datetime-picker>
+<q-datetime-picker standout label="Standout Date Picker" v-model="date"></q-datetime-picker>
+```
+
+## modes
+```html
+<q-datetime-picker mode="date" label="Date Mode" v-model="date"></q-datetime-picker>
+<q-datetime-picker mode="time" label="Time Mode" v-model="time"></q-datetime-picker>
+<q-datetime-picker mode="datetime" label="Date & Time Mode" v-model="datetime"></q-datetime-picker>
+<q-datetime-picker label="Default Mode (date)" v-model="date"></q-datetime-picker>
+```
+
+## colors
+```html
+<q-datetime-picker label="Primary Color with Light Background" v-model="date"></q-datetime-picker>
+<q-datetime-picker color="secondary" label="Secondary Color with Light Background" v-model="date"></q-datetime-picker>
+<q-datetime-picker dark label="Primary Color with Dark Background" v-model="date"></q-datetime-picker>
+<q-datetime-picker color="negative" dark label="negative Color with Dark Background" v-model="date"></q-datetime-picker>
+```
+
+## icons
+```html
+<q-datetime-picker label="A Customized Icon" v-model="date" icon="date_range"></q-datetime-picker>
+```
+
+## clearable
+```html
+<q-datetime-picker label="The value can be cleared" v-model="date" clearable"></q-datetime-picker>
+```
+
+## format24h
+```html
+<q-datetime-picker label="Time picker in the 24h format" mode="time" v-model="time" format24h></q-datetime-picker>
+<q-datetime-picker label="Time picker in the 24h format" mode="datetime" v-model="time" format24h></q-datetime-picker>
+```
+
+## display-value
+```html
+<q-datetime-picker label="Format the date without force the calendar to gregorian and numeric system to latin" v-model="date" display-value></q-datetime-picker>
+<q-datetime-picker label="Format the date the date in arab(egypt) using arab numeric system" v-model="date" lang="ar-EG" display-value></q-datetime-picker>
+<q-datetime-picker label="Format the date using a computed property" v-model="date" display-value="computedProperty"></q-datetime-picker>
+<q-datetime-picker label="Format the date using a filter" v-model="date" display-value="date | filter('args')"></q-datetime-picker>
+```
+
 # Language Files
 
 We need help translating the language files. Below are listed the available ones. If you know another language, please PR and help us out.
