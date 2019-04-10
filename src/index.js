@@ -5,7 +5,7 @@
  * API: https://github.com/quasarframework/quasar/blob/master/app/lib/app-extension/IndexAPI.js
  */
 
-const extendDatetimePicker = function (conf) {
+const extendDatetimePicker = function (conf, ctx) {
   conf.boot = conf.boot || []
   conf.css = conf.css || []
 
@@ -13,12 +13,12 @@ const extendDatetimePicker = function (conf) {
   const cssFile = '~quasar-app-extension-qdatetimepicker/component/datetime-picker.styl'
   
   if (!conf.boot.includes(bootFile)) {
-    conf.boot.push(bootFile)
+    conf.boot.push({ path: bootFile, server: false })
     conf.build.transpileDependencies.push(/quasar-app-extension-qdatetimepicker[\\/]src[\\/]boot/)
   }
   
   if (!conf.css.includes(cssFile)) {
-    conf.css.push(cssFile)
+    // conf.css.push(cssFile)
   }
 }
 

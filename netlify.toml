@@ -1,4 +1,4 @@
 [build]
   base    = "test/app"
-  command = "quasar build"
-  publish = "test/app/dist/spa"
+  command = "quasar build -m ssr"
+  publish = "test/app/dist/ssr"
