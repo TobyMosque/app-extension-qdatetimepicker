@@ -25,7 +25,6 @@ const fields = Object.keys(QField.options.props)
 const renderDate = function (self, h) {
   return [
     h(QDate, {
-      class: { 'full-width': self.selfProxy },
       props: {
         dark: self.dark,
         color: self.color,
@@ -43,7 +42,6 @@ const renderDate = function (self, h) {
 const renderTime = function (self, h) {
   return [
     h(QTime, {
-      class: { 'full-width': self.selfProxy },
       props: {
         dark: self.dark,
         color: self.color,
@@ -199,7 +197,7 @@ const renderPopupProxy = function (self, h) {
       attrs: {
         fit: self.fit,
         cover: self.cover,
-        anchor: self.anchor || (self.selfProxy ? 'top left' : '')
+        anchor: self.anchor || (self.target === 'self' ? 'top left' : undefined)
       },
       props: {
         breakpoint: 600
@@ -212,7 +210,7 @@ const renderPopupProxy = function (self, h) {
     }, [
       h(QCard, {
         ref: 'card',
-        class: 'q-datetimepicker',
+        class: { 'q-datetimepicker': true, 'q-datetimepicker-target-self': self.target === 'self' },
         props: {
           dark: self.dark
         },
@@ -314,7 +312,13 @@ export default Vue.extend({
     },
     fit: Boolean,
     anchor: String,
-    selfProxy: Boolean
+    target: {
+      type: String,
+      default: "icon",
+      validation (value) {
+        return ["self", "icon"].indexOf(value) !== -1
+      }
+    }
   },
   mounted () {
     this.__updateMetadata()
@@ -426,19 +430,20 @@ export default Vue.extend({
     },
     async __updatePosition () {
       await this.$nextTick()
-      if (this.popup) {
+      var wrapper = this.$refs.card.$parent.$el
+      if (this.popup && wrapper.classList.contains('q-menu')) {
         let height = Math.round(dom.height(this.$refs.card.$el))
         await this.__sleep(10)
-        var offset = dom.offset(this.$refs.card.$parent.$el)
-        if (this.selfProxy) {
-          var minWidth = dom.style(this.$refs.card.$parent.$el, "min-width")
-          this.$refs.card.$parent.$el.style.maxWidth = minWidth
+        var offset = dom.offset(wrapper)
+        if (this.target === 'self') {
+          var minWidth = dom.style(wrapper, "min-width")
+          wrapper.style.maxWidth = minWidth
         } else {
-          this.$refs.card.$parent.$el.style.maxWidth = null
+          wrapper.style.maxWidth = null
         }
         if (offset.top + height > window.innerHeight) {
           let top = (height + 50) > window.innerHeight ? 25 : window.innerHeight - height - 25
-          this.$refs.card.$parent.$el.style.top = top + 'px'
+          wrapper.style.top = top + 'px'
         }
       }
     },
@@ -569,7 +574,7 @@ export default Vue.extend({
       if (typeof this.displayValue === 'string') {
         this.display = this.displayValue
       } else {
-        if (this.displayValue) {
+        if (this.displayValue || this.target === 'self') {
           this.display = this.intlDisplayFormatter.format(date)
         } else {
           this.display = ''
@@ -597,6 +602,7 @@ export default Vue.extend({
       var dateObj = new Date(year, month, day, hour, minute, second)
       this.__intlFormat(dateObj)
       this.cValue = toISOString(dateObj)
+      this.__updatePosition()
     },
     __updateMetadata () {
       this.__updateDateMetadata()
@@ -750,7 +756,7 @@ export default Vue.extend({
       })
     }
 
-    var _renderInput = self.selfProxy || self.displayValue !== false ? renderReadonlyInput : renderInput
+    var _renderInput = self.target === 'self' || self.displayValue !== false ? renderReadonlyInput : renderInput
     return h('div', {
       class: 'q-datetimepicker'
     }, [
@@ -764,10 +770,10 @@ export default Vue.extend({
               props: {
                 name: self.icon || (self.mode === 'time' ? 'access_time' : 'event' )
               }
-            }, self.selfProxy ? [] : renderPopupProxy(self, h))
+            }, self.target === 'self' ? [] : renderPopupProxy(self, h))
           ]
         }
-      }, self.selfProxy ? renderPopupProxy(self, h) : [])
+      }, self.target === 'self' ? renderPopupProxy(self, h) : [])
     ])
   }
 })
