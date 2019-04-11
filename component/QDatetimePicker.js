@@ -433,22 +433,26 @@ export default Vue.extend({
       return new Promise(resolve => window.setTimeout(resolve, delay))
     },
     async __updatePosition () {
+      if (!this.popup || !this.$refs.card) {
+        return
+      }
       await this.$nextTick()
       var wrapper = this.$refs.card.$parent.$el
-      if (this.popup && wrapper.classList.contains('q-menu')) {
-        let height = Math.round(dom.height(this.$refs.card.$el))
-        await this.__sleep(10)
-        var offset = dom.offset(wrapper)
-        if (this.target === 'self') {
-          var minWidth = dom.style(wrapper, "min-width")
-          wrapper.style.maxWidth = minWidth
-        } else {
-          wrapper.style.maxWidth = null
-        }
-        if (offset.top + height > window.innerHeight) {
-          let top = (height + 50) > window.innerHeight ? 25 : window.innerHeight - height - 25
-          wrapper.style.top = top + 'px'
-        }
+      if (!wrapper.classList.contains('q-menu')) {
+        return
+      }
+      let height = Math.round(dom.height(this.$refs.card.$el))
+      await this.__sleep(10)
+      var offset = dom.offset(wrapper)
+      if (this.target === 'self') {
+        var minWidth = dom.style(wrapper, "min-width")
+        wrapper.style.maxWidth = minWidth
+      } else {
+        wrapper.style.maxWidth = null
+      }
+      if (offset.top + height > window.innerHeight) {
+        let top = (height + 50) > window.innerHeight ? 25 : window.innerHeight - height - 25
+        wrapper.style.top = top + 'px'
       }
     },
     async __onOpen () {
@@ -526,14 +530,16 @@ export default Vue.extend({
         this.inputs.date = date
         if (date.length === this.masks.date.length) {
           let meta = this.metas.date
-          let parts = date.split(meta.separator)
-          let year = meta.year.order === -1 ? '1970' : parts[meta.year.order]
-          let month = meta.month.order === -1 ? '01' : parts[meta.month.order]
-          let day = meta.day.order === -1 ? '01' : parts[meta.day.order]
-          this.$nextTick().then(() => {
-            this.values.date = `${year}/${month}/${day}`
-            this.__onDateChange()
-          })
+          if (Object.keys(meta).length > 0) {
+            let parts = date.split(meta.separator)
+            let year = meta.year.order === -1 ? '1970' : parts[meta.year.order]
+            let month = meta.month.order === -1 ? '01' : parts[meta.month.order]
+            let day = meta.day.order === -1 ? '01' : parts[meta.day.order]
+            this.$nextTick().then(() => {
+              this.values.date = `${year}/${month}/${day}`
+              this.__onDateChange()
+            })
+          }
         }
       }
     },
@@ -542,14 +548,16 @@ export default Vue.extend({
         this.inputs.time = time
         if (time.length === this.masks.time.length) {
           let meta = this.metas.time
-          let parts = time.split(meta.separator)
-          let hour = meta.hour.order === -1 ? '00' : parts[meta.hour.order]
-          let minute = meta.minute.order === -1 ? '00' : parts[meta.minute.order]
-          let second = meta.second.order === -1 ? '00' : parts[meta.second.order]
-          this.$nextTick().then(() => {
-            this.values.time = `${hour}:${minute}:${second}`
-            this.__onTimeChange()
-          })
+          if (Object.keys(meta).length > 0) {
+            let parts = time.split(meta.separator)
+            let hour = meta.hour.order === -1 ? '00' : parts[meta.hour.order]
+            let minute = meta.minute.order === -1 ? '00' : parts[meta.minute.order]
+            let second = meta.second.order === -1 ? '00' : parts[meta.second.order]
+            this.$nextTick().then(() => {
+              this.values.time = `${hour}:${minute}:${second}`
+              this.__onTimeChange()
+            })
+          }
         }
       }
     },
