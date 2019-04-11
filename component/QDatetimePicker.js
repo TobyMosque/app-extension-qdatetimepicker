@@ -324,18 +324,22 @@ export default Vue.extend({
       }
     }
   },
-  mounted () {
+  created () {
     this.__updateMetadata()
     this.__setupLanguage()
-
-    var self = this
-    self.onResizeEvent = () => self.__updatePosition()
-    window.addEventListener('resize', self.onResizeEvent)
-    window.addEventListener('scroll', self.onResizeEvent)
+    
+    if (!process.env.SERVER) {
+      var self = this
+      self._onResizeEvent = () => self.__updatePosition()
+      window.addEventListener('resize', self._onResizeEvent)
+      window.addEventListener('scroll', self._onResizeEvent)
+    }
   },
   destroyed () {
-    window.removeEventListener('resize', self.onResizeEvent)
-    window.removeEventListener('resize', self.onResizeEvent)
+    if (!process.env.SERVER) {
+      window.removeEventListener('resize', self._onResizeEvent)
+      window.removeEventListener('resize', self._onResizeEvent)
+    }
   },
   data () {
     return {
@@ -530,16 +534,14 @@ export default Vue.extend({
         this.inputs.date = date
         if (date.length === this.masks.date.length) {
           let meta = this.metas.date
-          if (Object.keys(meta).length > 0) {
-            let parts = date.split(meta.separator)
-            let year = meta.year.order === -1 ? '1970' : parts[meta.year.order]
-            let month = meta.month.order === -1 ? '01' : parts[meta.month.order]
-            let day = meta.day.order === -1 ? '01' : parts[meta.day.order]
-            this.$nextTick().then(() => {
-              this.values.date = `${year}/${month}/${day}`
-              this.__onDateChange()
-            })
-          }
+          let parts = date.split(meta.separator)
+          let year = meta.year.order === -1 ? '1970' : parts[meta.year.order]
+          let month = meta.month.order === -1 ? '01' : parts[meta.month.order]
+          let day = meta.day.order === -1 ? '01' : parts[meta.day.order]
+          this.$nextTick().then(() => {
+            this.values.date = `${year}/${month}/${day}`
+            this.__onDateChange()
+          })
         }
       }
     },
@@ -548,16 +550,14 @@ export default Vue.extend({
         this.inputs.time = time
         if (time.length === this.masks.time.length) {
           let meta = this.metas.time
-          if (Object.keys(meta).length > 0) {
-            let parts = time.split(meta.separator)
-            let hour = meta.hour.order === -1 ? '00' : parts[meta.hour.order]
-            let minute = meta.minute.order === -1 ? '00' : parts[meta.minute.order]
-            let second = meta.second.order === -1 ? '00' : parts[meta.second.order]
-            this.$nextTick().then(() => {
-              this.values.time = `${hour}:${minute}:${second}`
-              this.__onTimeChange()
-            })
-          }
+          let parts = time.split(meta.separator)
+          let hour = meta.hour.order === -1 ? '00' : parts[meta.hour.order]
+          let minute = meta.minute.order === -1 ? '00' : parts[meta.minute.order]
+          let second = meta.second.order === -1 ? '00' : parts[meta.second.order]
+          this.$nextTick().then(() => {
+            this.values.time = `${hour}:${minute}:${second}`
+            this.__onTimeChange()
+          })
         }
       }
     },
