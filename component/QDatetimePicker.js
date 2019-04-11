@@ -58,11 +58,10 @@ const renderTime = function (self, h) {
 
 const renderTabsTitle = function (self, h) {
   return h(QTabs, {
-    class: `bg-${self.color || 'primary'} text-white${self.landscape ? ' tabs-landscape' : ''}`,
+    class: `bg-${self.color || 'primary'} text-white`,
     props: {
       value: self.tab,
       vertical: self.landscape,
-      'narrow-indicator': !self.landscape,
       dense: true
     },
     on: {
@@ -210,7 +209,12 @@ const renderPopupProxy = function (self, h) {
     }, [
       h(QCard, {
         ref: 'card',
-        class: { 'q-datetimepicker': true, 'q-datetimepicker-target-self': self.target === 'self' },
+        class: { 
+          'q-datetimepicker': true, 
+          'q-datetimepicker-full-width': self.target === 'self',
+          'q-datetimepicker-landscape': self.landscape,
+          'q-datetimepicker-portrait': !self.landscape
+        },
         props: {
           dark: self.dark
         },
