@@ -138,10 +138,8 @@ export default {
       languages
     })
   },
-  mounted () {
-    if (!this.$store.state.homePage) {
-      this.$store.registerModule('homePage', homeStore, { preserveState: true })
-    }
+  created () {
+    this.$store.registerModule('homePage', homeStore, { preserveState: true })
   },
   destroyed () {
     this.$store.unregisterModule('homePage')

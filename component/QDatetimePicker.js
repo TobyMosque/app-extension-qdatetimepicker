@@ -58,11 +58,10 @@ const renderTime = function (self, h) {
 
 const renderTabsTitle = function (self, h) {
   return h(QTabs, {
-    class: `bg-${self.color || 'primary'} text-white${self.landscape ? ' tabs-landscape' : ''}`,
+    class: `bg-${self.color || 'primary'} text-white`,
     props: {
       value: self.tab,
       vertical: self.landscape,
-      'narrow-indicator': !self.landscape,
       dense: true
     },
     on: {
@@ -209,7 +208,12 @@ const renderPopupProxy = function (self, h) {
     }, [
       h(QCard, {
         ref: 'card',
-        class: { 'q-datetimepicker': true, 'q-datetimepicker-target-self': self.target === 'self' },
+        class: { 
+          'q-datetimepicker': true, 
+          'q-datetimepicker-full-width': self.target === 'self',
+          'q-datetimepicker-landscape': self.landscape,
+          'q-datetimepicker-portrait': !self.landscape
+        },
         props: {
           dark: self.dark
         },
@@ -319,18 +323,22 @@ export default Vue.extend({
       }
     }
   },
-  mounted () {
+  created () {
     this.__updateMetadata()
     this.__setupLanguage()
-
-    let self = this
-    self.onResizeEvent = () => self.__updatePosition()
-    window.addEventListener('resize', self.onResizeEvent)
-    window.addEventListener('scroll', self.onResizeEvent)
+    
+    if (!process.env.SERVER) {
+      var self = this
+      self._onResizeEvent = () => self.__updatePosition()
+      window.addEventListener('resize', self._onResizeEvent)
+      window.addEventListener('scroll', self._onResizeEvent)
+    }
   },
   destroyed () {
-    window.removeEventListener('resize', self.onResizeEvent)
-    window.removeEventListener('resize', self.onResizeEvent)
+    if (!process.env.SERVER) {
+      window.removeEventListener('resize', self._onResizeEvent)
+      window.removeEventListener('resize', self._onResizeEvent)
+    }
   },
   data () {
     return {
@@ -428,22 +436,26 @@ export default Vue.extend({
       return new Promise(resolve => window.setTimeout(resolve, delay))
     },
     async __updatePosition () {
+      if (!this.popup || !this.$refs.card) {
+        return
+      }
       await this.$nextTick()
-      let wrapper = this.$refs.card.$parent.$el
-      if (this.popup && wrapper.classList.contains('q-menu')) {
-        let height = Math.round(dom.height(this.$refs.card.$el))
-        await this.__sleep(10)
-        let offset = dom.offset(wrapper)
-        if (this.target === 'self') {
-          let minWidth = dom.style(wrapper, "min-width")
-          wrapper.style.maxWidth = minWidth
-        } else {
-          wrapper.style.maxWidth = null
-        }
-        if (offset.top + height > window.innerHeight) {
-          let top = (height + 50) > window.innerHeight ? 25 : window.innerHeight - height - 25
-          wrapper.style.top = top + 'px'
-        }
+      var wrapper = this.$refs.card.$parent.$el
+      if (!wrapper.classList.contains('q-menu')) {
+        return
+      }
+      let height = Math.round(dom.height(this.$refs.card.$el))
+      await this.__sleep(10)
+      var offset = dom.offset(wrapper)
+      if (this.target === 'self') {
+        var minWidth = dom.style(wrapper, "min-width")
+        wrapper.style.maxWidth = minWidth
+      } else {
+        wrapper.style.maxWidth = null
+      }
+      if (offset.top + height > window.innerHeight) {
+        let top = (height + 50) > window.innerHeight ? 25 : window.innerHeight - height - 25
+        wrapper.style.top = top + 'px'
       }
     },
     async __onOpen () {
