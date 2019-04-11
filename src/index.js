@@ -13,12 +13,11 @@ const extendDatetimePicker = function (conf, ctx) {
   const cssFile = '~quasar-app-extension-qdatetimepicker/component/datetime-picker.styl'
   
   if (!conf.boot.includes(bootFile)) {
-    conf.boot.push({ path: bootFile, server: false })
-    conf.build.transpileDependencies.push(/quasar-app-extension-qdatetimepicker[\\/]src[\\/]boot/)
+    conf.boot.push(bootFile)
   }
   
   if (!conf.css.includes(cssFile)) {
-    // conf.css.push(cssFile)
+    conf.css.push(cssFile)
   }
 }
 
