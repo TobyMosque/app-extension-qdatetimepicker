@@ -17,9 +17,16 @@
       position: relative
       top: 50%
       transform: translateY(-50%)
+  .q-date__content
+    padding-bottom: 30px
+  .q-time__content
+    margin-bottom: 56px
+  .q-card__actions
+    position: absolute
+    bottom: 0px
+    right: 0px
 
 .q-menu.scroll
-  overflow: unset
   .q-datetimepicker-full-width
     .q-date,
     .q-time
@@ -31,21 +38,6 @@
       max-width: 290px
       left: 50%
       transform: translateX(-50%)
-
-.q-datetimepicker-landscape
-  .q-date__content
-    padding-bottom: 30px
-  .q-time__content
-    margin-bottom: 57px
-  .q-card__actions
-    position: absolute
-    bottom: 0px
-    right: 0px
-
-.q-menu.scroll
-  .q-datetimepicker-landscape
-    .q-time__content
-      margin-bottom: 56px
 
 .q-datetimepicker.q-card--dark
   background: $grey-9

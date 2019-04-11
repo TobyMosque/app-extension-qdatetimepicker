@@ -1,8 +1,7 @@
 import Vue from 'vue'
-import { dom, debounce } from 'quasar'
 
 import {
-  QSplitter,
+  dom,
   QField,
   QInput,
   QIcon,
@@ -328,7 +327,7 @@ export default Vue.extend({
     this.__setupLanguage()
     
     if (!process.env.SERVER) {
-      var self = this
+      let self = this
       self._onResizeEvent = () => self.__updatePosition()
       window.addEventListener('resize', self._onResizeEvent)
       window.addEventListener('scroll', self._onResizeEvent)
@@ -440,15 +439,15 @@ export default Vue.extend({
         return
       }
       await this.$nextTick()
-      var wrapper = this.$refs.card.$parent.$el
+      let wrapper = this.$refs.card.$parent.$el
       if (!wrapper.classList.contains('q-menu')) {
         return
       }
       let height = Math.round(dom.height(this.$refs.card.$el))
       await this.__sleep(10)
-      var offset = dom.offset(wrapper)
+      let offset = dom.offset(wrapper)
       if (this.target === 'self') {
-        var minWidth = dom.style(wrapper, "min-width")
+        let minWidth = dom.style(wrapper, "min-width")
         wrapper.style.maxWidth = minWidth
       } else {
         wrapper.style.maxWidth = null

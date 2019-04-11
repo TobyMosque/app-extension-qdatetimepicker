@@ -19,7 +19,6 @@
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
-
     <q-drawer
       v-model="leftDrawerOpen"
       bordered
@@ -74,7 +73,6 @@
         </q-item>
       </q-list>
     </q-drawer>
-
     <q-page-container>
       <router-view />
     </q-page-container>
