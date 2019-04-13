@@ -29,7 +29,8 @@ const renderDate = function (self, h) {
         color: self.color,
         value: self.values.date,
         landscape: self.landscape,
-        todayBtn: self.todayBtn
+        todayBtn: self.todayBtn,
+        calendar: self.calendar
       },
       on: {
         input (value) { self.values.date = value }
@@ -312,6 +313,13 @@ export default Vue.extend({
       type: Boolean,
       default: true
     },
+    calendar: {
+      type: String,
+      default: "gregorian",
+      validation (value) {
+        return ["gregorian", "persian"].indexOf(value) !== -1
+      }
+    },
     fit: Boolean,
     anchor: String,
     target: {
@@ -408,9 +416,17 @@ export default Vue.extend({
     },
     intlOptions () {
       return { ...this.dateIntlOptions, ...this.timeIntlOptions }
-    },    
+    },
+    intlLocaleOptions () {
+      var intlLocale = 'gregory'
+      switch (this.calendar) {
+        case 'gregorian': intlLocale = 'gregory'; break;
+        case 'persian': intlLocale = 'persian'; break;
+      }
+      return `-u-ca-${intlLocale}-nu-latn`
+    },
     language () {
-      return (this.lang || this.$q.lang.isoName || navigator.language) + '-u-ca-gregory-nu-latn'
+      return (this.lang || this.$q.lang.isoName || navigator.language) + this.intlLocaleOptions
     },
     intlDateFormatter () {
       return new Intl.DateTimeFormat(this.language, this.dateIntlOptions)
@@ -419,7 +435,7 @@ export default Vue.extend({
       return new Intl.DateTimeFormat(this.language, this.timeIntlOptions)
     },
     intlDisplayFormatter () {
-      let lang = this.language.replace('-u-ca-gregory-nu-latn', '')
+      let lang = this.language.replace(this.intlLocaleOptions, '')
       return new Intl.DateTimeFormat(lang, this.intlOptions)
     },
     mask () {

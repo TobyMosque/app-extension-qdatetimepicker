@@ -29,6 +29,5 @@ module.exports = function (api, conf) {
     cfg.resolve.alias['q-datetimepicker-comp$'] = 'quasar-app-extension-qdatetimepicker/component/QDatetimePicker.js'
     cfg.resolve.alias['q-datetimepicker-boot$'] = 'quasar-app-extension-qdatetimepicker/boot/qdatetimepicker.js'
     cfg.resolve.alias['q-datetimepicker-styl$'] = 'quasar-app-extension-qdatetimepicker/component/datetime-picker.styl'
-    cfg.resolve.alias['vue$'] = 'vue/dist/vue.esm.js'
   })
 }

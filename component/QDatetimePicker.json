@@ -145,6 +145,11 @@
       "desc": "Target Mode ('self': the picker will be opened when the input is clicked, 'icon': the picker will be opened when the icon is clicked)",
       "examples": [ "self", "icon" ],
       "default": "icon"
+    },
+    "calendar": {
+      "type": "String",
+      "desc": "Calendar Mode ('gregorian', 'persian') (default: 'gregorian')",
+      "default": "gregorian"
     }
   }
 }
