@@ -4,6 +4,7 @@ module.exports = function (ctx) {
   return {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
+    preFetch: true,
     boot: [
       'i18n',
       'axios'
@@ -26,6 +27,7 @@ module.exports = function (ctx) {
       // all: true, // --- includes everything; for dev only!
 
       components: [
+        'QLinearProgress',
         'QForm',
         'QBanner',
         'QAvatar',

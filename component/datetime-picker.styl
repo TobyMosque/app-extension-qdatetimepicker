@@ -9,15 +9,35 @@
   .q-time
     border-radius: 0px
     box-shadow: none
-  .tabs-landscape .q-tabs__content .q-tab--full
+
+.q-datetimepicker-landscape 
+  .q-tabs__content .q-tab--full
     height: 50%
     .q-tab__content
       position: relative
       top: 50%
       transform: translateY(-50%)
+  .q-date__content
+    padding-bottom: 30px
+  .q-time__content
+    margin-bottom: 56px
+  .q-card__actions
+    position: absolute
+    bottom: 0px
+    right: 0px
 
 .q-menu.scroll
-  overflow: unset
+  .q-datetimepicker-full-width
+    .q-date,
+    .q-time
+      width: 100% !important
+      margin-left: 0 !important
+      margin-right: 0 !important
+    .q-date__content,
+    .q-time__content
+      max-width: 290px
+      left: 50%
+      transform: translateX(-50%)
 
 .q-datetimepicker.q-card--dark
   background: $grey-9

@@ -1,8 +1,7 @@
 import Vue from 'vue'
-import { dom, debounce } from 'quasar'
 
 import {
-  QSplitter,
+  dom,
   QField,
   QInput,
   QIcon,
@@ -25,13 +24,13 @@ const fields = Object.keys(QField.options.props)
 const renderDate = function (self, h) {
   return [
     h(QDate, {
-      class: { 'full-width': self.selfProxy },
       props: {
         dark: self.dark,
         color: self.color,
         value: self.values.date,
         landscape: self.landscape,
-        todayBtn: self.todayBtn
+        todayBtn: self.todayBtn,
+        calendar: self.calendar
       },
       on: {
         input (value) { self.values.date = value }
@@ -43,7 +42,6 @@ const renderDate = function (self, h) {
 const renderTime = function (self, h) {
   return [
     h(QTime, {
-      class: { 'full-width': self.selfProxy },
       props: {
         dark: self.dark,
         color: self.color,
@@ -60,11 +58,10 @@ const renderTime = function (self, h) {
 
 const renderTabsTitle = function (self, h) {
   return h(QTabs, {
-    class: `bg-${self.color || 'primary'} text-white${self.landscape ? ' tabs-landscape' : ''}`,
+    class: `bg-${self.color || 'primary'} text-white`,
     props: {
       value: self.tab,
       vertical: self.landscape,
-      'narrow-indicator': !self.landscape,
       dense: true
     },
     on: {
@@ -184,14 +181,13 @@ const renderReadonlyInput = function (self, h, inputFields, scopedSlots, childre
 }
 
 const renderPopupProxy = function (self, h) {
-  let renderContent = renderDate;
-  if (!self.date && !!self.time) {
-    renderContent = renderTime
-  }
-  if (!!self.date && !!self.time) {
-    // renderContent = renderDateTime
-    renderContent = self.landscape ? renderVerticalDateTime : renderDateTime
-  }
+  let renderContent = (() => {
+    switch (self.mode) {
+      case 'date': return renderDate
+      case 'time': return renderTime
+      case 'datetime': return self.landscape ? renderVerticalDateTime : renderDateTime
+    }
+  })()
 
   return [
     h(QPopupProxy, {
@@ -199,7 +195,7 @@ const renderPopupProxy = function (self, h) {
       attrs: {
         fit: self.fit,
         cover: self.cover,
-        anchor: self.anchor || (self.selfProxy ? 'top left' : '')
+        anchor: self.anchor || (self.target === 'self' ? 'top left' : undefined)
       },
       props: {
         breakpoint: 600
@@ -212,7 +208,12 @@ const renderPopupProxy = function (self, h) {
     }, [
       h(QCard, {
         ref: 'card',
-        class: 'q-datetimepicker',
+        class: { 
+          'q-datetimepicker': true, 
+          'q-datetimepicker-full-width': self.target === 'self',
+          'q-datetimepicker-landscape': self.landscape,
+          'q-datetimepicker-portrait': !self.landscape
+        },
         props: {
           dark: self.dark
         },
@@ -269,7 +270,7 @@ const toISOString = function (date) {
     return null
   }
 
-  var offset = date.getTimezoneOffset() * -1
+  let offset = date.getTimezoneOffset() * -1
   if (offset % 30 === 0)
   {
     date = new Date(date.getTime() + offset * 60000)
@@ -312,22 +313,39 @@ export default Vue.extend({
       type: Boolean,
       default: true
     },
+    calendar: {
+      type: String,
+      default: "gregorian",
+      validation (value) {
+        return ["gregorian", "persian"].indexOf(value) !== -1
+      }
+    },
     fit: Boolean,
     anchor: String,
-    selfProxy: Boolean
+    target: {
+      type: String,
+      default: "icon",
+      validation (value) {
+        return ["self", "icon"].indexOf(value) !== -1
+      }
+    }
   },
-  mounted () {
+  created () {
     this.__updateMetadata()
     this.__setupLanguage()
-
-    var self = this
-    self.onResizeEvent = () => self.__updatePosition()
-    window.addEventListener('resize', self.onResizeEvent)
-    window.addEventListener('scroll', self.onResizeEvent)
+    
+    if (!process.env.SERVER) {
+      let self = this
+      self._onResizeEvent = () => self.__updatePosition()
+      window.addEventListener('resize', self._onResizeEvent)
+      window.addEventListener('scroll', self._onResizeEvent)
+    }
   },
   destroyed () {
-    window.removeEventListener('resize', self.onResizeEvent)
-    window.removeEventListener('resize', self.onResizeEvent)
+    if (!process.env.SERVER) {
+      window.removeEventListener('resize', self._onResizeEvent)
+      window.removeEventListener('resize', self._onResizeEvent)
+    }
   },
   data () {
     return {
@@ -384,23 +402,31 @@ export default Vue.extend({
         this.$emit('input', value)
       }
     },
-    date () {
+    displayDatePicker () {
       return ["date", "datetime"].indexOf(this.mode) !== -1
     },
-    time () {
+    displayTimePicker () {
       return ["time", "datetime"].indexOf(this.mode) !== -1
     },
     dateIntlOptions () {
-      return this.date ? { day: '2-digit', month: '2-digit', year: 'numeric' } : {}
+      return this.displayDatePicker ? { day: '2-digit', month: '2-digit', year: 'numeric' } : {}
     },
     timeIntlOptions () {
-      return this.time ? { hour: '2-digit', minute: '2-digit', hour12: false /*!this.format24h*/ } : {}
+      return this.displayTimePicker ? { hour: '2-digit', minute: '2-digit', hour12: false /*!this.format24h*/ } : {}
     },
     intlOptions () {
       return { ...this.dateIntlOptions, ...this.timeIntlOptions }
-    },    
+    },
+    intlLocaleOptions () {
+      var intlLocale = 'gregory'
+      switch (this.calendar) {
+        case 'gregorian': intlLocale = 'gregory'; break;
+        case 'persian': intlLocale = 'persian'; break;
+      }
+      return `-u-ca-${intlLocale}-nu-latn`
+    },
     language () {
-      return (this.lang || this.$q.lang.isoName || navigator.language) + '-u-ca-gregory-nu-latn'
+      return (this.lang || this.$q.lang.isoName || navigator.language) + this.intlLocaleOptions
     },
     intlDateFormatter () {
       return new Intl.DateTimeFormat(this.language, this.dateIntlOptions)
@@ -409,8 +435,8 @@ export default Vue.extend({
       return new Intl.DateTimeFormat(this.language, this.timeIntlOptions)
     },
     intlDisplayFormatter () {
-      let lang = this.language.replace('-u-ca-gregory-nu-latn', '')
-      return new Intl.DateTimeFormat(lang, { ...this.dateIntlOptions, ...this.timeIntlOptions })
+      let lang = this.language.replace(this.intlLocaleOptions, '')
+      return new Intl.DateTimeFormat(lang, this.intlOptions)
     },
     mask () {
       if (this.masks.date && this.masks.time) {
@@ -425,21 +451,26 @@ export default Vue.extend({
       return new Promise(resolve => window.setTimeout(resolve, delay))
     },
     async __updatePosition () {
+      if (!this.popup || !this.$refs.card) {
+        return
+      }
       await this.$nextTick()
-      if (this.popup) {
-        let height = Math.round(dom.height(this.$refs.card.$el))
-        await this.__sleep(10)
-        var offset = dom.offset(this.$refs.card.$parent.$el)
-        if (this.selfProxy) {
-          var minWidth = dom.style(this.$refs.card.$parent.$el, "min-width")
-          this.$refs.card.$parent.$el.style.maxWidth = minWidth
-        } else {
-          this.$refs.card.$parent.$el.style.maxWidth = null
-        }
-        if (offset.top + height > window.innerHeight) {
-          let top = (height + 50) > window.innerHeight ? 25 : window.innerHeight - height - 25
-          this.$refs.card.$parent.$el.style.top = top + 'px'
-        }
+      let wrapper = this.$refs.card.$parent.$el
+      if (!wrapper.classList.contains('q-menu')) {
+        return
+      }
+      let height = Math.round(dom.height(this.$refs.card.$el))
+      await this.__sleep(10)
+      let offset = dom.offset(wrapper)
+      if (this.target === 'self') {
+        let minWidth = dom.style(wrapper, "min-width")
+        wrapper.style.maxWidth = minWidth
+      } else {
+        wrapper.style.maxWidth = null
+      }
+      if (offset.top + height > window.innerHeight) {
+        let top = (height + 50) > window.innerHeight ? 25 : window.innerHeight - height - 25
+        wrapper.style.top = top + 'px'
       }
     },
     async __onOpen () {
@@ -469,11 +500,13 @@ export default Vue.extend({
       let isoSeparator = value.indexOf('T')
       let date = null
       if (isoSeparator === -1) {
-        if (!this.date) {
-          value = '1970-01-01T' + value
-        } else {
-          value = value + 'T00:00:00'
-        }
+        let self = this
+        value = (() => {
+          switch (self.mode) {
+            case 'time': return '1970-01-01T' + value
+            case 'date': return value + 'T00:00:00'
+          }
+        })()
       }
       date = new Date(value)
       this.cValue = toISOString(date)
@@ -550,7 +583,7 @@ export default Vue.extend({
       } else {
         this.__onTimeChange()
       }
-      if (this.date && this.time && this.tab === 'date') {
+      if (this.mode === 'datetime' && this.tab === 'date') {
         this.tab = 'time'
       } else {
         this.$refs.popup.hide()
@@ -569,19 +602,20 @@ export default Vue.extend({
       if (typeof this.displayValue === 'string') {
         this.display = this.displayValue
       } else {
-        if (this.displayValue) {
+        if (this.displayValue || this.target === 'self') {
           this.display = this.intlDisplayFormatter.format(date)
         } else {
           this.display = ''
         }
       }
-      if (this.date && this.time) {
-        this.masked = this.intlDateFormatter.format(date) + ' ' + this.intlTimeFormatter.format(date)
-      } else if (!this.date) {
-        this.masked = this.intlTimeFormatter.format(date)
-      } else  {
-        this.masked = this.intlDateFormatter.format(date)
-      }
+      let self = this
+      this.masked = (() => {
+        switch (self.mode) {
+          case 'datetime': return self.intlDateFormatter.format(date) + ' ' + self.intlTimeFormatter.format(date)
+          case 'date': return self.intlDateFormatter.format(date)
+          case 'time': return self.intlTimeFormatter.format(date)
+        }
+      })()
     },
     __onChange () {
       let date = this.values.date.split('/')
@@ -594,9 +628,10 @@ export default Vue.extend({
       let minute = this.__parseIntFromArray(time, 1, 0)
       let second = this.__parseIntFromArray(time, 2, 0)
       
-      var dateObj = new Date(year, month, day, hour, minute, second)
+      let dateObj = new Date(year, month, day, hour, minute, second)
       this.__intlFormat(dateObj)
       this.cValue = toISOString(dateObj)
+      this.__updatePosition()
     },
     __updateMetadata () {
       this.__updateDateMetadata()
@@ -605,8 +640,8 @@ export default Vue.extend({
     __updateDateMetadata () {
       let meta = {}
       let mask = ''
-      if (this.date) {
-        var formatter = new Intl.DateTimeFormat(this.language, this.dateIntlOptions)
+      if (this.displayDatePicker) {
+        let formatter = new Intl.DateTimeFormat(this.language, this.dateIntlOptions)
 
         let date = new Date(2048, 11, 24)
         let formatted = formatter.format(date)
@@ -627,23 +662,23 @@ export default Vue.extend({
           cases: 2,
           order: -1
         }
-        var limit = [ meta.year, meta.month, meta.day ].filter(meta => meta.pos !== -1).length
-        var getNextIndex = (index) => {
-          var next = [meta.day, meta.month, meta.year].filter(part => part.pos > index).sort((partA, partB) => partA.pos - partB.pos)[0]
+        let limit = [ meta.year, meta.month, meta.day ].filter(meta => meta.pos !== -1).length
+        let getNextIndex = (index) => {
+          let next = [meta.day, meta.month, meta.year].filter(part => part.pos > index).sort((partA, partB) => partA.pos - partB.pos)[0]
           if (next) {
             return next.pos
           } else {
             return formatted.length
           }
         }
-        var _index = 0
-        for (var i = 0; i < limit; i++) {
+        let _index = 0
+        for (let i = 0; i < limit; i++) {
           if (meta.day.pos == _index) {
             meta.day.order = i
             mask = mask + ''.padStart(meta.day.cases, '#')
             if (i < limit - 1) {
               _index += meta.day.cases
-              var nextIndex = getNextIndex(_index)
+              let nextIndex = getNextIndex(_index)
               meta.separator = formatted.substring(_index, nextIndex)
               _index = nextIndex
               mask = mask + meta.separator
@@ -653,7 +688,7 @@ export default Vue.extend({
             mask = mask + ''.padStart(meta.month.cases, '#')
             if (i < limit - 1) {
               _index += meta.month.cases
-              var nextIndex = getNextIndex(_index)
+              let nextIndex = getNextIndex(_index)
               meta.separator = formatted.substring(_index, nextIndex)
               _index = nextIndex
               mask = mask + meta.separator
@@ -664,7 +699,7 @@ export default Vue.extend({
             mask = mask + ''.padStart(meta.year.cases, '#')
             if (i < limit - 1) {
               _index += meta.year.cases
-              var nextIndex = getNextIndex(_index)
+              let nextIndex = getNextIndex(_index)
               meta.separator = formatted.substring(_index, nextIndex)
               _index = nextIndex
               mask = mask + meta.separator
@@ -678,8 +713,8 @@ export default Vue.extend({
     __updateTimeMetadata () {
       let meta = {}
       let mask = ''
-      if (this.time) {
-        var formatter = new Intl.DateTimeFormat(this.language, this.timeIntlOptions)
+      if (this.displayTimePicker) {
+        let formatter = new Intl.DateTimeFormat(this.language, this.timeIntlOptions)
         let date = new Date(2011, 11, 11, 12, 24, 48)
         let formatted = formatter.format(date)
         meta.separator = ''
@@ -698,10 +733,10 @@ export default Vue.extend({
           cases: 2,
           order: -1
         }
-        var limit = [ meta.hour, meta.minute, meta.second ].filter(meta => meta.pos !== -1).length
+        let limit = [ meta.hour, meta.minute, meta.second ].filter(meta => meta.pos !== -1).length
         
-        var _index = 0
-        for (var i = 0; i < limit; i++) {
+        let _index = 0
+        for (let i = 0; i < limit; i++) {
           if (meta.hour.pos == _index) {
             meta.hour.order = i
             mask = mask + ''.padStart(meta.hour.cases, '#')
@@ -750,7 +785,7 @@ export default Vue.extend({
       })
     }
 
-    var _renderInput = self.selfProxy || self.displayValue !== false ? renderReadonlyInput : renderInput
+    let _renderInput = self.target === 'self' || self.displayValue !== false ? renderReadonlyInput : renderInput
     return h('div', {
       class: 'q-datetimepicker'
     }, [
@@ -764,10 +799,10 @@ export default Vue.extend({
               props: {
                 name: self.icon || (self.mode === 'time' ? 'access_time' : 'event' )
               }
-            }, self.selfProxy ? [] : renderPopupProxy(self, h))
+            }, self.target === 'self' ? [] : renderPopupProxy(self, h))
           ]
         }
-      }, self.selfProxy ? renderPopupProxy(self, h) : [])
+      }, self.target === 'self' ? renderPopupProxy(self, h) : [])
     ])
   }
 })

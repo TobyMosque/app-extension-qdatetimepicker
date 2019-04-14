@@ -22,9 +22,9 @@
           <q-separator inset />
           <q-card-section>
             <q-datetime-picker class="q-mb-md" label="Standard Date Picker" v-model="date" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="Outlined Date Picker" v-model="date" :rules="rules" self-proxy></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" filled label="Filled Date Picker" v-model="date" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" standout label="Standout Date Picker" v-model="date" :rules="rules" icon="date_range"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="Outlined Date Picker" mode="time" v-model="time" :rules="rules"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" filled label="Filled Date Picker" v-model="date" :rules="rules" target="self"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" standout label="Standout Date Picker" mode="time" v-model="time" :rules="rules" target="self"></q-datetime-picker>
           </q-card-section>
           <q-card-actions>
             <q-btn label="Submit" type="submit" color="positive" class="full-width" />
@@ -122,20 +122,58 @@
 
 <script>
 // import something here
+import homeStore from '../store/home'
 import languages from 'quasar/lang/index.json'
 import { throttle } from 'quasar'
 export default {
   name: 'PageIndex',
-  data () {
-    return {
+  preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext }) {
+    console.log('Hello World!')
+    store.registerModule('homePage', homeStore)
+    return store.dispatch('homePage/init', {
       date: '2018-11-02',
       time: '15:46',
+      datetime: '2018-11-02T15:46',
+      language: 'en-US',
+      languages
+    })
+  },
+  created () {
+    this.$store.registerModule('homePage', homeStore, { preserveState: true })
+  },
+  destroyed () {
+    this.$store.unregisterModule('homePage')
+  },
+  data () {
+    return {
       rules: [
         (val) => !!val || 'Date is required'
-      ],
-      datetime: '2018-11-02T15:46',
-      language: this.$q.lang.isoName,
-      languages
+      ]
+    }
+  },
+  computed: {
+    date: {
+      get () { return this.$store.state.homePage.date },
+      set (value) { return this.$store.commit('homePage/date', value) }
+    },
+    time: {
+      get () { return this.$store.state.homePage.time },
+      set (value) { return this.$store.commit('homePage/time', value) }
+    },
+    datetime: {
+      get () { return this.$store.state.homePage.datetime },
+      set (value) { return this.$store.commit('homePage/datetime', value) }
+    },
+    language: {
+      get () { return this.$store.state.homePage.language },
+      set (value) { return this.$store.commit('homePage/language', value) }
+    },
+    languages: {
+      get () { return this.$store.state.homePage.languages },
+      set (value) { return this.$store.commit('homePage/languages', value) }
+    },
+    displayValue () {
+      return `iso: ${this.datetime} | i18n: ${new Date(this.datetime).toLocaleString(this.language)}`
     }
   },
   watch: {
@@ -156,16 +194,19 @@ export default {
       handler () {
         console.log('datetime: ', this.datetime)
       }
+    },
+    '$q.lang.isoName': {
+      immediate: true,
+      handler (value) {
+        if (this.language !== value) {
+          this.language = value
+        }
+      }
     }
   },
   filters: {
     displayFilter (value, language) {
       return `iso: ${value} | ${language}: ${new Date(value).toLocaleString(language)}`
-    }
-  },
-  computed: {
-    displayValue () {
-      return `iso: ${this.datetime} | i18n: ${new Date(this.datetime).toLocaleString(this.language)}`
     }
   },
   methods: {

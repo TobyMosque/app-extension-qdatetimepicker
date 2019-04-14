@@ -97,6 +97,11 @@ data () {
 <q-datetime-picker today-btn mode="date" label="Disabled Today Button" v-model="date"></q-datetime-picker>
 ```
 
+## target
+```html
+<q-datetime-picker target="self" mode="date" label="DatetimePicker will act like Datetime Input from Quasar 0.17" v-model="date"></q-datetime-picker>
+```
+
 # Language Files
 
 We need help translating the language files. Below are listed the available ones. If you know another language, please PR and help us out.
@@ -113,7 +118,7 @@ We need help translating the language files. Below are listed the available ones
 # QDatetimePicker Vue Properties
 | Vue&nbsp;Property | Type	|  Description |
 |---|---|---|
-| label | String | A text label that will 'float' up above the input field, once the field gets focus |
+| label | String | A text label that will `float` up above the input field, once the field gets focus |
 | stack-label | Boolean | Label will be always shown above the field regardless of field content (if any) |
 | hint | String | Helper (hint) text which gets placed below your wrapped form component |
 | hide-hint | Boolean | Hide the helper (hint) text when field is not focused |
@@ -122,28 +127,33 @@ We need help translating the language files. Below are listed the available ones
 | color | String | Color name from Quasar Color Palette; Overrides default dynamic color |
 | bg-color | String | Color name from Quasar Color Palette; Overrides default dynamic color |
 | dark | Boolean | Notify the component that the background is a dark color |
-| loading | Boolean | Signals the user a process is in progress by displaying a spinner; Spinner can be customized by using the 'loading' slot. |
+| loading | Boolean | Signals the user a process is in progress by displaying a spinner; Spinner can be customized by using the `loading`slot. |
 | clearable | Boolean | Appends clearable icon when a value (not undefined or null) is set; When clicked, model becomes null |
-| clear-icon | Boolean | Custom icon to use for the clear button when using along with 'clearable' prop |
-| filled | Boolean | Use 'filled' design for the field |
-| outlined | Boolean | Use 'outlined' design for the field |
-| borderless | Boolean | Use 'borderless' design for the field |
-| standout | Boolean | Use 'standout' design for the field |
-| bottom-slots | Boolean | Enables bottom slots ('error', 'hint', 'counter') |
+| clear-icon | Boolean | Custom icon to use for the clear button when using along with `clearable` prop |
+| filled | Boolean | Use `filled` design for the field |
+| outlined | Boolean | Use `outlined` design for the field |
+| borderless | Boolean | Use `borderless` design for the field |
+| standout | Boolean | Use `standout` design for the field |
+| bottom-slots | Boolean | Enables bottom slots (`error`, `hint`, `counter`) |
 | counter | Boolean | Show an automatic counter on the bottom right |
 | rounded | Boolean | Applies a small standard border-radius for a squared shape of the component |
-| square | Boolean | Remove border-radius so borders are squared; Overrides 'rounded' prop |
+| square | Boolean | Remove border-radius so borders are squared; Overrides `rounded` prop |
 | dense | Boolean | Dense mode; occupies less space |
 | items-aligned | Boolean | Align content to match QItem |
 | disable | Boolean | Put component in disabled mode |
 | readonly | Boolean | Put component in readonly mode |
 | lang | Boolean | Language identifier (default: $q.lang.isoName) |
-| mode | String | Display Mode ('date', 'time', 'datetime') (default: 'date') |
+| mode | String | Display Mode (`date`, `time`, `datetime`) (default: `date`) |
 | format24h | Boolean | Show the timepicker in 24 hour format. The masked value will not be affected. |
 | display-value | Boolean or String | if the value is `true` or a `string` que internal QInput will be readonly. if value is `true` the calendar and numeric system used to format the date will not be forced to be gregory calendar and latin nu. if value is a `string`, the format function will be ignored and the `display-value` will be used directly in the `input` (default: `false`) |
 | icon | String | The icon of the picker (default: `access_time` when the mode is `time`, otherwise `event`) |
 | landscape | Boolean | Show the picker in landscape mode (default: false) |
 | today-btn | Boolean | Display a button that selects the current day (`date` and `datetime` modes only) (default: false) |
-\\
+| cover | Boolean | Allows the picker to cover its target. When used, the `fit` props are no longer effective (default: `true`) |
+| fit | Boolean | Allows the picker to match at least the full width of its target (default: `true` when target is `self`, otherwise `false`) |
+| anchor | String | Two values setting the starting position or anchor point of the menu relative to its target (`top left`, `top middle`, `top right`, `center left`, `center middle`, `center right`, `bottom left`, `bottom middle` or `bottom right`) |
+| target | String | Target Mode (`self`: the picker will be opened when the input is clicked, `icon`: the picker will be opened when the icon is clicked) (default: `icon`) |
+| calendar | String | Calendar Mode (`gregorian`, `persian`) (default: `gregorian`) |
+
 # Patreon
 If you like (and use) this App Extension, please consider becoming a Quasar [Patreon](https://www.patreon.com/quasarframework).

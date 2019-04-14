@@ -111,20 +111,45 @@
     },
     "display-value": {
       "type": [ "Boolean", "String" ],
-      "desc": "if the value is `true` or a `function` que internal QInput will be readonly. if value is `true` the calendar and numeric system used to format the date will not be forced to be gregory calendar and latin nu. if value is a `string`, the format function will be ignored and the `display-value` will be used directly in the `input` (default: `false`)",
+      "desc": "if the value is 'true' or a 'function' que internal QInput will be readonly. if value is 'true' the calendar and numeric system used to format the date will not be forced to be gregory calendar and latin nu. if value is a 'string', the format function will be ignored and the 'display-value' will be used directly in the 'input' (default: 'false')",
       "default": "false"
     },
     "display-icon": {
       "type": [ "String" ],
-      "desc": "The icon of the picker (default: `access_time` when the mode is `time`, otherwise `event`)"
+      "desc": "The icon of the picker (default: 'access_time' when the mode is 'time', otherwise 'event')"
     },
     "landscape": {
       "type": [ "Boolean" ],
-      "desc": "Show the picker in landscape mode (default: `false`)"
+      "desc": "Show the picker in landscape mode (default: 'false')"
     },
     "today-btn": {
       "type": [ "Boolean" ],
-      "desc": "Display a button that selects the current day (`date` and `datetime` modes only) (default: `false`)"
+      "desc": "Display a button that selects the current day ('date' and 'datetime' modes only) (default: 'false')"
+    },
+    "cover": {
+      "type": [ "Boolean" ],
+      "desc": "Allows the picker to cover its target. When used, the 'fit' props are no longer effective",
+      "default": "true"
+    },
+    "fit": {
+      "type": [ "Boolean" ],
+      "desc": "Allows the picker to match at least the full width of its target (default: ''true' when target is 'self', otherwise 'false')"
+    },
+    "anchor": {
+      "type": [ "String" ],
+      "desc": "Two values setting the starting position or anchor point of the menu relative to its target",
+      "examples": [ "top left", "top middle", "top right", "center left", "center middle", "center right", "bottom left", "bottom middle", "bottom right" ]
+    },
+    "target": {
+      "type": [ "String" ],
+      "desc": "Target Mode ('self': the picker will be opened when the input is clicked, 'icon': the picker will be opened when the icon is clicked)",
+      "examples": [ "self", "icon" ],
+      "default": "icon"
+    },
+    "calendar": {
+      "type": "String",
+      "desc": "Calendar Mode ('gregorian', 'persian') (default: 'gregorian')",
+      "default": "gregorian"
     }
   }
 }
