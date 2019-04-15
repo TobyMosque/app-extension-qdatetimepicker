@@ -5,6 +5,9 @@ QDatetimePicker is an `UI App Extension` for [Quasar Framework v1](https://v1.qu
 
 This work is currently in `alpha` and there are expected changes while things get worked out. Your help with testing is greatly appreciated.
 
+# Notes
+`v1.0.0-alpha.21` - SSR hydration - don't forget to tun `quasar upgrade` (`@quasar/app v1.0.0-beta.17` is required).
+
 # Installation
 To add this App Extension to your Quasar application, run the following (in your Quasar app folder):
 ```
