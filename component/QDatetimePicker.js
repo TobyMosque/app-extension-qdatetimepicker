@@ -451,10 +451,10 @@ export default Vue.extend({
       return new Promise(resolve => window.setTimeout(resolve, delay))
     },
     async __updatePosition () {
+      await this.$nextTick()
       if (!this.popup || !this.$refs.card) {
         return
       }
-      await this.$nextTick()
       let wrapper = this.$refs.card.$parent.$el
       if (!wrapper.classList.contains('q-menu')) {
         return
