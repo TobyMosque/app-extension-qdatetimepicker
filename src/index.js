@@ -5,28 +5,18 @@
  * API: https://github.com/quasarframework/quasar/blob/master/app/lib/app-extension/IndexAPI.js
  */
 
-const extendDatetimePicker = function (conf, ctx) {
-  conf.boot = conf.boot || []
-  conf.css = conf.css || []
-
-  const bootFile = '~quasar-app-extension-qdatetimepicker/boot/qdatetimepicker.js'
-  const cssFile = '~quasar-app-extension-qdatetimepicker/component/datetime-picker.styl'
-  
-  if (!conf.boot.includes(bootFile)) {
-    conf.boot.push(bootFile)
-  }
-  
-  conf.build.transpileDependencies.push(/quasar-app-extension-qdatetimepicker\/[boot|component]/)
-  if (!conf.css.includes(cssFile)) {
-    conf.css.push(cssFile)
-  }
+const extendDatetimePicker = function (conf) {
+  conf.boot.push('~quasar-app-extension-qdatetimepicker/src/boot/qdatetimepicker.js')
+  conf.build.transpileDependencies.push(/quasar-app-extension-qdatetimepicker[\\/]src/)
+  conf.css.push('~quasar-app-extension-qdatetimepicker/src/component/datetime-picker.styl')
 }
 
-module.exports = function (api, conf) {
-  var compatibleWith = api.compatibleWith || function (package, version) {
+module.exports = function (api) {
+  var compatibleWith = api.compatibleWith || function (_, version) {
     return api.compatibleWithQuasarApp(version)
   }
-  compatibleWith('@quasar/app', '^1.0.0-beta.17')
-  api.registerDescribeApi('QDatetimePicker', '../component/QDatetimePicker.json')
+  compatibleWith('@quasar/app', '^1.0.0-beta.18')
+
+  api.registerDescribeApi('QDatetimePicker', './component/QDatetimePicker.json')
   api.extendQuasarConf(extendDatetimePicker)
 }
