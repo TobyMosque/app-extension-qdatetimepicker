@@ -14,15 +14,16 @@ const extendDatetimePicker = function (conf, ctx) {
   
   if (!conf.boot.includes(bootFile)) {
     conf.boot.push(bootFile)
-    conf.build.transpileDependencies.push(/quasar-app-extension-qdatetimepicker\/[boot|component]/)
   }
   
+  conf.build.transpileDependencies.push(/quasar-app-extension-qdatetimepicker\/[boot|component]/)
   if (!conf.css.includes(cssFile)) {
     conf.css.push(cssFile)
   }
 }
 
 module.exports = function (api, conf) {
+  api.compatibleWith('@quasar/app', '^1.0.0-beta.17')
   api.registerDescribeApi('QDatetimePicker', '../component/QDatetimePicker.json')
   api.extendQuasarConf(extendDatetimePicker)
 }
