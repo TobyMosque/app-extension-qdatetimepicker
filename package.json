@@ -21,5 +21,10 @@
     "node": ">= 8.9.0",
     "npm": ">= 5.6.0",
     "yarn": ">= 1.6.0"
+  },
+  "homepage": "https://github.com/TobyMosque/app-extension-qdatetimepicker#readme",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/TobyMosque/app-extension-qdatetimepicker.git"
   }
 }
