@@ -30,7 +30,8 @@ const renderDate = function (self, h) {
         value: self.values.date,
         landscape: self.landscape,
         todayBtn: self.todayBtn,
-        calendar: self.calendar
+        calendar: self.calendar,
+        options: self.options
       },
       on: {
         input (value) { self.values.date = value }
@@ -309,6 +310,7 @@ export default Vue.extend({
     icon: String,
     landscape: Boolean,
     todayBtn: Boolean,
+    options: [Array, Function],
     cover: {
       type: Boolean,
       default: true
@@ -399,7 +401,18 @@ export default Vue.extend({
     cValue: {
       get () { return this.value },
       set (value) {
-        this.$emit('input', value)
+        let isValid = true
+        if (!this.options || this.options.length === 0 || !this.displayDatePicker) {
+          isValid = true
+        } else if (typeof this.options === 'function') {
+          isValid = this.options(this.values.date)
+        } else {
+          isValid = this.options.indexOf(this.values.date) !== -1
+        }
+
+        if (isValid) {
+          this.$emit('input', value)
+        }
       }
     },
     displayDatePicker () {
@@ -517,7 +530,7 @@ export default Vue.extend({
       })
     },
     __setupLanguage () {
-      let isoName = this.lang || this.$q.lang.isoName || navigator.language
+      let isoName = this.$q.lang.isoName || this.lang || navigator.language
       let lang
       try {
         lang = require(`./lang/${isoName}`)
