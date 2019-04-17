@@ -198,7 +198,7 @@ We need help translating the language files. Below are listed the available ones
 | target | String | Target Mode (`self`: the picker will be opened when the input is clicked, `icon`: the picker will be opened when the icon is clicked) (default: `icon`) |
 | calendar | String | Calendar Mode (`gregorian`, `persian`) (default: `gregorian`) |
 | date-options | Function or Array | A list of events to highlight on the calendar; If using a function, it receives the date as a String and must return a Boolean (matches or not) |
-| time-options | Function or Array | Optionally configure what time the user allowed to set |
+| time-options | Function | Optionally configure what time the user allowed to set |
 
 # Patreon
 If you like (and use) this App Extension, please consider becoming a Quasar [Patreon](https://www.patreon.com/quasarframework).

@@ -153,10 +153,10 @@
     },
     "date-options": {
       "type": [ "Function", "Array" ],
-      "desc": "Optionally configure what date is the user allowed to set"
+      "desc": "A list of events to highlight on the calendar; If using a function, it receives the date as a String and must return a Boolean (matches or not)"
     },
     "time-options": {
-      "type": [ "Function", "Array" ],
+      "type": "Function",
       "desc": "Optionally configure what time is the user allowed to set"
     }
   }
