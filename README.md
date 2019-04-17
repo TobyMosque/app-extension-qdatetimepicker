@@ -126,7 +126,7 @@ export default {
     }
   },
   methods: {
-    tdateOptionsB (date) {
+    dateOptionsB (date) {
       return date >= '2019/02/03' && date <= '2019/02/15'
     },
     timeOptionsB (hr, min, sec) {
