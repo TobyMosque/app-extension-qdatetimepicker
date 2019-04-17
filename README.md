@@ -157,6 +157,8 @@ We need help translating the language files. Below are listed the available ones
 | anchor | String | Two values setting the starting position or anchor point of the menu relative to its target (`top left`, `top middle`, `top right`, `center left`, `center middle`, `center right`, `bottom left`, `bottom middle` or `bottom right`) |
 | target | String | Target Mode (`self`: the picker will be opened when the input is clicked, `icon`: the picker will be opened when the icon is clicked) (default: `icon`) |
 | calendar | String | Calendar Mode (`gregorian`, `persian`) (default: `gregorian`) |
+| date-options | Function or Array | Optionally configure what date is the user allowed to set |
+| time-options | Function or Array | Optionally configure what time is the user allowed to set |
 
 # Patreon
 If you like (and use) this App Extension, please consider becoming a Quasar [Patreon](https://www.patreon.com/quasarframework).

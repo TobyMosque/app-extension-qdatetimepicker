@@ -21,8 +21,8 @@
           </q-card-section>
           <q-separator inset />
           <q-card-section>
-            <q-datetime-picker class="q-mb-md" label="Standard Date Picker" v-model="date" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="Outlined Date Picker" mode="time" v-model="time" :rules="rules"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" label="Standard Date Picker" v-model="date" :rules="rules" :date-options="dateFilter"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="Outlined Date Picker" mode="time" v-model="time" :rules="rules" :time-options="timeFilter"></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" filled label="Filled Date Picker" v-model="date" :rules="rules" target="self"></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" standout label="Standout Date Picker" mode="time" v-model="time" :rules="rules" target="self"></q-datetime-picker>
           </q-card-section>
@@ -213,6 +213,13 @@ export default {
     async onLanguageInput () {
       let lang = await import(`quasar/lang/${this.language}`)
       this.$q.lang.set(lang.default)
+    },
+    dateFilter (date) {
+      const parts = date.split('/')
+      return parts[2] % 2 === 0
+    },
+    timeFilter (hr, min, sec) {
+      return hr % 2 === 0
     },
     onSubmit: throttle(function (form) {
       form.validate().then(success => {

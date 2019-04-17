@@ -150,6 +150,14 @@
       "type": "String",
       "desc": "Calendar Mode ('gregorian', 'persian') (default: 'gregorian')",
       "default": "gregorian"
+    },
+    "date-options": {
+      "type": [ "Function", "Array" ],
+      "desc": "Optionally configure what date is the user allowed to set"
+    },
+    "time-options": {
+      "type": [ "Function", "Array" ],
+      "desc": "Optionally configure what time is the user allowed to set"
     }
   }
 }

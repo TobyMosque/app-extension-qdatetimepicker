@@ -31,7 +31,7 @@ const renderDate = function (self, h) {
         landscape: self.landscape,
         todayBtn: self.todayBtn,
         calendar: self.calendar,
-        options: self.options
+        options: self.dateOptions
       },
       on: {
         input (value) { self.values.date = value }
@@ -48,7 +48,8 @@ const renderTime = function (self, h) {
         color: self.color,
         value: self.values.time,
         landscape: self.landscape,
-        format24h: self.format24h
+        format24h: self.format24h,
+        options: self.timeOptions
       },
       on: {
         input (value) { self.values.time = value }
@@ -310,7 +311,8 @@ export default Vue.extend({
     icon: String,
     landscape: Boolean,
     todayBtn: Boolean,
-    options: [Array, Function],
+    dateOptions: [Array, Function],
+    timeOptions: Function,
     cover: {
       type: Boolean,
       default: true
@@ -401,16 +403,34 @@ export default Vue.extend({
     cValue: {
       get () { return this.value },
       set (value) {
-        let isValid = true
-        if (!this.options || this.options.length === 0 || !this.displayDatePicker) {
-          isValid = true
-        } else if (typeof this.options === 'function') {
-          isValid = this.options(this.values.date)
+        let hour = -1
+        let minute = -1
+        let second = -1
+        let isDateValid = true
+        let isTimeValid = true
+        if (!this.dateOptions || this.dateOptions.length === 0 || !this.values.date || !this.displayDatePicker) {
+          isDateValid = true
+        } else if (typeof this.dateOptions === 'function') {
+          isDateValid = this.dateOptions(this.values.date)
         } else {
-          isValid = this.options.indexOf(this.values.date) !== -1
+          isDateValid = this.dateOptions.indexOf(this.values.date) !== -1
         }
 
-        if (isValid) {
+        if (this.values.time) {
+          let time = this.values.time.split(':')
+          hour = this.__parseIntFromArray(time, 0, 0)
+          minute = this.__parseIntFromArray(time, 1, 0)
+          second = this.__parseIntFromArray(time, 2, 0)
+        }
+        if (!this.timeOptions || this.timeOptions.length === 0 || hour === -1 || !this.displayTimePicker) {
+          isTimeValid = true
+        } else if (typeof this.timeOptions === 'function') {
+          isTimeValid = this.timeOptions(hour, minute, second)
+        } else {
+          isTimeValid = this.timeOptions.indexOf({ hour, minute, second }) !== -1
+        }
+
+        if (isTimeValid && isDateValid) {
           this.$emit('input', value)
         }
       }
