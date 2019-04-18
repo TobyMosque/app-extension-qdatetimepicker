@@ -801,6 +801,9 @@ export default Vue.extend({
 
       this.$set(this.masks, 'time', mask)
       this.$set(this.metas, 'time', meta)
+    },
+    __clearValue () {
+      this.cValue = ''
     }
   },
   render (h) {
@@ -819,21 +822,33 @@ export default Vue.extend({
     }
 
     let _renderInput = self.target === 'self' || self.displayValue !== false ? renderReadonlyInput : renderInput
+    let clearBtn = h(QIcon, {
+      staticClass: 'cursor-pointer',
+      props: { name: this.clearIcon || this.$q.iconSet.field.clear },
+      on: {
+        click: this.__clearValue
+      }
+    })
+
     return h('div', {
       class: 'q-datetimepicker'
     }, [
       _renderInput(self, h, inputFields, {
         append (props) {
-          return [
-            h(QIcon, {
-              class: {
-                'cursor-pointer': true
-              },
-              props: {
-                name: self.icon || (self.mode === 'time' ? 'access_time' : 'event' )
-              }
-            }, self.target === 'self' ? [] : renderPopupProxy(self, h))
-          ]
+          let icons = []
+          var pickerbtn = h(QIcon, {
+            class: {
+              'cursor-pointer': true
+            },
+            props: {
+              name: self.icon || (self.mode === 'time' ? 'access_time' : 'event' )
+            }
+          }, self.target === 'self' ? [] : renderPopupProxy(self, h))
+          if (self.cValue && self.target === 'self' && self.clearable) {
+            icons.push(clearBtn)
+          }
+          icons.push(pickerbtn)
+          return icons
         }
       }, self.target === 'self' ? renderPopupProxy(self, h) : [])
     ])
