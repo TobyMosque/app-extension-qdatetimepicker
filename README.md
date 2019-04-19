@@ -83,7 +83,7 @@ data () {
 ## display-value
 ```html
 <q-datetime-picker label="Format the date without force the calendar to gregorian and numeric system to latin" v-model="date" display-value></q-datetime-picker>
-<q-datetime-picker label="Format the date the date in arab(egypt) using arab numeric system" v-model="date" lang="ar-EG" display-value></q-datetime-picker>
+<q-datetime-picker label="Format the date in arab(egypt) using arab numeric system" v-model="date" lang="ar-EG" display-value></q-datetime-picker>
 <q-datetime-picker label="Format the date using a computed property" v-model="date" display-value="computedProperty"></q-datetime-picker>
 <q-datetime-picker label="Format the date using a filter" v-model="date" display-value="date | filter('args')"></q-datetime-picker>
 ```
