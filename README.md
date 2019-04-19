@@ -5,6 +5,9 @@ QDatetimePicker is an `UI App Extension` for [Quasar Framework v1](https://v1.qu
 
 This work is currently in `alpha` and there are expected changes while things get worked out. Your help with testing is greatly appreciated.
 
+# Notes
+`v1.0.0-alpha.21` - SSR hydration - don't forget to tun `quasar upgrade` (`@quasar/app v1.0.0-beta.17` is required).
+
 # Installation
 To add this App Extension to your Quasar application, run the following (in your Quasar app folder):
 ```
@@ -102,6 +105,46 @@ data () {
 <q-datetime-picker target="self" mode="date" label="DatetimePicker will act like Datetime Input from Quasar 0.17" v-model="date"></q-datetime-picker>
 ```
 
+## date and time options
+```html
+<q-datetime-picker target="self" mode="date" label="Even Days" v-model="date" date-options="dateOptionsA"></q-datetime-picker>
+<q-datetime-picker target="self" mode="date" label="Date Range" v-model="date" date-options="dateOptionsB"></q-datetime-picker>
+<q-datetime-picker target="self" mode="time" label="Even Hours" v-model="time" time-options="timeOptionsA"></q-datetime-picker>
+<q-datetime-picker target="self" mode="time" label="Non Human Friendly" v-model="time" time-options="timeOptionsB"></q-datetime-picker>
+```
+```js
+export default {
+  data () {
+    return {
+      dateOptionsA (date) {
+        const parts = date.split('/')
+        return parts[2] % 2 === 0
+      },
+      timeOptionsA (hr) {
+        return hr % 2 === 0
+      }
+    }
+  },
+  methods: {
+    dateOptionsB (date) {
+      return date >= '2019/02/03' && date <= '2019/02/15'
+    },
+    timeOptionsB (hr, min, sec) {
+      if (hr < 6 || hr > 15 || hr % 2 !== 0) {
+        return false
+      }
+      if (min !== null && (min <= 25 || min >= 58)) {
+        return false
+      }
+      if (sec !== null && sec % 10 !== 0) {
+        return false
+      }
+      return true
+    }
+  }
+}
+```
+
 # Language Files
 
 We need help translating the language files. Below are listed the available ones. If you know another language, please PR and help us out.
@@ -127,7 +170,7 @@ We need help translating the language files. Below are listed the available ones
 | color | String | Color name from Quasar Color Palette; Overrides default dynamic color |
 | bg-color | String | Color name from Quasar Color Palette; Overrides default dynamic color |
 | dark | Boolean | Notify the component that the background is a dark color |
-| loading | Boolean | Signals the user a process is in progress by displaying a spinner; Spinner can be customized by using the `loading`slot. |
+| loading | Boolean | Signals to the user that a process is in progress by displaying a spinner; Spinner can be customized by using the `loading`slot. |
 | clearable | Boolean | Appends clearable icon when a value (not undefined or null) is set; When clicked, model becomes null |
 | clear-icon | Boolean | Custom icon to use for the clear button when using along with `clearable` prop |
 | filled | Boolean | Use `filled` design for the field |
@@ -145,7 +188,7 @@ We need help translating the language files. Below are listed the available ones
 | lang | Boolean | Language identifier (default: $q.lang.isoName) |
 | mode | String | Display Mode (`date`, `time`, `datetime`) (default: `date`) |
 | format24h | Boolean | Show the timepicker in 24 hour format. The masked value will not be affected. |
-| display-value | Boolean or String | if the value is `true` or a `string` que internal QInput will be readonly. if value is `true` the calendar and numeric system used to format the date will not be forced to be gregory calendar and latin nu. if value is a `string`, the format function will be ignored and the `display-value` will be used directly in the `input` (default: `false`) |
+| display-value | Boolean or String | If the value is `true` or a `string`, the internal QInput will be readonly. If the value is `true` the calendar and numeric system used to format the date will not be forced to be the gregorian calendar and latin numbers. If value is a `string`, the format function will be ignored and the `display-value` will be used directly in the `input` (default: `false`) |
 | icon | String | The icon of the picker (default: `access_time` when the mode is `time`, otherwise `event`) |
 | landscape | Boolean | Show the picker in landscape mode (default: false) |
 | today-btn | Boolean | Display a button that selects the current day (`date` and `datetime` modes only) (default: false) |
@@ -154,6 +197,8 @@ We need help translating the language files. Below are listed the available ones
 | anchor | String | Two values setting the starting position or anchor point of the menu relative to its target (`top left`, `top middle`, `top right`, `center left`, `center middle`, `center right`, `bottom left`, `bottom middle` or `bottom right`) |
 | target | String | Target Mode (`self`: the picker will be opened when the input is clicked, `icon`: the picker will be opened when the icon is clicked) (default: `icon`) |
 | calendar | String | Calendar Mode (`gregorian`, `persian`) (default: `gregorian`) |
+| date-options | Function or Array | A list of events to highlight on the calendar; If using a function, it receives the date as a String and must return a Boolean (matches or not) |
+| time-options | Function | Optionally configure what time the user allowed to set |
 
 # Patreon
 If you like (and use) this App Extension, please consider becoming a Quasar [Patreon](https://www.patreon.com/quasarframework).

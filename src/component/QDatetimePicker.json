@@ -22,12 +22,12 @@
     "prefix": {
       "type": "String",
       "desc": "Prefix",
-      "examples": [ "$" ]
+      "examples": [ "Today: " ]
     },
     "suffix": {
       "type": "String",
       "desc": "Suffix",
-      "examples": [ "@gmail.com" ]
+      "examples": [ "PM", "o'clock" ]
     },
     "color": {
       "extends": "color"
@@ -40,7 +40,7 @@
     },
     "loading": {
       "type": "Boolean",
-      "desc": "Signals the user a process is in progress by displaying a spinner; Spinner can be customized by using the 'loading' slot."
+      "desc": "Signals to the user that a process is in progress by displaying a spinner; Spinner can be customized by using the 'loading' slot."
     },
     "clearable": {
       "type": "Boolean",
@@ -111,7 +111,7 @@
     },
     "display-value": {
       "type": [ "Boolean", "String" ],
-      "desc": "if the value is 'true' or a 'function' que internal QInput will be readonly. if value is 'true' the calendar and numeric system used to format the date will not be forced to be gregory calendar and latin nu. if value is a 'string', the format function will be ignored and the 'display-value' will be used directly in the 'input' (default: 'false')",
+      "desc": "If the value is 'true' or a 'function', the internal QInput will be readonly. If the value is 'true' the calendar and numeric system used to format the date will not be forced to be the gregorian calendar and latin numbers. If value is a 'string', the format function will be ignored and the 'display-value' will be used directly in the 'input' (default: 'false')",
       "default": "false"
     },
     "display-icon": {
@@ -150,6 +150,14 @@
       "type": "String",
       "desc": "Calendar Mode ('gregorian', 'persian') (default: 'gregorian')",
       "default": "gregorian"
+    },
+    "date-options": {
+      "type": [ "Function", "Array" ],
+      "desc": "A list of events to highlight on the calendar; If using a function, it receives the date as a String and must return a Boolean (matches or not)"
+    },
+    "time-options": {
+      "type": "Function",
+      "desc": "Optionally configure what time the user allowed to set"
     }
   }
 }
