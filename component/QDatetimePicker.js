@@ -298,6 +298,13 @@ export default Vue.extend({
         return ["date", "time", "datetime"].indexOf(value) !== -1
       }
     },
+    defaultStandard: {
+      type: String,
+      default: "iso",
+      validation (value) {
+        return ["iso", "quasar"].indexOf(value) !== -1
+      }
+    },
     format24h: {
       type: Boolean,
       default: false
@@ -358,6 +365,7 @@ export default Vue.extend({
         time: ''
       },
       values: {
+        iso: '',
         date: '',
         time: '00:00:00'
       },
@@ -372,6 +380,10 @@ export default Vue.extend({
       isoLang: {
         lang: '',
         dateTimePicker: {}
+      },
+      track: {
+        format: '',
+        hasSeparator: true,
       }
     }
   },
@@ -397,8 +409,22 @@ export default Vue.extend({
   },
   computed: {
     cValue: {
-      get () { return this.value },
-      set (value) {
+      get () { return this.values.iso },
+      set (original) {
+        var value = null
+        if (original) {
+          let [ date, time ] = original.split('T')
+          time = time.substring(0, 5)
+          if (this.track.format == 'quasar') {
+            date = date.replace(/-/g, '/')
+          }
+          if (!this.track.hasSeparator) {
+            value = this.mode === 'date' ? date : time
+          } else {
+            let sepatator = this.track.format == 'iso' ? 'T' : ' '
+            value = date + sepatator + time
+          }
+        }
         this.$emit('input', value)
       }
     },
@@ -490,27 +516,39 @@ export default Vue.extend({
       this.inputs.time = ''
       this.values.date = ''
       this.values.time = ''
+      this.values.iso = ''
     },
     __onValueUpdated (value) {
+      this.track.format = this.track.format || this.defaultStandard
+      this.track.hasSeparator = this.mode === 'datetime'
+
       if (!value) {
         this.__resetValues()
         return
       }
+      
+      if (this.displayDatePicker) {
+        this.track.format = value.indexOf('-') !== -1 ? 'iso' : 'quasar'
+      }
+      var separator = this.track.format === 'iso' ? 'T' : ' '
+      this.track.hasSeparator = value.indexOf(separator) !== -1
+      this.values.iso = (() => {
+        switch (this.track.format) {
+          case 'iso': return value
+          case 'quasar': return value.replace(/[\\/]/g, '-').replace(' ', 'T')
+        }
+      })()
 
-      let isoSeparator = value.indexOf('T')
-      let date = null
-      if (isoSeparator === -1) {
-        let self = this
-        value = (() => {
-          switch (self.mode) {
-            case 'time': return '1970-01-01T' + value
-            case 'date': return value + 'T00:00:00'
+      if (!this.track.hasSeparator) {
+        this.values.iso = (() => {
+          switch (this.mode) {
+            case 'time': return '1970-01-01T' + this.values.iso
+            case 'date': return this.values.iso + 'T00:00:00'
           }
         })()
       }
-      date = new Date(value)
-      this.cValue = toISOString(date)
-
+      
+      let date = new Date(this.values.iso)
       this.__intlFormat(date)
       this.$nextTick().then(() => {
         this.__onInput()
@@ -630,7 +668,8 @@ export default Vue.extend({
       
       let dateObj = new Date(year, month, day, hour, minute, second)
       this.__intlFormat(dateObj)
-      this.cValue = toISOString(dateObj)
+      this.values.iso = toISOString(dateObj)
+      this.cValue = this.values.iso
       this.__updatePosition()
     },
     __updateMetadata () {
