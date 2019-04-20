@@ -30,7 +30,8 @@ const renderDate = function (self, h) {
         value: self.values.date,
         landscape: self.landscape,
         todayBtn: self.todayBtn,
-        calendar: self.calendar
+        calendar: self.calendar,
+        options: self.dateOptions
       },
       on: {
         input (value) { self.values.date = value }
@@ -47,7 +48,8 @@ const renderTime = function (self, h) {
         color: self.color,
         value: self.values.time,
         landscape: self.landscape,
-        format24h: self.format24h
+        format24h: self.format24h,
+        options: self.timeOptions
       },
       on: {
         input (value) { self.values.time = value }
@@ -316,6 +318,8 @@ export default Vue.extend({
     icon: String,
     landscape: Boolean,
     todayBtn: Boolean,
+    dateOptions: [Array, Function],
+    timeOptions: Function,
     cover: {
       type: Boolean,
       default: true
@@ -411,21 +415,52 @@ export default Vue.extend({
     cValue: {
       get () { return this.values.iso },
       set (original) {
-        var value = null
+        let value = null
+        let isDateValid = true
+        let isTimeValid = true
+        let hour = -1
+        let minute = -1
+        let second = -1
         if (original) {
-          let [ date, time ] = original.split('T')
-          time = time.substring(0, 5)
-          if (this.track.format == 'quasar') {
-            date = date.replace(/-/g, '/')
-          }
-          if (!this.track.hasSeparator) {
-            value = this.mode === 'date' ? date : time
+          if (!this.dateOptions || this.dateOptions.length === 0 || !this.values.date || !this.displayDatePicker) {
+            isDateValid = true
+          } else if (typeof this.dateOptions === 'function') {
+            isDateValid = this.dateOptions(this.values.date)
           } else {
-            let sepatator = this.track.format == 'iso' ? 'T' : ' '
-            value = date + sepatator + time
+            isDateValid = this.dateOptions.indexOf(this.values.date) !== -1
+          }
+        
+          if (this.values.time) {
+            let time = this.values.time.split(':')
+            hour = this.__parseIntFromArray(time, 0, 0)
+            minute = this.__parseIntFromArray(time, 1, 0)
+            second = this.__parseIntFromArray(time, 2, 0)
+          }
+          if (!this.timeOptions || this.timeOptions.length === 0 || hour === -1 || !this.displayTimePicker) {
+            isTimeValid = true
+          } else if (typeof this.timeOptions === 'function') {
+            isTimeValid = this.timeOptions(hour, minute, second)
+          } else {
+            isTimeValid = this.timeOptions.indexOf({ hour, minute, second }) !== -1
+          }
+         
+          if (isTimeValid && isDateValid) {
+            let [ date, time ] = original.split('T')
+            time = time.substring(0, 5)
+            if (this.track.format == 'quasar') {
+              date = date.replace(/-/g, '/')
+            }
+            if (!this.track.hasSeparator) {
+              value = this.mode === 'date' ? date : time
+            } else {
+              let sepatator = this.track.format == 'iso' ? 'T' : ' '
+              value = date + sepatator + time
+            }
           }
         }
-        this.$emit('input', value)
+        if (isTimeValid && isDateValid) {
+          this.$emit('input', value)
+        }
       }
     },
     displayDatePicker () {
@@ -555,7 +590,7 @@ export default Vue.extend({
       })
     },
     __setupLanguage () {
-      let isoName = this.lang || this.$q.lang.isoName || navigator.language
+      let isoName = this.$q.lang.isoName || this.lang || navigator.language
       let lang
       try {
         lang = require(`./lang/${isoName}`)
@@ -807,6 +842,9 @@ export default Vue.extend({
 
       this.$set(this.masks, 'time', mask)
       this.$set(this.metas, 'time', meta)
+    },
+    __clearValue () {
+      this.cValue = ''
     }
   },
   render (h) {
@@ -825,21 +863,33 @@ export default Vue.extend({
     }
 
     let _renderInput = self.target === 'self' || self.displayValue !== false ? renderReadonlyInput : renderInput
+    let clearBtn = h(QIcon, {
+      staticClass: 'cursor-pointer',
+      props: { name: this.clearIcon || this.$q.iconSet.field.clear },
+      on: {
+        click: this.__clearValue
+      }
+    })
+
     return h('div', {
       class: 'q-datetimepicker'
     }, [
       _renderInput(self, h, inputFields, {
         append (props) {
-          return [
-            h(QIcon, {
-              class: {
-                'cursor-pointer': true
-              },
-              props: {
-                name: self.icon || (self.mode === 'time' ? 'access_time' : 'event' )
-              }
-            }, self.target === 'self' ? [] : renderPopupProxy(self, h))
-          ]
+          let icons = []
+          var pickerbtn = h(QIcon, {
+            class: {
+              'cursor-pointer': true
+            },
+            props: {
+              name: self.icon || (self.mode === 'time' ? 'access_time' : 'event' )
+            }
+          }, self.target === 'self' ? [] : renderPopupProxy(self, h))
+          if (self.cValue && self.target === 'self' && self.clearable) {
+            icons.push(clearBtn)
+          }
+          icons.push(pickerbtn)
+          return icons
         }
       }, self.target === 'self' ? renderPopupProxy(self, h) : [])
     ])
