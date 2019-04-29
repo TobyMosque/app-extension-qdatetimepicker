@@ -31,6 +31,7 @@ const renderDate = function (self, h) {
         landscape: self.landscape,
         todayBtn: self.todayBtn,
         calendar: self.calendar,
+        minimal: self.minimal,
         options: self.dateOptions
       },
       on: {
@@ -49,6 +50,7 @@ const renderTime = function (self, h) {
         value: self.values.time,
         landscape: self.landscape,
         format24h: self.format24h,
+        minimal: self.minimal,
         options: self.timeOptions
       },
       on: {
@@ -306,6 +308,10 @@ export default Vue.extend({
       validation (value) {
         return ["iso", "quasar"].indexOf(value) !== -1
       }
+    },
+    minimal: {
+      type: Boolean,
+      default: false
     },
     format24h: {
       type: Boolean,

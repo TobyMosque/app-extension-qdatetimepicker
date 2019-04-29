@@ -133,6 +133,23 @@
           </q-card-actions>
         </q-card>
       </q-form>
+      <q-form ref="form8" @submit="onSubmit($refs.form8)" class="col col-lg-3 col-md-6 col-12 q-pa-md" >
+        <q-card>
+          <q-card-section>
+            <div class="text-h6">Minimal Property</div>
+          </q-card-section>
+          <q-separator dark inset />
+          <q-card-section class="">
+            <q-datetime-picker class="q-mb-md" outlined label="Date with Minimal Prop" mode="date" v-model="iso_date" :rules="rules" minimal></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="Time with Minimal Prop" mode="time" v-model="iso_time" :rules="rules" minimal></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="DateTime with Minimal Prop" mode="datetime" v-model="iso_datetime" :rules="rules" minimal></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="DateTime with Minimal and Landscape Prop" mode="datetime" v-model="iso_datetime" :rules="rules" minimal landscape></q-datetime-picker>
+          </q-card-section>
+          <q-card-actions>
+            <q-btn label="Submit" type="submit" dark color="negative" class="full-width" />
+          </q-card-actions>
+        </q-card>
+      </q-form>
       <div class="col col-md-6 col-12 q-pa-md">
         <q-banner rounded class="bg-primary text-white">
           <template v-slot:avatar>
