@@ -8,6 +8,7 @@ export default {
     iso_empty_datetime (state, value) { state.iso_empty_datetime = value },
     iso_date (state, value) { state.iso_date = value },
     iso_time (state, value) { state.iso_time = value },
+    iso_time2 (state, value) { state.iso_time2 = value },
     iso_datetime (state, value) { state.iso_datetime = value },
     quasar_empty_date (state, value) { state.quasar_empty_date = value },
     quasar_empty_time (state, value) { state.quasar_empty_time = value },
@@ -25,6 +26,7 @@ export default {
       iso_empty_datetime: '',
       iso_date: '2018-11-02',
       iso_time: '15:46',
+      iso_time2: '15:46:28',
       iso_datetime: '2018-11-02T15:46',
       quasar_empty_date: '',
       quasar_empty_time: '',
@@ -43,6 +45,7 @@ export default {
       commit('iso_empty_datetime', obj.iso_empty_datetime)
       commit('iso_date', obj.iso_date)
       commit('iso_time', obj.iso_time)
+      commit('iso_time2', obj.iso_time2)
       commit('iso_datetime', obj.iso_datetime)
       commit('quasar_empty_date', obj.quasar_empty_date)
       commit('quasar_empty_time', obj.quasar_empty_time)

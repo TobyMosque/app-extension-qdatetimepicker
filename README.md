@@ -199,6 +199,7 @@ We need help translating the language files. Below are listed the available ones
 | calendar | String | Calendar Mode (`gregorian`, `persian`) (default: `gregorian`) |
 | date-options | Function or Array | A list of events to highlight on the calendar; If using a function, it receives the date as a String and must return a Boolean (matches or not) |
 | time-options | Function | Optionally configure what time the user allowed to set |
+| with-seconds | Boolean | Allow the time to be set with seconds |
 | default-standard | String | serialization standard, the property will be ignored if value isn't null (`iso`, `quasar`) (eg.: `iso`: `yyyy-MM-ddTHH:mm`, `quasar`: `yyyy/MM/dd HH:mm`) (default: `iso`) |
 
 # Patreon

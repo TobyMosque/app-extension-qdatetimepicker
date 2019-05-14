@@ -22,7 +22,7 @@
           <q-separator inset />
           <q-card-section>
             <q-datetime-picker class="q-mb-md" label="Standard Date Picker" v-model="iso_date" :rules="rules" :date-options="dateFilter" @input="log"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="Outlined Date Picker" mode="time" v-model="iso_time" :rules="rules" :time-options="timeFilter" @input="log"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="Outlined Date Picker" mode="time" v-model="iso_time" :rules="rules" :time-options="timeFilter"></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" filled label="Filled Date Picker" v-model="iso_date" :rules="rules" target="self" clearable></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" standout label="Standout Date Picker" mode="time" v-model="iso_time" :rules="rules" target="self"></q-datetime-picker>
           </q-card-section>
@@ -39,7 +39,7 @@
           <q-separator dark inset />
           <q-card-section class="">
             <q-datetime-picker class="q-mb-md" outlined label="Date Picker" color="negative" dark v-model="iso_date" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="Time Picker" mode="time" color="negative" dark v-model="iso_time" :rules="rules"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="Time Picker" mode="time" color="negative" dark v-model="iso_time2" :rules="rules" with-seconds></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" outlined label="DateTime Picker" mode="datetime" color="negative" dark v-model="iso_datetime" :rules="rules" @input="log"></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" mode="datetime" color="negative" dark v-model="iso_datetime" format24h clearable :rules="rules" icon="date_range"></q-datetime-picker>
           </q-card-section>
@@ -203,6 +203,7 @@ export default {
       iso_empty_datetime: '',
       iso_date: '2018-11-02',
       iso_time: '15:46',
+      iso_time2: '15:46:36',
       iso_datetime: '2018-11-02T15:46',
       quasar_empty_date: '',
       quasar_empty_time: '',
@@ -247,6 +248,10 @@ export default {
     iso_time: {
       get () { return this.$store.state.homePage.iso_time },
       set (value) { return this.$store.commit('homePage/iso_time', value) }
+    },
+    iso_time2: {
+      get () { return this.$store.state.homePage.iso_time2 },
+      set (value) { return this.$store.commit('homePage/iso_time2', value) }
     },
     iso_datetime: {
       get () { return this.$store.state.homePage.iso_datetime },
@@ -301,6 +306,13 @@ export default {
       deep: true,
       handler () {
         console.log('iso_time: ', this.iso_time)
+      }
+    },
+    iso_time2: {
+      immediate: true,
+      deep: true,
+      handler () {
+        console.log('iso_time2: ', this.iso_time2)
       }
     },
     iso_datetime: {

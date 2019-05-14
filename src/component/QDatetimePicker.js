@@ -51,6 +51,7 @@ const renderTime = function (self, h) {
         landscape: self.landscape,
         format24h: self.format24h,
         minimal: self.minimal,
+        withSeconds: self.withSeconds,
         options: self.timeOptions
       },
       on: {
@@ -326,6 +327,7 @@ export default Vue.extend({
     todayBtn: Boolean,
     dateOptions: [Array, Function],
     timeOptions: Function,
+    withSeconds: Boolean,
     cover: {
       type: Boolean,
       default: true
@@ -452,7 +454,7 @@ export default Vue.extend({
          
           if (isTimeValid && isDateValid) {
             let [ date, time ] = original.split('T')
-            time = time.substring(0, 5)
+            time = time.substring(0, this.withSeconds ? 8 : 5)
             if (this.track.format == 'quasar') {
               date = date.replace(/-/g, '/')
             }
@@ -479,7 +481,14 @@ export default Vue.extend({
       return this.displayDatePicker ? { day: '2-digit', month: '2-digit', year: 'numeric' } : {}
     },
     timeIntlOptions () {
-      return this.displayTimePicker ? { hour: '2-digit', minute: '2-digit', hour12: false /*!this.format24h*/ } : {}
+      if (!this.displayTimePicker) {
+        return {}
+      }
+      let options = { hour: '2-digit', minute: '2-digit', hour12: false /*!this.format24h*/ }
+      if (this.withSeconds) {
+        options.second = '2-digit'
+      }
+      return options
     },
     intlOptions () {
       return { ...this.dateIntlOptions, ...this.timeIntlOptions }
@@ -844,8 +853,7 @@ export default Vue.extend({
             }
           }
         }
-      }
-
+      }      
       this.$set(this.masks, 'time', mask)
       this.$set(this.metas, 'time', meta)
     },
