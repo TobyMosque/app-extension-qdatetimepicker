@@ -464,7 +464,7 @@ export default Vue.extend({
             }
           }
         }
-        if (isTimeValid && isDateValid) {
+        if (isTimeValid && isDateValid && this.value !== value) {
           this.$emit('input', value)
         }
       }
