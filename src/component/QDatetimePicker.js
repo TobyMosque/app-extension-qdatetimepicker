@@ -35,7 +35,11 @@ const renderDate = function (self, h) {
         options: self.dateOptions
       },
       on: {
-        input (value) { self.values.date = value }
+        input (value) { 
+          self.values.date = value
+          if (self.automaticSet)
+            self.__onSetClick()
+        }
       }
     }, [])
   ]
@@ -55,7 +59,11 @@ const renderTime = function (self, h) {
         options: self.timeOptions
       },
       on: {
-        input (value) { self.values.time = value }
+        input (value) {
+          self.values.time = value
+          if (self.automaticSet)
+            self.__onSetClick()
+        }
       }
     }, [])
   ]
@@ -347,6 +355,10 @@ export default Vue.extend({
       validation (value) {
         return ["self", "icon"].indexOf(value) !== -1
       }
+    },
+    automaticSet: {
+        type: Boolean,
+        default: false
     }
   },
   created () {
