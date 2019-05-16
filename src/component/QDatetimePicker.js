@@ -881,7 +881,10 @@ export default Vue.extend({
       staticClass: 'cursor-pointer',
       props: { name: this.clearIcon || this.$q.iconSet.field.clear },
       on: {
-        click: this.__clearValue
+        click: e => {
+          e.stopPropagation()
+          this.__clearValue()
+        }
       }
     })
 
