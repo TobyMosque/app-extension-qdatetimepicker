@@ -125,7 +125,7 @@
           <q-card-section class="">
             <q-datetime-picker class="q-mb-md" outlined label="Date using Quasar Standard" v-model="iso_empty_date" :rules="rules"></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" outlined label="Time using Quasar Standard" mode="time" v-model="iso_empty_time" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="DateTime using Quasar Standard" mode="datetime" v-model="iso_empty_datetime" :rules="rules"></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="DateTime using Quasar Standard" mode="datetime" v-model="iso_empty_datetime" :rules="rules" today-btn now-btn></q-datetime-picker>
             <q-datetime-picker class="q-mb-md" standout label="DateTime 24h using Quasar Standard" mode="datetime" v-model="iso_empty_datetime" format24h clearable :rules="rules" icon="date_range"></q-datetime-picker>
           </q-card-section>
           <q-card-actions>

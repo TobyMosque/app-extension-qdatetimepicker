@@ -54,6 +54,7 @@ const renderTime = function (self, h) {
         value: self.values.time,
         landscape: self.landscape,
         format24h: self.format24h,
+        nowBtn: self.nowBtn,
         minimal: self.minimal,
         withSeconds: self.withSeconds,
         options: self.timeOptions
@@ -333,6 +334,7 @@ export default Vue.extend({
     icon: String,
     landscape: Boolean,
     todayBtn: Boolean,
+    nowBtn: Boolean,
     dateOptions: [Array, Function],
     timeOptions: Function,
     withSeconds: Boolean,
@@ -667,9 +669,9 @@ export default Vue.extend({
         if (time.length === this.masks.time.length) {
           let meta = this.metas.time
           let parts = time.split(meta.separator)
-          let hour = meta.hour.order === -1 ? '00' : parts[meta.hour.order]
-          let minute = meta.minute.order === -1 ? '00' : parts[meta.minute.order]
-          let second = meta.second.order === -1 ? '00' : parts[meta.second.order]
+          let hour = meta.hour.order === -1 ? '00' : parts[meta.hour.order].padStart(2, '0')
+          let minute = meta.minute.order === -1 ? '00' : parts[meta.minute.order].padStart(2, '0')
+          let second = meta.second.order === -1 ? '00' : parts[meta.second.order].padStart(2, '0')
           this.$nextTick().then(() => {
             this.values.time = `${hour}:${minute}:${second}`
             this.__onTimeChange()
@@ -710,10 +712,14 @@ export default Vue.extend({
       }
       let self = this
       this.masked = (() => {
+        var formatTime = function (date) {
+          var formated = self.intlTimeFormatter.format(date)
+          return formated.split(':').map(part => part.padStart(2, '0')).join(':')
+        }
         switch (self.mode) {
-          case 'datetime': return self.intlDateFormatter.format(date) + ' ' + self.intlTimeFormatter.format(date)
+          case 'datetime': return self.intlDateFormatter.format(date) + ' ' + formatTime(date)
           case 'date': return self.intlDateFormatter.format(date)
-          case 'time': return self.intlTimeFormatter.format(date)
+          case 'time': return formatTime(date)
         }
       })()
     },

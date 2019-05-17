@@ -95,9 +95,11 @@ data () {
 <q-datetime-picker landscape mode="datetime" label="Landscape Date & Time Mode" v-model="datetime"></q-datetime-picker>
 ```
 
-## today-btn
+## today-btn and now-btn
 ```html
-<q-datetime-picker today-btn mode="date" label="Disabled Today Button" v-model="date"></q-datetime-picker>
+<q-datetime-picker today-btn mode="date" label="Today Button" v-model="date"></q-datetime-picker>
+<q-datetime-picker now-btn mode="time" label="Now Button" v-model="date"></q-datetime-picker>
+<q-datetime-picker today-btn now-btn mode="datetime" label="Today and Now Button" v-model="date"></q-datetime-picker>
 ```
 
 ## target
@@ -192,6 +194,7 @@ We need help translating the language files. Below are listed the available ones
 | icon | String | The icon of the picker (default: `access_time` when the mode is `time`, otherwise `event`) |
 | landscape | Boolean | Show the picker in landscape mode (default: false) |
 | today-btn | Boolean | Display a button that selects the current day (`date` and `datetime` modes only) (default: false) |
+| now-btn | Boolean | Display a button that selects the current time (`time` and `datetime` modes only) (default: false) |
 | cover | Boolean | Allows the picker to cover its target. When used, the `fit` props are no longer effective (default: `true`) |
 | fit | Boolean | Allows the picker to match at least the full width of its target (default: `true` when target is `self`, otherwise `false`) |
 | anchor | String | Two values setting the starting position or anchor point of the menu relative to its target (`top left`, `top middle`, `top right`, `center left`, `center middle`, `center right`, `bottom left`, `bottom middle` or `bottom right`) |

@@ -126,6 +126,10 @@
       "type": [ "Boolean" ],
       "desc": "Display a button that selects the current day ('date' and 'datetime' modes only) (default: 'false')"
     },
+    "now-btn": {
+      "type": [ "Boolean" ],
+      "desc": "Display a button that selects the current time ('time' and 'datetime' modes only) (default: 'false')"
+    },
     "cover": {
       "type": [ "Boolean" ],
       "desc": "Allows the picker to cover its target. When used, the 'fit' props are no longer effective",
