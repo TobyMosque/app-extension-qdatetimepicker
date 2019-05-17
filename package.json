@@ -1,6 +1,6 @@
 {
   "name": "quasar-app-extension-qdatetimepicker",
-  "version": "1.0.0-alpha.31",
+  "version": "1.0.0-alpha.33",
   "description": "QDatetimePicker for Quasar",
   "author": "Tobias Mesquita <tobias.mesquita@gmail.com>",
   "main": "src/index.js",

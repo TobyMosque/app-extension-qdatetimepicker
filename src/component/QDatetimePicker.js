@@ -2,6 +2,7 @@ import Vue from 'vue'
 
 import {
   dom,
+  debounce,
   QField,
   QInput,
   QIcon,
@@ -35,10 +36,14 @@ const renderDate = function (self, h) {
         options: self.dateOptions
       },
       on: {
-        input (value) { 
+        input (value, reason) { 
           self.values.date = value
-          if (self.autoUpdateValue)
+          if (reason === 'today' && self.nowBtn && self.displayTimePicker) {
+            self.values.time = self.__formatTime(new Date())
+          }
+          if (self.autoUpdateValue) {
             self.__onSetClick()
+          }
         }
       }
     }, [])
@@ -48,6 +53,7 @@ const renderDate = function (self, h) {
 const renderTime = function (self, h) {
   return [
     h(QTime, {
+      ref: 'time',
       props: {
         dark: self.dark,
         color: self.color,
@@ -436,7 +442,7 @@ export default Vue.extend({
   computed: {
     cValue: {
       get () { return this.values.iso },
-      set (original) {
+      set: debounce(function (original) {
         let value = null
         let isDateValid = true
         let isTimeValid = true
@@ -483,7 +489,7 @@ export default Vue.extend({
         if (isTimeValid && isDateValid && this.value !== value) {
           this.$emit('input', value)
         }
-      }
+      }, 0),
     },
     displayDatePicker () {
       return ["date", "datetime"].indexOf(this.mode) !== -1
@@ -712,16 +718,17 @@ export default Vue.extend({
       }
       let self = this
       this.masked = (() => {
-        var formatTime = function (date) {
-          var formated = self.intlTimeFormatter.format(date)
-          return formated.split(':').map(part => part.padStart(2, '0')).join(':')
-        }
+        
         switch (self.mode) {
-          case 'datetime': return self.intlDateFormatter.format(date) + ' ' + formatTime(date)
+          case 'datetime': return self.intlDateFormatter.format(date) + ' ' + self.__formatTime(date)
           case 'date': return self.intlDateFormatter.format(date)
-          case 'time': return formatTime(date)
+          case 'time': return self.__formatTime(date)
         }
       })()
+    },
+    __formatTime (date) {
+      var formated = this.intlTimeFormatter.format(date)
+      return formated.split(':').map(part => part.padStart(2, '0')).join(':')
     },
     __onChange () {
       let date = this.values.date.split('/')
