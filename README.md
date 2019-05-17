@@ -201,6 +201,7 @@ We need help translating the language files. Below are listed the available ones
 | time-options | Function | Optionally configure what time the user allowed to set |
 | with-seconds | Boolean | Allow the time to be set with seconds |
 | default-standard | String | serialization standard, the property will be ignored if value isn't null (`iso`, `quasar`) (eg.: `iso`: `yyyy-MM-ddTHH:mm`, `quasar`: `yyyy/MM/dd HH:mm`) (default: `iso`) |
+| auto-update-value | Boolean | When the last action in selection mode is completed, the value is updated automatically |
 
 # Patreon
 If you like (and use) this App Extension, please consider becoming a Quasar [Patreon](https://www.patreon.com/quasarframework).

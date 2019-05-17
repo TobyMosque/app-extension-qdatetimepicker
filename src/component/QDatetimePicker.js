@@ -37,7 +37,7 @@ const renderDate = function (self, h) {
       on: {
         input (value) { 
           self.values.date = value
-          if (self.automaticSet)
+          if (self.autoUpdateValue)
             self.__onSetClick()
         }
       }
@@ -61,7 +61,7 @@ const renderTime = function (self, h) {
       on: {
         input (value) {
           self.values.time = value
-          if (self.automaticSet)
+          if (self.autoUpdateValue)
             self.__onSetClick()
         }
       }
@@ -356,7 +356,7 @@ export default Vue.extend({
         return ["self", "icon"].indexOf(value) !== -1
       }
     },
-    automaticSet: {
+    autoUpdateValue: {
         type: Boolean,
         default: false
     }
