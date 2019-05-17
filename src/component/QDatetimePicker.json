@@ -167,6 +167,10 @@
       "type": "String",
       "desc": "Serialization standard, the property will be ignored if value isn't null ('iso', 'quasar') (eg.: 'iso': 'yyyy-MM-ddTHH:mm', 'quasar': 'yyyy/MM/dd HH:mm') (default: 'iso')",
       "default": "iso"
+    },
+    "auto-update-value": {
+      "type": "Boolean",
+      "desc": "When the last action in selection mode is completed, the value is updated automatically"
     }
   }
 }
