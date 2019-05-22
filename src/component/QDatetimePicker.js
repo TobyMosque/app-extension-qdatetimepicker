@@ -288,29 +288,13 @@ export default function (ssrContext) {
   }
 
   const tzWorkaround = (function () {
-    const timeFormat = new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit' })
     const platform = process.env.SERVER ? Platform.parseSSR(ssrContext) : Platform
     return function (date) {
       if (platform.is.safari || platform.ipad || platform.is.iphone)
       {
-        if (!date) {
-          return ''
-        }
-        if (!date.getTimezoneOffset) {
-          date = new Date(date)
-        }
-        if (!date.getTimezoneOffset) {
-          return ''
-        }
-        let offset = date.getTimezoneOffset() * -1
-        var time = new Date(2000, 1, 1).getTime()
-        time = new Date(time + Math.abs(offset) * 60000)
-        time = timeFormat.format(time).substring(0, 5)
-    
-        var signal = offset > 0 ? '+' : '-'
-        return signal + time
+        return date.replace(/-/g, '/').replace('T', ' ')
       }
-      return ''
+      return date
     }
   })()
 
@@ -645,8 +629,7 @@ export default function (ssrContext) {
           })()
         }
         
-        let t = this.values.iso + tzWorkaround(this.values.iso, this.intlTimeFormatter)
-        let date = new Date(t)      
+        let date = new Date(tzWorkaround(this.values.iso))      
         this.__intlFormat(date)
         this.$nextTick().then(() => {
           this.__onInput()
