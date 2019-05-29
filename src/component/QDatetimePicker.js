@@ -690,7 +690,11 @@ export default function (ssrContext) {
             let minute = meta.minute.order === -1 ? '00' : parts[meta.minute.order].padStart(2, '0')
             let second = meta.second.order === -1 ? '00' : parts[meta.second.order].padStart(2, '0')
             this.$nextTick().then(() => {
-              this.values.time = `${hour}:${minute}:${second}`
+              if (this.withSeconds) {
+                this.values.time = `${hour}:${minute}:${second}`
+              } else {
+                this.values.time = `${hour}:${minute}`
+              }
               this.__onTimeChange()
             })
           }
