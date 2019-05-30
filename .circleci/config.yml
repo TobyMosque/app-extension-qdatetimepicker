@@ -12,6 +12,9 @@ jobs:
           name: Update quasar-cli
           command: 'sudo npm install -g @quasar/cli@latest'
       - run:
+          name: build test app
+          command: 'cd test/app && yarn'
+      - run:
           name: Update test app depedencies
           command: 'cd test/app && quasar upgrade -i'
       - run:
