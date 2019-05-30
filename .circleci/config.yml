@@ -7,14 +7,14 @@ jobs:
           name: Update npm
           command: 'sudo npm install -g npm@latest'
       - run:
-          name: Update npm
+          name: Update quasar-cli
           command: 'sudo npm install -g @quasar/cli@latest'
       - run:
-          name: Update npm
+          name: Update test app depedencies
           command: 'cd /test/app && quasar upgrade -i'
       - run:
-          name: Update npm
+          name: build test app
           command: 'cd /test/app && quasar build -m spa'
       - run:
-          name: Update npm
+          name: moving desployed artifacts to docs folder
           command: 'mv /test/app/dist/app /docs'
