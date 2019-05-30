@@ -10,21 +10,11 @@ jobs:
           - v1-dependencies-{{ checksum "package.json" }}
           - v1-dependencies-
       - run:
-          name: Update quasar-cli
-          command: 'sudo npm install -g @quasar/cli@latest'
-      - run:
           name: Install and configure dependencies
-          command: '|
-            sudo npm install -g @quasar/cli@latest
-            sudo install -g gh-pages@latest
-            git config user.email "ci-build@klukas.net"
-            git config user.name "ci-build"'
+          command: 'sudo npm install -g @quasar/cli@latest && sudo npm install -g gh-pages@latest && git config user.email "ci-build@klukas.net" && git config user.name "ci-build"'
       - run:
-          name: build test app
-          command: 'cd test/app && yarn'
-      - run:
-          name: Update test app depedencies
-          command: 'cd test/app && quasar upgrade -i'
+          name: installing dependencies
+          command: 'cd test/app && yarn && quasar upgrade -i'
       - save_cache:
           paths:
             - node_modules
