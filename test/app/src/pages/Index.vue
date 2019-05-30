@@ -154,12 +154,12 @@
         <q-banner rounded class="bg-primary text-white">
           <template v-slot:avatar>
             <q-avatar>
-              <img src="https://cdn.quasar-framework.org/logo/svg/quasar-logo.svg">
+              <img src="https://cdn.quasar.dev/logo/svg/quasar-logo.svg">
             </q-avatar>
           </template>
           New to Quasar? Don't miss the chance to know the best Framework based on Vue
           <template v-slot:action>
-            <a href="https://v1.quasar-framework.org">
+            <a href="https://quasar.dev">
               <q-btn flat color="white" label="Show me" />
             </a>
           </template>
