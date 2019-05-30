@@ -1,3 +1,20 @@
 version: 2
 jobs:
   build:
+    steps:
+      - checkout
+      - run:
+          name: Update npm
+          command: 'sudo npm install -g npm@latest'
+      - run:
+          name: Update npm
+          command: 'sudo npm install -g @quasar/cli@latest'
+      - run:
+          name: Update npm
+          command: 'cd /test/app && quasar upgrade -i'
+      - run:
+          name: Update npm
+          command: 'cd /test/app && quasar build -m spa'
+      - run:
+          name: Update npm
+          command: 'mv /test/app/dist/app /docs'
