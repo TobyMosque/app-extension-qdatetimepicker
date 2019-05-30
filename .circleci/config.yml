@@ -13,10 +13,10 @@ jobs:
           command: 'sudo npm install -g @quasar/cli@latest'
       - run:
           name: Update test app depedencies
-          command: 'cd /test/app && quasar upgrade -i'
+          command: 'cd test/app && quasar upgrade -i'
       - run:
           name: build test app
-          command: 'cd /test/app && quasar build -m spa'
+          command: 'cd test/app && quasar build -m spa'
       - run:
           name: moving desployed artifacts to docs folder
-          command: 'mv /test/app/dist/app /docs'
+          command: 'mv test/app/dist/app docs'
