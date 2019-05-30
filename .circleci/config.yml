@@ -1,8 +1,8 @@
 version: 2
 jobs:
   build:
-    machine:
-      image: circleci/classic:edge 
+    docker:
+      - image: circleci/node:latest
     steps:
       - checkout
       - run:
