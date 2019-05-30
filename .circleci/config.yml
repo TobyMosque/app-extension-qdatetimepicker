@@ -22,4 +22,4 @@ jobs:
           command: 'cd test/app && quasar build -m spa'
       - run:
           name: moving desployed artifacts to docs folder
-          command: 'mv test/app/dist/app docs'
+          command: 'mv test/app/dist/spa docs'
