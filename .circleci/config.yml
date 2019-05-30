@@ -14,11 +14,11 @@ jobs:
           command: 'sudo npm install -g @quasar/cli@latest'
       - run:
           name: Install and configure dependencies
-          command: |
+          command: '|
             sudo npm install -g @quasar/cli@latest
             sudo install -g gh-pages@latest
             git config user.email "ci-build@klukas.net"
-            git config user.name "ci-build"
+            git config user.name "ci-build"'
       - run:
           name: build test app
           command: 'cd test/app && yarn'
