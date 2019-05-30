@@ -28,5 +28,3 @@ jobs:
       - run:
           name: Deploy docs to gh-pages branch
           command: gh-pages --dotfiles --message "[skip ci] Updates" --dist test/app/dist/spa
-          name: moving desployed artifacts to docs folder
-          command: 'mv test/app/dist/spa docs'
