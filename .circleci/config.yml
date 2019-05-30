@@ -21,7 +21,7 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
       - add_ssh_keys:
           fingerprints:
-            - "21:64:64:80:7e:b4:b8:8f:6c:4d:fa:17:54:38:4b:e6"
+            - "e6:8a:ef:c5:2d:66:f3:6e:0f:fc:c4:3a:98:b4:ca:7c"
       - run:
           name: build test app
           command: 'cd test/app && quasar build -m spa'
