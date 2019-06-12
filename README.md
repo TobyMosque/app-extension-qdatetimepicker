@@ -109,10 +109,10 @@ data () {
 
 ## date and time options
 ```html
-<q-datetime-picker target="self" mode="date" label="Even Days" v-model="date" date-options="dateOptionsA"></q-datetime-picker>
-<q-datetime-picker target="self" mode="date" label="Date Range" v-model="date" date-options="dateOptionsB"></q-datetime-picker>
-<q-datetime-picker target="self" mode="time" label="Even Hours" v-model="time" time-options="timeOptionsA"></q-datetime-picker>
-<q-datetime-picker target="self" mode="time" label="Non Human Friendly" v-model="time" time-options="timeOptionsB"></q-datetime-picker>
+<q-datetime-picker target="self" mode="date" label="Even Days" v-model="date" :date-options="dateOptionsA"></q-datetime-picker>
+<q-datetime-picker target="self" mode="date" label="Date Range" v-model="date" :date-options="dateOptionsB"></q-datetime-picker>
+<q-datetime-picker target="self" mode="time" label="Even Hours" v-model="time" :time-options="timeOptionsA"></q-datetime-picker>
+<q-datetime-picker target="self" mode="time" label="Non Human Friendly" v-model="time" :time-options="timeOptionsB"></q-datetime-picker>
 ```
 ```js
 export default {
