@@ -445,7 +445,8 @@ export default function (ssrContext) {
       language() {
         this.__updateMetadata()
         this.__setupLanguage()
-        this.__onChange()
+        let value = '' + (this.value || '')
+        this.__onValueUpdated(value)
       },
       intlOptions () {
         this.__updateMetadata()
@@ -694,7 +695,6 @@ export default function (ssrContext) {
         }
       },
       __onInputTime (time) {
-        console.log(time)
         if (this.inputs.time !== time) {
           this.inputs.time = time
           var maskLength = this.masks.time.replace(/[^\#]/g, '').length
@@ -706,6 +706,7 @@ export default function (ssrContext) {
             }
             let meta = this.metas.time
             let parts = time.split(meta.separator)
+            console.log(parts)
             let hour = meta.hour.order === -1 ? '00' : parts[meta.hour.order].padStart(2, '0')            
             let minute = meta.minute.order === -1 ? '00' : parts[meta.minute.order].padStart(2, '0')
             let second = meta.second.order === -1 ? '00' : parts[meta.second.order].padStart(2, '0')
@@ -753,7 +754,6 @@ export default function (ssrContext) {
         }
         let self = this
         this.masked = (() => {
-          
           switch (self.mode) {
             case 'datetime': return self.intlDateFormatter.format(date) + ' ' + self.__formatTime(date)
             case 'date': return self.intlDateFormatter.format(date)
@@ -763,7 +763,8 @@ export default function (ssrContext) {
       },
       __formatTime (date) {
         var formated = this.intlTimeFormatter.format(date)
-        return formated.split(':').map(part => part.padStart(2, '0')).join(':')
+        var separator = this.metas.time.separator || ':'
+        return formated.split(separator).map(part => part.padStart(2, '0')).join(separator)
       },
       __onChange () {
         let date = this.values.date.split('/')
@@ -863,10 +864,10 @@ export default function (ssrContext) {
         let meta = {}
         let mask = ''
         if (this.displayTimePicker) {
-
           let formatter = new Intl.DateTimeFormat(this.language, this.timeIntlOptions)
           let date = new Date(2011, 11, 11, 11, 22, 44)
           let formatted = formatter.format(date)
+          console.log(formatted)
           meta.separator = ''
           meta.hour = {
             pos: formatted.indexOf('11'),
@@ -917,6 +918,7 @@ export default function (ssrContext) {
         }      
         this.$set(this.masks, 'time', mask)
         this.$set(this.metas, 'time', meta)
+        console.log(meta)
       },
       __clearValue () {
         this.cValue = ''
