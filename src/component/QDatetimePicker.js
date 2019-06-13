@@ -169,6 +169,16 @@ export default function (ssrContext) {
         value: self.masked
       },
       on: {
+        keyup (event) {
+          switch (true) {
+            case !self.values.suffix: return
+            case event.keyCode === 65 && self.values.suffix.endsWith('PM'):
+            case event.keyCode === 80 && self.values.suffix.endsWith('AM'): self.__toggleSuffix(); break
+            case event.shiftKey: return
+            case event.keyCode === 38:
+            case event.keyCode === 40: self.__toggleSuffix()
+          }
+        },
         input (value) {
           self.masked = value
         },
@@ -410,7 +420,8 @@ export default function (ssrContext) {
         values: {
           iso: '',
           date: '',
-          time: '00:00:00'
+          time: '00:00:00',
+          suffix: ''
         },
         masks: {
           date: '##/##/####',
@@ -515,7 +526,7 @@ export default function (ssrContext) {
         if (!this.displayTimePicker) {
           return {}
         }
-        let options = { hour: '2-digit', minute: '2-digit', hour12: false /*!this.format24h*/ }
+        let options = { hour: '2-digit', minute: '2-digit', hour12: !this.format24h }
         if (this.withSeconds) {
           options.second = '2-digit'
         }
@@ -650,12 +661,14 @@ export default function (ssrContext) {
           this.cValue = null
         } else if (this.masks.date && this.masks.time) {
           let value = this.masked.trim()
-          if (value.length === this.mask.length) {
+          var maskLength = this.mask.replace(/[^\#]/g, '').length
+          var valueLength = value.replace(/\D/g, '').length
+          if (valueLength === maskLength) {
             let date = this.masked.substring(0, this.masks.date.length)
             let time = this.masked.substring(this.masks.date.length + 1)
             this.__onInputTime(time)
             this.__onInputDate(date)
-          } else if (value.length === this.masks.date.length) {
+          } else if (valueLength === this.masks.date.length) {
             this.__onInputDate(value)
           }
         } else if (this.masks.date) {
@@ -681,21 +694,28 @@ export default function (ssrContext) {
         }
       },
       __onInputTime (time) {
+        console.log(time)
         if (this.inputs.time !== time) {
           this.inputs.time = time
-          if (time.length === this.masks.time.length) {
+          var maskLength = this.masks.time.replace(/[^\#]/g, '').length
+          var valueLength = time.replace(/\D/g, '').length
+          if (valueLength === maskLength) {
+            if (time.length > this.masks.time.length) {
+              this.values.suffix = time.substring(this.masks.time.length)
+              time = time.substring(0, this.masks.time.length)
+            }
             let meta = this.metas.time
             let parts = time.split(meta.separator)
-            let hour = meta.hour.order === -1 ? '00' : parts[meta.hour.order].padStart(2, '0')
+            let hour = meta.hour.order === -1 ? '00' : parts[meta.hour.order].padStart(2, '0')            
             let minute = meta.minute.order === -1 ? '00' : parts[meta.minute.order].padStart(2, '0')
             let second = meta.second.order === -1 ? '00' : parts[meta.second.order].padStart(2, '0')
+            if (this.values.suffix.endsWith('PM')) hour = "" + (parseInt(hour) + 12)
             this.$nextTick().then(() => {
-              if (this.withSeconds) {
-                this.values.time = `${hour}:${minute}:${second}`
-              } else {
-                this.values.time = `${hour}:${minute}`
+              let proposal = this.withSeconds ? `${hour}:${minute}:${second}` : `${hour}:${minute}`
+              if (this.values.time !== proposal) {
+                this.values.time = proposal
+                this.__onTimeChange()
               }
-              this.__onTimeChange()
             })
           }
         }
@@ -843,22 +863,23 @@ export default function (ssrContext) {
         let meta = {}
         let mask = ''
         if (this.displayTimePicker) {
+
           let formatter = new Intl.DateTimeFormat(this.language, this.timeIntlOptions)
-          let date = new Date(2011, 11, 11, 12, 24, 48)
+          let date = new Date(2011, 11, 11, 11, 22, 44)
           let formatted = formatter.format(date)
           meta.separator = ''
           meta.hour = {
-            pos: formatted.indexOf('12'),
+            pos: formatted.indexOf('11'),
             cases: 2,
             order: -1
           }
           meta.minute = {
-            pos: formatted.indexOf('24'),
+            pos: formatted.indexOf('22'),
             cases: 2,
             order: -1
           }
           meta.second = {
-            pos: formatted.indexOf('48'),
+            pos: formatted.indexOf('44'),
             cases: 2,
             order: -1
           }
@@ -899,6 +920,15 @@ export default function (ssrContext) {
       },
       __clearValue () {
         this.cValue = ''
+      },
+      __toggleSuffix () {
+        this.values.suffix = this.values.suffix.endsWith('PM') ? 'AM' : 'PM'
+        let difference = this.values.suffix === 'PM' ? +12 : -12
+        let [ hour, ...parts ] = this.values.time.split(':')
+        hour = "" + (parseInt(hour) + difference)
+        parts.unshift(hour)
+        this.values.time = parts.join(':')
+        this.__onTimeChange()
       }
     },
     render (h) {
@@ -927,6 +957,15 @@ export default function (ssrContext) {
           }
         }
       })
+
+      let suffixLabel = h('h6', { 
+        class: `text-${self.color || 'primary'} cursor-pointer q-pr-xs`,
+        on: {
+          click (event) {
+            self.__toggleSuffix()
+          }
+        }
+      }, self.values.suffix)
   
       return h('div', {
         class: 'q-datetimepicker'
@@ -942,9 +981,14 @@ export default function (ssrContext) {
                 name: self.icon || (self.mode === 'time' ? 'access_time' : 'event' )
               }
             }, self.target === 'self' ? [] : renderPopupProxy(self, h))
+            if (self.target !== 'self' && self.values.suffix) {
+              icons.push(suffixLabel)
+            }
+
             if (self.cValue && self.target === 'self' && self.clearable) {
               icons.push(clearBtn)
             }
+            
             icons.push(pickerbtn)
             return icons
           }
