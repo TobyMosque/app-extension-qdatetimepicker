@@ -3,6 +3,7 @@ import Vue from 'vue'
 import {
   dom,
   debounce,
+  throttle,
   Platform,
   QField,
   QInput,
@@ -391,6 +392,7 @@ export default function (ssrContext) {
       }
     },
     created () {
+      let self = this
       this.__updateMetadata()
       this.__setupLanguage()
       
@@ -400,6 +402,9 @@ export default function (ssrContext) {
         window.addEventListener('resize', self._onResizeEvent)
         window.addEventListener('scroll', self._onResizeEvent)
       }
+
+      this.__onInputTimeThrottle = throttle((time) => self.__onInputTime(time), 25)
+      this.__onInputDateThrottle = throttle((date) => self.__onInputDate(date), 25)
     },
     destroyed () {
       if (!process.env.SERVER) {
@@ -667,15 +672,15 @@ export default function (ssrContext) {
           if (valueLength === maskLength) {
             let date = this.masked.substring(0, this.masks.date.length)
             let time = this.masked.substring(this.masks.date.length + 1)
-            this.__onInputTime(time)
-            this.__onInputDate(date)
+            this.__onInputTimeThrottle(time)
+            this.__onInputDateThrottle(date)
           } else if (valueLength === this.masks.date.length) {
-            this.__onInputDate(value)
+            this.__onInputDateThrottle(value)
           }
         } else if (this.masks.date) {
-          this.__onInputDate(this.masked)
+          this.__onInputDateThrottle(this.masked)
         } else {
-          this.__onInputTime(this.masked)
+          this.__onInputTimeThrottle(this.masked)
         }
       },
       __onInputDate (date) {
@@ -687,10 +692,8 @@ export default function (ssrContext) {
             let year = meta.year.order === -1 ? '1970' : parts[meta.year.order]
             let month = meta.month.order === -1 ? '01' : parts[meta.month.order]
             let day = meta.day.order === -1 ? '01' : parts[meta.day.order]
-            this.$nextTick().then(() => {
-              this.values.date = `${year}/${month}/${day}`
-              this.__onDateChange()
-            })
+            this.values.date = `${year}/${month}/${day}`
+            this.__onDateChange()
           }
         }
       },
@@ -706,18 +709,15 @@ export default function (ssrContext) {
             }
             let meta = this.metas.time
             let parts = time.split(meta.separator)
-            console.log(parts)
             let hour = meta.hour.order === -1 ? '00' : parts[meta.hour.order].padStart(2, '0')            
             let minute = meta.minute.order === -1 ? '00' : parts[meta.minute.order].padStart(2, '0')
             let second = meta.second.order === -1 ? '00' : parts[meta.second.order].padStart(2, '0')
             if (this.values.suffix.endsWith('PM')) hour = "" + (parseInt(hour) + 12)
-            this.$nextTick().then(() => {
-              let proposal = this.withSeconds ? `${hour}:${minute}:${second}` : `${hour}:${minute}`
-              if (this.values.time !== proposal) {
-                this.values.time = proposal
-                this.__onTimeChange()
-              }
-            })
+            let proposal = this.withSeconds ? `${hour}:${minute}:${second}` : `${hour}:${minute}`
+            if (this.values.time !== proposal) {
+              this.values.time = proposal
+              this.__onTimeChange()
+            }
           }
         }
       },
@@ -867,7 +867,6 @@ export default function (ssrContext) {
           let formatter = new Intl.DateTimeFormat(this.language, this.timeIntlOptions)
           let date = new Date(2011, 11, 11, 11, 22, 44)
           let formatted = formatter.format(date)
-          console.log(formatted)
           meta.separator = ''
           meta.hour = {
             pos: formatted.indexOf('11'),
@@ -918,7 +917,6 @@ export default function (ssrContext) {
         }      
         this.$set(this.masks, 'time', mask)
         this.$set(this.metas, 'time', meta)
-        console.log(meta)
       },
       __clearValue () {
         this.cValue = ''
