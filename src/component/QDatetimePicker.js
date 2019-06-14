@@ -135,6 +135,9 @@ export default function (ssrContext) {
   }
 
   const renderVerticalDateTime = function (self, h) {
+    if (self.hideTabs) {
+      return renderDateTime(self, h)
+    }
     return [
       h('div', {
         class: { 'row': true }
@@ -155,6 +158,9 @@ export default function (ssrContext) {
   }
 
   const renderDateTime = function (self, h) {
+    if (self.hideTabs) {
+      return [renderTabPabels(self, h)]
+    }
     return [
       renderTabsTitle(self, h),
       renderTabPabels(self, h)
@@ -222,6 +228,49 @@ export default function (ssrContext) {
       }
     })()
 
+    var children = [
+      h(QCardSection, {}, renderContent(self, h)),
+    ]
+    if (!self.autoUpdateValue) {
+      children.push(h(QCardActions, {
+        props: {
+          align: 'right',
+          dark: self.dark
+        }
+      }, [
+        h(QBtn, {
+          props: {
+            dark: self.dark,
+            flat: true,
+            color: 'default'
+          },
+          on: {
+            click () { self.$refs.popup.hide() }
+          },
+          scopedSlots: {
+            default (props) {
+              return self.$q.lang.label.cancel || 'Cancel'
+            }
+          }
+        }, [])
+        ,h(QBtn, {
+          props: {
+            dark: self.dark,
+            flat: true,
+            color: self.color || 'primary'
+          },
+          on: {
+            click: self.__onSetClick
+          },
+          scopedSlots: {
+            default (props) {
+              return self.$q.lang.label.set || 'Set'
+            }
+          }
+        }, [])
+      ]))
+    }
+
     return [
       h(QPopupProxy, {
         ref: 'popup',
@@ -254,46 +303,7 @@ export default function (ssrContext) {
             'before-show': self.__onOpen,
             name: 'event'
           }
-        }, [
-          h(QCardSection, {}, renderContent(self, h)),
-          h(QCardActions, {
-            props: {
-              align: 'right',
-              dark: self.dark
-            }
-          }, [
-            h(QBtn, {
-              props: {
-                dark: self.dark,
-                flat: true,
-                color: 'default'
-              },
-              on: {
-                click () { self.$refs.popup.hide() }
-              },
-              scopedSlots: {
-                default (props) {
-                  return self.$q.lang.label.cancel || 'Cancel'
-                }
-              }
-            }, [])
-            ,h(QBtn, {
-              props: {
-                dark: self.dark,
-                flat: true,
-                color: self.color || 'primary'
-              },
-              on: {
-                click: self.__onSetClick
-              },
-              scopedSlots: {
-                default (props) {
-                  return self.$q.lang.label.set || 'Set'
-                }
-              }
-            }, [])
-          ])
-        ])
+        }, children)
       ])
     ]
   }
@@ -387,6 +397,10 @@ export default function (ssrContext) {
         }
       },
       autoUpdateValue: {
+          type: Boolean,
+          default: false
+      },
+      hideTabs: {
           type: Boolean,
           default: false
       }

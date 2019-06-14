@@ -140,10 +140,10 @@
           </q-card-section>
           <q-separator dark inset />
           <q-card-section class="">
-            <q-datetime-picker class="q-mb-md" outlined label="Date with Minimal Prop" mode="date" v-model="iso_date" :rules="rules" minimal></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="Time with Minimal Prop" mode="time" v-model="iso_time" :rules="rules" minimal></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="DateTime with Minimal Prop" mode="datetime" v-model="iso_datetime" :rules="rules" minimal></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="DateTime with Minimal and Landscape Prop" mode="datetime" v-model="iso_datetime" :rules="rules" minimal landscape></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="Date with Minimal Prop" mode="date" v-model="iso_date" :rules="rules" minimal auto-update-value hide-tabs></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="Time with Minimal Prop" mode="time" v-model="iso_time" :rules="rules" minimal auto-update-value hide-tabs></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="DateTime with Minimal Prop" mode="datetime" v-model="iso_datetime" :rules="rules" minimal auto-update-value hide-tabs></q-datetime-picker>
+            <q-datetime-picker class="q-mb-md" outlined label="DateTime with Minimal and Landscape Prop" mode="datetime" v-model="iso_datetime" :rules="rules" minimal landscape auto-update-value hide-tabs></q-datetime-picker>
           </q-card-section>
           <q-card-actions>
             <q-btn label="Submit" type="submit" dark color="negative" class="full-width" />

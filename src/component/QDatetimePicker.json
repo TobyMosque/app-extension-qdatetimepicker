@@ -175,6 +175,10 @@
     "auto-update-value": {
       "type": "Boolean",
       "desc": "When the last action in selection mode is completed, the value is updated automatically"
+    },
+    "hide-tabs": {
+      "type": "Boolean",
+      "desc": "Hide Date and Time Tabs Titles"
     }
   }
 }
