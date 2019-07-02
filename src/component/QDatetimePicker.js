@@ -39,7 +39,7 @@ export default function (ssrContext) {
           options: self.dateOptions
         },
         on: {
-          input (value, reason) { 
+          input (value, reason) {
             self.values.date = value
             if (reason === 'today' && self.nowBtn && self.displayTimePicker) {
               self.values.time = self.__formatTime(new Date())
@@ -71,8 +71,9 @@ export default function (ssrContext) {
         on: {
           input (value) {
             self.values.time = value
-            if (self.autoUpdateValue)
+            if (self.autoUpdateValue) {
               self.__onSetClick()
+            }
           }
         }
       }, [])
@@ -149,7 +150,7 @@ export default function (ssrContext) {
           renderTabsTitle(self, h)
         ]),
         h('div', {
-          class: { 'col': true },
+          class: { 'col': true }
         }, [
           renderTabPabels(self, h)
         ])
@@ -168,7 +169,7 @@ export default function (ssrContext) {
   }
 
   const renderInput = function (self, h, inputFields, scopedSlots, children) {
-    return h(QInput, { 
+    return h(QInput, {
       ref: 'input',
       props: {
         ...inputFields,
@@ -179,8 +180,8 @@ export default function (ssrContext) {
         keyup (event) {
           switch (true) {
             case !self.values.suffix: return
-            case event.keyCode === 65 && self.values.suffix.endsWith('PM'):
-            case event.keyCode === 80 && self.values.suffix.endsWith('AM'): self.__toggleSuffix(); break
+            case event.keyCode === 65 && self.__isPm:
+            case event.keyCode === 80 && self.__isAm: self.__toggleSuffix(); break
             case event.shiftKey: return
             case event.keyCode === 38:
             case event.keyCode === 40: self.__toggleSuffix()
@@ -200,7 +201,7 @@ export default function (ssrContext) {
 
   const renderReadonlyInput = function (self, h, inputFields, scopedSlots, children) {
     children = children || []
-    children.unshift(h('input', { 
+    children.unshift(h('input', {
       class: {
         'q-field__native': true
       },
@@ -209,7 +210,7 @@ export default function (ssrContext) {
         value: self.display
       }
     }, []))
-    return h(QField, { 
+    return h(QField, {
       ref: 'input',
       props: {
         ...inputFields,
@@ -229,7 +230,7 @@ export default function (ssrContext) {
     })()
 
     var children = [
-      h(QCardSection, {}, renderContent(self, h)),
+      h(QCardSection, {}, renderContent(self, h))
     ]
     if (!self.autoUpdateValue) {
       children.push(h(QCardActions, {
@@ -252,8 +253,8 @@ export default function (ssrContext) {
               return self.$q.lang.label.cancel || 'Cancel'
             }
           }
-        }, [])
-        ,h(QBtn, {
+        }, []),
+        h(QBtn, {
           props: {
             dark: self.dark,
             flat: true,
@@ -290,8 +291,8 @@ export default function (ssrContext) {
       }, [
         h(QCard, {
           ref: 'card',
-          class: { 
-            'q-datetimepicker': true, 
+          class: {
+            'q-datetimepicker': true,
             'q-datetimepicker-full-width': self.target === 'self',
             'q-datetimepicker-landscape': self.landscape,
             'q-datetimepicker-portrait': !self.landscape
@@ -311,8 +312,7 @@ export default function (ssrContext) {
   const tzWorkaround = (function () {
     const platform = process.env.SERVER ? Platform.parseSSR(ssrContext) : Platform
     return function (date) {
-      if (platform.is.safari || platform.ipad || platform.is.iphone)
-      {
+      if (platform.is.safari || platform.ipad || platform.is.iphone) {
         return date.replace(/-/g, '/').replace('T', ' ')
       }
       return date
@@ -325,13 +325,10 @@ export default function (ssrContext) {
     }
 
     let offset = date.getTimezoneOffset() * -1
-    if (offset % 30 === 0)
-    {
+    if (offset % 30 === 0) {
       date = new Date(date.getTime() + offset * 60000)
       date = date.toISOString().replace('Z', '')
-    }
-    else 
-    {
+    } else {
       date = new Date(date.getTime() + offset * 60000)
       date = date.toISOString().replace('Z', '').substring(0, 16)
     }
@@ -345,16 +342,16 @@ export default function (ssrContext) {
       lang: String,
       mode: {
         type: String,
-        default: "date",
+        default: 'date',
         validation (value) {
-          return ["date", "time", "datetime"].indexOf(value) !== -1
+          return ['date', 'time', 'datetime'].indexOf(value) !== -1
         }
       },
       defaultStandard: {
         type: String,
-        default: "iso",
+        default: 'iso',
         validation (value) {
-          return ["iso", "quasar"].indexOf(value) !== -1
+          return ['iso', 'quasar'].indexOf(value) !== -1
         }
       },
       minimal: {
@@ -382,34 +379,34 @@ export default function (ssrContext) {
       },
       calendar: {
         type: String,
-        default: "gregorian",
+        default: 'gregorian',
         validation (value) {
-          return ["gregorian", "persian"].indexOf(value) !== -1
+          return ['gregorian', 'persian'].indexOf(value) !== -1
         }
       },
       fit: Boolean,
       anchor: String,
       target: {
         type: String,
-        default: "icon",
+        default: 'icon',
         validation (value) {
-          return ["self", "icon"].indexOf(value) !== -1
+          return ['self', 'icon'].indexOf(value) !== -1
         }
       },
       autoUpdateValue: {
-          type: Boolean,
-          default: false
+        type: Boolean,
+        default: false
       },
       hideTabs: {
-          type: Boolean,
-          default: false
+        type: Boolean,
+        default: false
       }
     },
     created () {
       let self = this
       this.__updateMetadata()
       this.__setupLanguage()
-      
+
       if (!process.env.SERVER) {
         let self = this
         self._onResizeEvent = () => self.__updatePosition()
@@ -417,8 +414,7 @@ export default function (ssrContext) {
         window.addEventListener('scroll', self._onResizeEvent)
       }
 
-      this.__onInputTimeThrottle = throttle((time) => self.__onInputTime(time), 25)
-      this.__onInputDateThrottle = throttle((date) => self.__onInputDate(date), 25)
+      this.__maskerWatcher = throttle(() => self.__onInput(), 25)
     },
     destroyed () {
       if (!process.env.SERVER) {
@@ -448,7 +444,12 @@ export default function (ssrContext) {
         },
         metas: {
           date: {},
-          time: {}
+          time: {},
+          ampm: {
+            am: 'AM',
+            am: 'PM',
+            suffix: true
+          }
         },
         isoLang: {
           lang: '',
@@ -456,12 +457,12 @@ export default function (ssrContext) {
         },
         track: {
           format: '',
-          hasSeparator: true,
+          hasSeparator: true
         }
       }
     },
     watch: {
-      language() {
+      language () {
         this.__updateMetadata()
         this.__setupLanguage()
         let value = '' + (this.value || '')
@@ -479,9 +480,17 @@ export default function (ssrContext) {
         handler (value) {
           this.__onValueUpdated(value)
         }
-      },
+      }
     },
     computed: {
+      __isPm () {
+        let { pm, suffix } = this.metas.ampm
+        return suffix ? this.values.suffix.endsWith(pm) : this.values.suffix.startsWith(pm)
+      },
+      __isAm () {
+        let { am, suffix } = this.metas.ampm
+        return suffix ? this.values.suffix.endsWith(am) : this.values.suffix.startsWith(am)
+      },
       cValue: {
         get () { return this.values.iso },
         set: debounce(function (original) {
@@ -499,7 +508,7 @@ export default function (ssrContext) {
             } else {
               isDateValid = this.dateOptions.indexOf(this.values.date) !== -1
             }
-          
+
             if (this.values.time) {
               let time = this.values.time.split(':')
               hour = this.__parseIntFromArray(time, 0, 0)
@@ -513,17 +522,17 @@ export default function (ssrContext) {
             } else {
               isTimeValid = this.timeOptions.indexOf({ hour, minute, second }) !== -1
             }
-           
+
             if (isTimeValid && isDateValid) {
               let [ date, time ] = original.split('T')
               time = time.substring(0, this.withSeconds ? 8 : 5)
-              if (this.track.format == 'quasar') {
+              if (this.track.format === 'quasar') {
                 date = date.replace(/-/g, '/')
               }
               if (!this.track.hasSeparator) {
                 value = this.mode === 'date' ? date : time
               } else {
-                let sepatator = this.track.format == 'iso' ? 'T' : ' '
+                let sepatator = this.track.format === 'iso' ? 'T' : ' '
                 value = date + sepatator + time
               }
             }
@@ -531,13 +540,13 @@ export default function (ssrContext) {
           if (isTimeValid && isDateValid && this.value !== value) {
             this.$emit('input', value)
           }
-        }, 0),
+        }, 0)
       },
       displayDatePicker () {
-        return ["date", "datetime"].indexOf(this.mode) !== -1
+        return ['date', 'datetime'].indexOf(this.mode) !== -1
       },
       displayTimePicker () {
-        return ["time", "datetime"].indexOf(this.mode) !== -1
+        return ['time', 'datetime'].indexOf(this.mode) !== -1
       },
       dateIntlOptions () {
         return this.displayDatePicker ? { day: '2-digit', month: '2-digit', year: 'numeric' } : {}
@@ -558,8 +567,8 @@ export default function (ssrContext) {
       intlLocaleOptions () {
         var intlLocale = 'gregory'
         switch (this.calendar) {
-          case 'gregorian': intlLocale = 'gregory'; break;
-          case 'persian': intlLocale = 'persian'; break;
+          case 'gregorian': intlLocale = 'gregory'; break
+          case 'persian': intlLocale = 'persian'; break
         }
         return `-u-ca-${intlLocale}-nu-latn`
       },
@@ -582,7 +591,7 @@ export default function (ssrContext) {
         } else {
           return this.masks.date || this.masks.time
         }
-      }    
+      }
     },
     methods: {
       __sleep (delay) {
@@ -601,7 +610,7 @@ export default function (ssrContext) {
         await this.__sleep(10)
         let offset = dom.offset(wrapper)
         if (this.target === 'self') {
-          let minWidth = dom.style(wrapper, "min-width")
+          let minWidth = dom.style(wrapper, 'min-width')
           wrapper.style.maxWidth = minWidth
         } else {
           wrapper.style.maxWidth = null
@@ -633,12 +642,12 @@ export default function (ssrContext) {
       __onValueUpdated (value) {
         this.track.format = this.track.format || this.defaultStandard
         this.track.hasSeparator = this.mode === 'datetime'
-  
+
         if (!value) {
           this.__resetValues()
           return
         }
-        
+
         if (this.displayDatePicker) {
           this.track.format = value.indexOf('-') !== -1 ? 'iso' : 'quasar'
         }
@@ -650,7 +659,7 @@ export default function (ssrContext) {
             case 'quasar': return value.replace(/[\\/]/g, '-').replace(' ', 'T')
           }
         })()
-  
+
         if (!this.track.hasSeparator) {
           this.values.iso = (() => {
             switch (this.mode) {
@@ -659,8 +668,8 @@ export default function (ssrContext) {
             }
           })()
         }
-        
-        let date = new Date(tzWorkaround(this.values.iso))      
+
+        let date = new Date(tzWorkaround(this.values.iso))
         this.__intlFormat(date)
         this.$nextTick().then(() => {
           this.__onInput()
@@ -681,20 +690,20 @@ export default function (ssrContext) {
           this.cValue = null
         } else if (this.masks.date && this.masks.time) {
           let value = this.masked.trim()
-          var maskLength = this.mask.replace(/[^\#]/g, '').length
+          var maskLength = this.mask.replace(/[^#]/g, '').length
           var valueLength = value.replace(/\D/g, '').length
           if (valueLength === maskLength) {
             let date = this.masked.substring(0, this.masks.date.length)
             let time = this.masked.substring(this.masks.date.length + 1)
-            this.__onInputTimeThrottle(time)
-            this.__onInputDateThrottle(date)
+            this.__onInputTime(time)
+            this.__onInputDate(date)
           } else if (valueLength === this.masks.date.length) {
-            this.__onInputDateThrottle(value)
+            this.__onInputDate(value)
           }
         } else if (this.masks.date) {
-          this.__onInputDateThrottle(this.masked)
+          this.__onInputDate(this.masked)
         } else {
-          this.__onInputTimeThrottle(this.masked)
+          this.__onInputTime(this.masked)
         }
       },
       __onInputDate (date) {
@@ -714,7 +723,7 @@ export default function (ssrContext) {
       __onInputTime (time) {
         if (this.inputs.time !== time) {
           this.inputs.time = time
-          var maskLength = this.masks.time.replace(/[^\#]/g, '').length
+          var maskLength = this.masks.time.replace(/[^#]/g, '').length
           var valueLength = time.replace(/\D/g, '').length
           if (valueLength === maskLength) {
             if (time.length > this.masks.time.length) {
@@ -723,10 +732,11 @@ export default function (ssrContext) {
             }
             let meta = this.metas.time
             let parts = time.split(meta.separator)
-            let hour = meta.hour.order === -1 ? '00' : parts[meta.hour.order].padStart(2, '0')            
+            let hour = meta.hour.order === -1 ? '00' : parts[meta.hour.order].padStart(2, '0')
             let minute = meta.minute.order === -1 ? '00' : parts[meta.minute.order].padStart(2, '0')
             let second = meta.second.order === -1 ? '00' : parts[meta.second.order].padStart(2, '0')
-            if (this.values.suffix.endsWith('PM')) hour = "" + (parseInt(hour) + 12)
+            let { am, pm } = this.metas.ampm
+            if (this.__isPm) hour = '' + (parseInt(hour) + 12)
             let proposal = this.withSeconds ? `${hour}:${minute}:${second}` : `${hour}:${minute}`
             if (this.values.time !== proposal) {
               this.values.time = proposal
@@ -785,12 +795,12 @@ export default function (ssrContext) {
         let year = this.__parseIntFromArray(date, 0, 1970)
         let month = this.__parseIntFromArray(date, 1, 1) - 1
         let day = this.__parseIntFromArray(date, 2, 1)
-  
+
         let time = this.values.time.split(':')
         let hour = this.__parseIntFromArray(time, 0, 0)
         let minute = this.__parseIntFromArray(time, 1, 0)
         let second = this.__parseIntFromArray(time, 2, 0)
-        
+
         let dateObj = new Date(year, month, day, hour, minute, second)
         this.__intlFormat(dateObj)
         this.values.iso = toISOString(dateObj)
@@ -806,11 +816,11 @@ export default function (ssrContext) {
         let mask = ''
         if (this.displayDatePicker) {
           let formatter = new Intl.DateTimeFormat(this.language, this.dateIntlOptions)
-  
+
           let date = new Date(2048, 11, 24)
           let formatted = formatter.format(date)
           let yearCases = formatted.indexOf('2048') !== -1 ? 4 : 2
-          meta.separator = '',
+          meta.separator = ''
           meta.year = {
             pos: yearCases === 4 ? formatted.indexOf('2048') : formatted.indexOf('48'),
             cases: yearCases,
@@ -837,7 +847,7 @@ export default function (ssrContext) {
           }
           let _index = 0
           for (let i = 0; i < limit; i++) {
-            if (meta.day.pos == _index) {
+            if (meta.day.pos === _index) {
               meta.day.order = i
               mask = mask + ''.padStart(meta.day.cases, '#')
               if (i < limit - 1) {
@@ -847,7 +857,7 @@ export default function (ssrContext) {
                 _index = nextIndex
                 mask = mask + meta.separator
               }
-            } else if (meta.month.pos == _index) {
+            } else if (meta.month.pos === _index) {
               meta.month.order = i
               mask = mask + ''.padStart(meta.month.cases, '#')
               if (i < limit - 1) {
@@ -858,7 +868,7 @@ export default function (ssrContext) {
                 mask = mask + meta.separator
               }
               continue
-            } else if (meta.year.pos == _index) {
+            } else if (meta.year.pos === _index) {
               meta.year.order = i
               mask = mask + ''.padStart(meta.year.cases, '#')
               if (i < limit - 1) {
@@ -876,6 +886,7 @@ export default function (ssrContext) {
       },
       __updateTimeMetadata () {
         let meta = {}
+        let ampm = { am: 'AM', pm: 'PM', suffix: true }
         let mask = ''
         if (this.displayTimePicker) {
           let formatter = new Intl.DateTimeFormat(this.language, this.timeIntlOptions)
@@ -898,10 +909,10 @@ export default function (ssrContext) {
             order: -1
           }
           let limit = [ meta.hour, meta.minute, meta.second ].filter(meta => meta.pos !== -1).length
-          
+
           let _index = 0
           for (let i = 0; i < limit; i++) {
-            if (meta.hour.pos == _index) {
+            if (meta.hour.pos === _index) {
               meta.hour.order = i
               mask = mask + ''.padStart(meta.hour.cases, '#')
               if (i < limit - 1) {
@@ -909,7 +920,7 @@ export default function (ssrContext) {
                 meta.separator = formatted.substring(_index, ++_index)
                 mask = mask + meta.separator
               }
-            } else if (meta.minute.pos == _index) {
+            } else if (meta.minute.pos === _index) {
               meta.minute.order = i
               mask = mask + ''.padStart(meta.minute.cases, '#')
               if (i < limit - 1) {
@@ -918,7 +929,7 @@ export default function (ssrContext) {
                 mask = mask + meta.separator
               }
               continue
-            } else if (meta.second.pos == _index) {
+            } else if (meta.second.pos === _index) {
               meta.second.order = i
               mask = mask + ''.padStart(meta.second.cases, '#')
               if (i < limit - 1) {
@@ -928,18 +939,33 @@ export default function (ssrContext) {
               }
             }
           }
-        }      
+
+          if (!this.format24h) {
+            let formatter24 = new Intl.DateTimeFormat(this.language, { ...this.timeIntlOptions, hour12: false })
+            let dateAM = new Date(2011, 11, 11, 11, 22, 44)
+            let datePM = new Date(2011, 11, 11, 23, 22, 44)
+            let formatted24 = formatter24.format(dateAM)
+            let formattedAM = formatter.format(dateAM)
+            let formattedPM = formatter.format(datePM)
+            ampm.am = formattedAM.replace(formatted24, '').trim()
+            ampm.pm = formattedPM.replace(formatted24, '').trim()
+            ampm.suffix = formattedAM.endsWith(ampm.am)
+            console.log(formattedAM, ampm)
+          }
+        }
         this.$set(this.masks, 'time', mask)
         this.$set(this.metas, 'time', meta)
+        this.$set(this.metas, 'ampm', ampm)
       },
       __clearValue () {
         this.cValue = ''
       },
       __toggleSuffix () {
-        this.values.suffix = this.values.suffix.endsWith('PM') ? 'AM' : 'PM'
-        let difference = this.values.suffix === 'PM' ? +12 : -12
+        let { am, pm } = this.metas.ampm
+        this.values.suffix = this.__isPm ? am : am
+        let difference = this.values.suffix === pm ? +12 : -12
         let [ hour, ...parts ] = this.values.time.split(':')
-        hour = "" + (parseInt(hour) + difference)
+        hour = '' + (parseInt(hour) + difference)
         parts.unshift(hour)
         this.values.time = parts.join(':')
         this.__onTimeChange()
@@ -951,7 +977,7 @@ export default function (ssrContext) {
         props[field] = self[field]
         return props
       }, {})
-  
+
       if (self.rules) {
         inputFields.rules = self.rules.map(rule => {
           return (val) => {
@@ -959,7 +985,7 @@ export default function (ssrContext) {
           }
         })
       }
-  
+
       let _renderInput = self.target === 'self' || self.displayValue !== false ? renderReadonlyInput : renderInput
       let clearBtn = h(QIcon, {
         staticClass: 'cursor-pointer',
@@ -972,7 +998,7 @@ export default function (ssrContext) {
         }
       })
 
-      let suffixLabel = h('h6', { 
+      let suffixLabel = h('h6', {
         class: `text-${self.color || 'primary'} cursor-pointer q-pr-xs`,
         on: {
           click (event) {
@@ -980,7 +1006,7 @@ export default function (ssrContext) {
           }
         }
       }, self.values.suffix)
-  
+
       return h('div', {
         class: 'q-datetimepicker'
       }, [
@@ -992,7 +1018,7 @@ export default function (ssrContext) {
                 'cursor-pointer': true
               },
               props: {
-                name: self.icon || (self.mode === 'time' ? 'access_time' : 'event' )
+                name: self.icon || (self.mode === 'time' ? 'access_time' : 'event')
               }
             }, self.target === 'self' ? [] : renderPopupProxy(self, h))
             if (self.target !== 'self' && self.values.suffix) {
@@ -1002,7 +1028,7 @@ export default function (ssrContext) {
             if (self.cValue && self.target === 'self' && self.clearable) {
               icons.push(clearBtn)
             }
-            
+
             icons.push(pickerbtn)
             return icons
           }
