@@ -735,10 +735,10 @@ export default function (ssrContext) {
             let hour = meta.hour.order === -1 ? '00' : parts[meta.hour.order].padStart(2, '0')
             let minute = meta.minute.order === -1 ? '00' : parts[meta.minute.order].padStart(2, '0')
             let second = meta.second.order === -1 ? '00' : parts[meta.second.order].padStart(2, '0')
-            let { am, pm } = this.metas.ampm
             if (this.__isPm) hour = '' + (parseInt(hour) + 12)
+            if (hour === '24') hour = '00'
             let proposal = this.withSeconds ? `${hour}:${minute}:${second}` : `${hour}:${minute}`
-            if (this.values.time !== proposal) {
+            if (proposal !== '00:00' && time !== proposal && this.inputs.time !== proposal) {
               this.values.time = proposal
               this.__onTimeChange()
             }
@@ -950,7 +950,6 @@ export default function (ssrContext) {
             ampm.am = formattedAM.replace(formatted24, '').trim()
             ampm.pm = formattedPM.replace(formatted24, '').trim()
             ampm.suffix = formattedAM.endsWith(ampm.am)
-            console.log(formattedAM, ampm)
           }
         }
         this.$set(this.masks, 'time', mask)
@@ -965,9 +964,12 @@ export default function (ssrContext) {
         this.values.suffix = this.__isPm ? am : am
         let difference = this.values.suffix === pm ? +12 : -12
         let [ hour, ...parts ] = this.values.time.split(':')
-        hour = '' + (parseInt(hour) + difference)
+        let iHour = parseInt(hour)
+        iHour = iHour + difference > 0 ? iHour + difference : iHour - difference
+        hour = '' + iHour
         parts.unshift(hour)
         this.values.time = parts.join(':')
+        console.log('toggle', this.values.time)
         this.__onTimeChange()
       }
     },
