@@ -738,7 +738,7 @@ export default function (ssrContext) {
             if (this.__isPm) hour = '' + (parseInt(hour) + 12)
             if (hour === '24') hour = '00'
             let proposal = this.withSeconds ? `${hour}:${minute}:${second}` : `${hour}:${minute}`
-            if (proposal !== '00:00' && time !== proposal && this.inputs.time !== proposal) {
+            if (proposal !== this.values.time) {
               this.values.time = proposal
               this.__onTimeChange()
             }
