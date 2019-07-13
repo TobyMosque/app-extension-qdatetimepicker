@@ -207,4 +207,4 @@ We need help translating the language files. Below are listed the available ones
 | auto-update-value | Boolean | When the last action in selection mode is completed, the value is updated automatically |
 
 # Donate
-If you like (and use) this App Extension, please consider becoming a Quasar [GitHub Supporter](https://www.patreon.com/quasarframework).
+If you like (and use) this App Extension, please consider becoming a Quasar [GitHub Supporter](https://donate.quasar.dev).
