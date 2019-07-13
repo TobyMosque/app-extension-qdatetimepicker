@@ -1,12 +1,12 @@
 QDatetimePicker (quasar-app-extension-qdatetimepicker)
 ===
 
-QDatetimePicker is an `UI App Extension` for [Quasar Framework v1](https://v1.quasar-framework.org/). It will not work with legacy versions of Quasar Framework.
+QDatetimePicker is a `UI App Extension` for [Quasar Framework v1](https://v1.quasar-framework.org/). It will not work with legacy versions of Quasar Framework.
 
-This work is currently in `alpha` and there are expected changes while things get worked out. Your help with testing is greatly appreciated.
+This work is currently in `beta` and minor changes may still happen. Your help with testing is greatly appreciated.
 
 # Notes
-`v1.0.0-alpha.21` - SSR hydration - don't forget to tun `quasar upgrade` (`@quasar/app v1.0.0-beta.17` is required).
+Minimum required version is Quasar 1.0.0.
 
 # Installation
 To add this App Extension to your Quasar application, run the following (in your Quasar app folder):
@@ -206,5 +206,5 @@ We need help translating the language files. Below are listed the available ones
 | default-standard | String | serialization standard, the property will be ignored if value isn't null (`iso`, `quasar`) (eg.: `iso`: `yyyy-MM-ddTHH:mm`, `quasar`: `yyyy/MM/dd HH:mm`) (default: `iso`) |
 | auto-update-value | Boolean | When the last action in selection mode is completed, the value is updated automatically |
 
-# Patreon
-If you like (and use) this App Extension, please consider becoming a Quasar [Patreon](https://www.patreon.com/quasarframework).
+# Donate
+If you like (and use) this App Extension, please consider becoming a Quasar [GitHub Supporter](https://www.patreon.com/quasarframework).
