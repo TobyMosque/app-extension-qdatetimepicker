@@ -1,4 +1,4 @@
-export function parse (proporsal) {
+export function parse ({ proporsal, withSeconds }) {
   let padStart = (number, length = 2) => {
     return ('' + number).padStart(length, '0')
   }
@@ -11,7 +11,7 @@ export function parse (proporsal) {
     let hour = padStart(objDate.getHours())
     let minute = padStart(objDate.getMinutes())
     let formatted = `${year}/${month}/${day} ${hour}:${minute}`
-    if (this.withSeconds) {
+    if (withSeconds) {
       let second = padStart(objDate.getSeconds())
       formatted = formatted + `:${second}`
     }

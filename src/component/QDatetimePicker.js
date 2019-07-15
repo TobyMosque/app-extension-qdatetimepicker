@@ -268,7 +268,7 @@ export default function ({ ssrContext }) {
                 case 'time': proporsal = '1970/01/01 ' + proporsal; break
               }
             }
-            let parsed = date.parse(proporsal)
+            let parsed = date.parse({ proporsal, withSeconds: this.withSeconds })
             if (parsed.success) {
               this.__updateDates(parsed)
             }
@@ -291,7 +291,7 @@ export default function ({ ssrContext }) {
             metas: this.metas,
             masks: this.masks
           })
-          let parsed = date.parse(proporsal)
+          let parsed = date.parse({ proporsal, withSeconds: this.withSeconds })
           if (parsed.success) {
             this.__updateDates(parsed)
           } else {
@@ -328,7 +328,7 @@ export default function ({ ssrContext }) {
         let dateValue = this.original.date || '1970/01/01'
         let timeValue = this.original.time || (this.withSeconds ? '00:00:00' : '00:00')
         let proporsal = `${dateValue} ${timeValue}`
-        let parsed = date.parse(proporsal)
+        let parsed = date.parse({ proporsal, withSeconds: this.withSeconds })
         if (parsed.success) {
           this.__updateDates(parsed)
         }
