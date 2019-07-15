@@ -64,6 +64,9 @@ export function quasar ({ masked, ampm, mode, metas, masks }) {
       if (ampm === 'PM') {
         hours += 12
       }
+      if (hours === 24) {
+        hours = 0
+      }
       hour = ('' + hours).padStart(2, '0')
     }
     time = `${hour}:${minute}:${second}`

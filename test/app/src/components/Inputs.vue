@@ -1,5 +1,5 @@
 <template>
-  <q-form ref="form" class="col col-4 q-pa-md q-gutter-y-sm bg-grey-2" :class="{ 'bg-grey-2': !dark, 'bg-grey-9': dark }">
+  <q-form ref="form" class="col col-12 col-md-6 col-lg-4 q-pa-md q-gutter-y-sm bg-grey-2" :class="{ 'bg-grey-2': !dark, 'bg-grey-9': dark }">
     <template v-if="mode !== 'date' || !this.format24h">
       <q-datetime-picker :mode="mode" :rules="rules" :color="color" :date-options="dateOptions" :time-options="timeOptions" :default-standard="standard" :format24h="format24h" :display-value="displayValue" :dark="dark" outlined clearable v-model="__value" :label="`${prefix} Standard Datepicker`"></q-datetime-picker>
       <q-datetime-picker :mode="mode" :rules="rules" :color="color" :date-options="dateOptions" :time-options="timeOptions" :default-standard="standard" :format24h="format24h" :display-value="displayValue" :dark="dark" outlined clearable v-model="__value" :label="`${prefix} Classic Datepicker`" target="self"></q-datetime-picker>
