@@ -70,6 +70,7 @@ const { value, clearable, ...props } = {
 delete props.fit.default
 delete props.cover.default
 delete props.anchor.default
+delete props.contentClass
 
 export default function ({ ssrContext }) {
   return Vue.extend({

@@ -126,6 +126,14 @@ export default {
       handler () {
         console.log(this.quasar)
       }
+    },
+    '$q.lang.isoName': {
+      immediate: true,
+      handler (value) {
+        if (this.language !== value) {
+          this.language = value
+        }
+      }
     }
   },
   computed: {
@@ -145,14 +153,6 @@ export default {
     languages: {
       get () { return this.$store.state.homePage.languages },
       set (value) { return this.$store.commit('homePage/languages', value) }
-    },
-    '$q.lang.isoName': {
-      immediate: true,
-      handler (value) {
-        if (this.language !== value) {
-          this.language = value
-        }
-      }
     }
   },
   methods: {
