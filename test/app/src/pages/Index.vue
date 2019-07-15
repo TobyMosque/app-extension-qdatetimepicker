@@ -14,142 +14,27 @@
             @input="onLanguageInput">
         </q-select>
       </div>
-      <q-form ref="form1" @submit="onSubmit($refs.form1)" class="col col-lg-3 col-md-6 col-12 q-pa-md" >
-        <q-card>
-          <q-card-section>
-            <div class="text-h6">Input Types</div>
-          </q-card-section>
-          <q-separator inset />
-          <q-card-section>
-            <q-datetime-picker class="q-mb-md" label="Standard Date Picker" v-model="iso_date" :rules="rules" :date-options="dateFilter" @input="log"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="Outlined Date Picker" mode="time" v-model="iso_time" :rules="rules" :time-options="timeFilter"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" filled label="Filled Date Picker" v-model="iso_date" :rules="rules" target="self" clearable></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" standout label="Standout Date Picker" mode="time" v-model="iso_time" :rules="rules" target="self"></q-datetime-picker>
-          </q-card-section>
-          <q-card-actions>
-            <q-btn label="Submit" type="submit" color="positive" class="full-width" />
-          </q-card-actions>
-        </q-card>
-      </q-form>
-      <q-form ref="form2" @submit="onSubmit($refs.form2)" class="col col-lg-3 col-md-6 col-12 q-pa-md" >
-        <q-card dark class="bg-grey-10">
-          <q-card-section>
-            <div class="text-h6">Dark Mode</div>
-          </q-card-section>
-          <q-separator dark inset />
-          <q-card-section class="">
-            <q-datetime-picker class="q-mb-md" outlined label="Date Picker" color="negative" dark v-model="iso_date" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="Time Picker" mode="time" color="negative" dark v-model="iso_time2" :rules="rules" with-seconds></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="DateTime Picker" mode="datetime" color="negative" dark v-model="iso_datetime" :rules="rules" @input="log"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" mode="datetime" color="negative" dark v-model="iso_datetime" format24h clearable :rules="rules" icon="date_range"></q-datetime-picker>
-          </q-card-section>
-          <q-card-actions>
-            <q-btn label="Submit" type="submit" dark color="negative" class="full-width" />
-          </q-card-actions>
-        </q-card>
-      </q-form>
-      <q-form ref="form3" @submit="onSubmit($refs.form3)" class="col col-lg-3 col-md-6 col-12 q-pa-md" >
-        <q-card>
-          <q-card-section>
-            <div class="text-h6">Light Mode</div>
-          </q-card-section>
-          <q-separator inset />
-          <q-card-section>
-            <q-datetime-picker class="q-mb-md" outlined landscape label="Date Picker" color="positive" v-model="iso_date" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined landscape label="Time Picker" mode="time" color="positive" v-model="iso_time" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined landscape label="DateTime Picker" mode="datetime" color="positive" v-model="iso_datetime" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" standout landscape label="Standout DateTime Picker" mode="datetime" color="positive" v-model="iso_datetime" format24h clearable :rules="rules" icon="date_range"></q-datetime-picker>
-          </q-card-section>
-          <q-card-actions>
-            <q-btn label="Submit" type="submit" color="positive" class="full-width" />
-          </q-card-actions>
-        </q-card>
-      </q-form>
-      <q-form ref="form4" @submit="onSubmit($refs.form4)" class="col col-lg-3 col-md-6 col-12 q-pa-md" >
-        <q-card dark class="bg-grey-10">
-          <q-card-section>
-            <div class="text-h6">Display Function</div>
-          </q-card-section>
-          <q-separator dark inset />
-          <q-card-section class="">
-            <q-datetime-picker class="q-mb-md" outlined label="Date Picker" color="negative" dark v-model="iso_date" :rules="rules" lang="ar-EG" display-value></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="Time Picker" mode="time" color="negative" dark v-model="iso_time" :rules="rules" lang="ar-EG" display-value></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="DateTime Picker" mode="datetime" color="negative" dark v-model="iso_datetime" :rules="rules" :display-value="iso_datetime | displayFilter('ar-EG')"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" standout label="Standout DateTime Picker" mode="datetime" color="negative" dark v-model="iso_datetime" format24h clearable :rules="rules" :display-value="displayValue" icon="date_range"></q-datetime-picker>
-          </q-card-section>
-          <q-card-actions>
-            <q-btn label="Submit" type="submit" dark color="negative" class="full-width" />
-          </q-card-actions>
-        </q-card>
-      </q-form>
-      <q-form ref="form5" @submit="onSubmit($refs.form5)" class="col col-lg-3 col-md-6 col-12 q-pa-md" >
-        <q-card>
-          <q-card-section>
-            <div class="text-h6">Quasar Standard</div>
-          </q-card-section>
-          <q-separator dark inset />
-          <q-card-section class="">
-            <q-datetime-picker class="q-mb-md" outlined label="Date using Quasar Standard" v-model="quasar_date" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="Time using Quasar Standard" mode="time" v-model="quasar_time" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="DateTime using Quasar Standard" mode="datetime" v-model="quasar_datetime" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" standout label="DateTime 24h using Quasar Standard" mode="datetime" v-model="quasar_datetime" format24h clearable :rules="rules" icon="date_range"></q-datetime-picker>
-          </q-card-section>
-          <q-card-actions>
-            <q-btn label="Submit" type="submit" dark color="negative" class="full-width" />
-          </q-card-actions>
-        </q-card>
-      </q-form>
-      <q-form ref="form6" @submit="onSubmit($refs.form6)" class="col col-lg-3 col-md-6 col-12 q-pa-md" >
-        <q-card>
-          <q-card-section>
-            <div class="text-h6">Quasar Standard - Empty Strings</div>
-          </q-card-section>
-          <q-separator dark inset />
-          <q-card-section class="">
-            <q-datetime-picker class="q-mb-md" outlined default-standard="quasar" label="Date using Quasar Standard" v-model="quasar_empty_date" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined default-standard="quasar" label="Time using Quasar Standard" mode="time" v-model="quasar_empty_time" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined default-standard="quasar" label="DateTime using Quasar Standard" mode="datetime" v-model="quasar_empty_datetime" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" standout default-standard="quasar" label="DateTime 24h using Quasar Standard" mode="datetime" v-model="quasar_empty_datetime" format24h clearable :rules="rules" icon="date_range"></q-datetime-picker>
-          </q-card-section>
-          <q-card-actions>
-            <q-btn label="Submit" type="submit" dark color="negative" class="full-width" />
-          </q-card-actions>
-        </q-card>
-      </q-form>
-      <q-form ref="form7" @submit="onSubmit($refs.form7)" class="col col-lg-3 col-md-6 col-12 q-pa-md" >
-        <q-card>
-          <q-card-section>
-            <div class="text-h6">ISO Standard - Empty Strings</div>
-          </q-card-section>
-          <q-separator dark inset />
-          <q-card-section class="">
-            <q-datetime-picker class="q-mb-md" outlined label="Date using Quasar Standard" v-model="iso_empty_date" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="Time using Quasar Standard" mode="time" v-model="iso_empty_time" :rules="rules"></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="DateTime using Quasar Standard" mode="datetime" v-model="iso_empty_datetime" :rules="rules" today-btn now-btn></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" standout label="DateTime 24h using Quasar Standard" mode="datetime" v-model="iso_empty_datetime" format24h clearable :rules="rules" icon="date_range"></q-datetime-picker>
-          </q-card-section>
-          <q-card-actions>
-            <q-btn label="Submit" type="submit" dark color="negative" class="full-width" />
-          </q-card-actions>
-        </q-card>
-      </q-form>
-      <q-form ref="form8" @submit="onSubmit($refs.form8)" class="col col-lg-3 col-md-6 col-12 q-pa-md" >
-        <q-card>
-          <q-card-section>
-            <div class="text-h6">Minimal Property</div>
-          </q-card-section>
-          <q-separator dark inset />
-          <q-card-section class="">
-            <q-datetime-picker class="q-mb-md" outlined label="Date with Minimal Prop" mode="date" v-model="iso_date" :rules="rules" minimal auto-update-value hide-tabs></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="Time with Minimal Prop" mode="time" v-model="iso_time" :rules="rules" minimal auto-update-value hide-tabs></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="DateTime with Minimal Prop" mode="datetime" v-model="iso_datetime" :rules="rules" minimal auto-update-value hide-tabs></q-datetime-picker>
-            <q-datetime-picker class="q-mb-md" outlined label="DateTime with Minimal and Landscape Prop" mode="datetime" v-model="iso_datetime" :rules="rules" minimal landscape auto-update-value hide-tabs></q-datetime-picker>
-          </q-card-section>
-          <q-card-actions>
-            <q-btn label="Submit" type="submit" dark color="negative" class="full-width" />
-          </q-card-actions>
-        </q-card>
-      </q-form>
+      <my-inputs v-model="iso.date"></my-inputs>
+      <my-inputs mode="time" v-model="iso.time"></my-inputs>
+      <my-inputs mode="datetime" v-model="iso.datetime"></my-inputs>
+      <my-inputs dark v-model="iso.date"></my-inputs>
+      <my-inputs dark mode="time" v-model="iso.time"></my-inputs>
+      <my-inputs dark mode="datetime" v-model="iso.datetime"></my-inputs>
+
+      <my-inputs color="negative" :display-value="displayDate" v-model="iso.date"></my-inputs>
+      <my-inputs color="negative" :display-value="displayTime" mode="time" v-model="iso.time"></my-inputs>
+      <my-inputs color="negative" :display-value="displayDatetime" mode="datetime" v-model="iso.datetime"></my-inputs>
+      <my-inputs color="negative" dark :format24h="format24h" v-model="iso.date"></my-inputs>
+      <my-inputs color="negative" dark :format24h="format24h" mode="time" v-model="iso.time"></my-inputs>
+      <my-inputs color="negative" dark :format24h="format24h" mode="datetime" v-model="iso.datetime"></my-inputs>
+
+      <my-inputs color="positive" v-model="quasar.date"></my-inputs>
+      <my-inputs color="positive" mode="time" standard="quasar" v-model="quasar.time"></my-inputs>
+      <my-inputs color="positive" mode="datetime" v-model="quasar.datetime"></my-inputs>
+
+      <my-inputs dark color="positive" :rules="rules" v-model="quasar.date" :date-options="dateOptions"></my-inputs>
+      <my-inputs dark color="positive" :rules="rules" mode="time" standard="quasar" v-model="quasar.time" :time-options="timeOptions"></my-inputs>
+      <my-inputs dark color="positive" :rules="rules" mode="datetime" v-model="quasar.datetime" :date-options="dateOptions" :time-options="timeOptions"></my-inputs>
       <div class="col col-md-6 col-12 q-pa-md">
         <q-banner rounded class="bg-primary text-white">
           <template v-slot:avatar>
@@ -192,28 +77,18 @@
 // import something here
 import homeStore from '../store/home'
 import languages from 'quasar/lang/index.json'
-import { throttle } from 'quasar'
+import Inputs from 'src/components/Inputs'
 export default {
   name: 'PageIndex',
   preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext }) {
     store.registerModule('homePage', homeStore)
     return store.dispatch('homePage/init', {
-      iso_empty_date: '',
-      iso_empty_time: '',
-      iso_empty_datetime: '',
-      iso_date: '2018-11-02',
-      iso_time: '15:46',
-      iso_time2: '15:46:36',
-      iso_datetime: '2018-11-02T15:46',
-      quasar_empty_date: '',
-      quasar_empty_time: '',
-      quasar_empty_datetime: '',
-      quasar_date: '2018/11/02',
-      quasar_time: '15:46',
-      quasar_datetime: '2018/11/02 15:46',
       language: 'en-US',
       languages
     })
+  },
+  components: {
+    'my-inputs': Inputs
   },
   created () {
     this.$store.registerModule('homePage', homeStore, { preserveState: true })
@@ -223,63 +98,45 @@ export default {
   },
   data () {
     return {
+      format24h: true,
+      iso: {
+        date: '2018-11-02',
+        time: '15:46',
+        datetime: '2018-11-02T15:46'
+      },
+      quasar: {
+        date: '2018/11/02',
+        time: '15:46',
+        datetime: '2018/11/02 15:46'
+      },
       rules: [
         (val) => !!val || 'Date is required'
       ]
     }
   },
+  watch: {
+    iso: {
+      deep: true,
+      handler () {
+        console.log(this.iso)
+      }
+    },
+    quasar: {
+      deep: true,
+      handler () {
+        console.log(this.quasar)
+      }
+    }
+  },
   computed: {
-    iso_empty_date: {
-      get () { return this.$store.state.homePage.iso_empty_date },
-      set (value) { return this.$store.commit('homePage/iso_empty_date', value) }
+    displayDate () {
+      return `iso: ${this.iso.date}`
     },
-    iso_empty_time: {
-      get () { return this.$store.state.homePage.iso_empty_time },
-      set (value) { return this.$store.commit('homePage/iso_empty_time', value) }
+    displayTime () {
+      return `iso: ${this.iso.time}`
     },
-    iso_empty_datetime: {
-      get () { return this.$store.state.homePage.iso_empty_datetime },
-      set (value) { return this.$store.commit('homePage/iso_empty_datetime', value) }
-    },
-    iso_date: {
-      get () { return this.$store.state.homePage.iso_date },
-      set (value) { return this.$store.commit('homePage/iso_date', value) }
-    },
-    iso_time: {
-      get () { return this.$store.state.homePage.iso_time },
-      set (value) { return this.$store.commit('homePage/iso_time', value) }
-    },
-    iso_time2: {
-      get () { return this.$store.state.homePage.iso_time2 },
-      set (value) { return this.$store.commit('homePage/iso_time2', value) }
-    },
-    iso_datetime: {
-      get () { return this.$store.state.homePage.iso_datetime },
-      set (value) { return this.$store.commit('homePage/iso_datetime', value) }
-    },
-    quasar_empty_date: {
-      get () { return this.$store.state.homePage.quasar_empty_date },
-      set (value) { return this.$store.commit('homePage/quasar_empty_date', value) }
-    },
-    quasar_empty_time: {
-      get () { return this.$store.state.homePage.quasar_empty_time },
-      set (value) { return this.$store.commit('homePage/quasar_empty_time', value) }
-    },
-    quasar_empty_datetime: {
-      get () { return this.$store.state.homePage.quasar_empty_datetime },
-      set (value) { return this.$store.commit('homePage/quasar_empty_datetime', value) }
-    },
-    quasar_date: {
-      get () { return this.$store.state.homePage.quasar_date },
-      set (value) { return this.$store.commit('homePage/quasar_date', value) }
-    },
-    quasar_time: {
-      get () { return this.$store.state.homePage.quasar_time },
-      set (value) { return this.$store.commit('homePage/quasar_time', value) }
-    },
-    quasar_datetime: {
-      get () { return this.$store.state.homePage.quasar_datetime },
-      set (value) { return this.$store.commit('homePage/quasar_datetime', value) }
+    displayDatetime () {
+      return `iso: ${this.iso.datetime}`
     },
     language: {
       get () { return this.$store.state.homePage.language },
@@ -288,98 +145,6 @@ export default {
     languages: {
       get () { return this.$store.state.homePage.languages },
       set (value) { return this.$store.commit('homePage/languages', value) }
-    },
-    displayValue () {
-      return `iso: ${this.iso_datetime} | i18n: ${new Date(this.iso_datetime).toLocaleString(this.language)}`
-    }
-  },
-  watch: {
-    iso_date: {
-      immediate: true,
-      deep: true,
-      handler () {
-        console.log('iso_date: ', this.iso_date)
-      }
-    },
-    iso_time: {
-      immediate: true,
-      deep: true,
-      handler () {
-        console.log('iso_time: ', this.iso_time)
-      }
-    },
-    iso_time2: {
-      immediate: true,
-      deep: true,
-      handler () {
-        console.log('iso_time2: ', this.iso_time2)
-      }
-    },
-    iso_datetime: {
-      immediate: true,
-      handler () {
-        console.log('iso_datetime: ', this.iso_datetime)
-      }
-    },
-    iso_empty_date: {
-      immediate: true,
-      deep: true,
-      handler () {
-        console.log('iso_empty_date: ', this.iso_empty_date)
-      }
-    },
-    iso_empty_time: {
-      immediate: true,
-      deep: true,
-      handler () {
-        console.log('iso_empty_time: ', this.iso_empty_time)
-      }
-    },
-    iso_empty_datetime: {
-      immediate: true,
-      handler () {
-        console.log('iso_empty_datetime: ', this.iso_empty_datetime)
-      }
-    },
-    quasar_date: {
-      immediate: true,
-      deep: true,
-      handler () {
-        console.log('quasar_date: ', this.quasar_date)
-      }
-    },
-    quasar_time: {
-      immediate: true,
-      deep: true,
-      handler () {
-        console.log('quasar_time: ', this.quasar_time)
-      }
-    },
-    quasar_datetime: {
-      immediate: true,
-      handler () {
-        console.log('quasar_datetime: ', this.quasar_datetime)
-      }
-    },
-    quasar_empty_date: {
-      immediate: true,
-      deep: true,
-      handler () {
-        console.log('quasar_date: ', this.quasar_empty_date)
-      }
-    },
-    quasar_empty_time: {
-      immediate: true,
-      deep: true,
-      handler () {
-        console.log('quasar_time: ', this.quasar_empty_time)
-      }
-    },
-    quasar_empty_datetime: {
-      immediate: true,
-      handler () {
-        console.log('quasar_datetime: ', this.quasar_empty_datetime)
-      }
     },
     '$q.lang.isoName': {
       immediate: true,
@@ -390,38 +155,18 @@ export default {
       }
     }
   },
-  filters: {
-    displayFilter (value, language) {
-      return `iso: ${value} | ${language}: ${new Date(value).toLocaleString(language)}`
-    }
-  },
   methods: {
     async onLanguageInput () {
       let lang = await import(`quasar/lang/${this.language}`)
       this.$q.lang.set(lang.default)
     },
-    log (input) {
-      console.log('input: ', input)
-    },
-    dateFilter (date) {
+    dateOptions (date) {
       const parts = date.split('/')
       return parts[2] % 2 === 0
     },
-    timeFilter (hr, min, sec) {
+    timeOptions (hr, min, sec) {
       return hr % 2 === 0
-    },
-    onSubmit: throttle(function (form) {
-      form.validate().then(success => {
-        if (success) {
-          this.$q.notify({
-            color: 'green-4',
-            textColor: 'white',
-            icon: 'fas fa-check-circle',
-            message: 'Submitted'
-          })
-        }
-      })
-    }, 250)
+    }
   }
 }
 </script>
