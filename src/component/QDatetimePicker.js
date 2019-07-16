@@ -275,7 +275,7 @@ export default function ({ ssrContext }) {
             }
           }
         } else {
-          this.values.input = this.original.input = null
+          this.values.input = this.original.input = ''
           this.values.date = this.original.date = ''
           this.values.time = this.original.time = ''
         }
