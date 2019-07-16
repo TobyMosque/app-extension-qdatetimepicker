@@ -1,5 +1,5 @@
 export default {
-  lang: 'en-419',
+  lang: 'es-419',
   dateTimePicker: {
     date: 'Fecha',
     time: 'Hora'

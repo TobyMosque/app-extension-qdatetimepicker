@@ -157,6 +157,7 @@ We need help translating the language files. Below are listed the available ones
 - French
 - Italian
 - Portuguese
+- Spanish (Latin America)
 
 ---
 
