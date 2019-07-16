@@ -126,7 +126,7 @@ export default function ({ ssrContext }) {
         return ['time', 'datetime'].indexOf(this.mode) !== -1
       },
       intlLocale () {
-        var calendarva = 'gregory'
+        var calendar = 'gregory'
         switch (this.calendar) {
           case 'gregorian': calendar = 'gregory'; break
           case 'persian': calendar = 'persian'; break
