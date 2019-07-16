@@ -126,7 +126,7 @@ export default function ({ ssrContext }) {
         return ['time', 'datetime'].indexOf(this.mode) !== -1
       },
       intlLocale () {
-        var calendar = 'gregory'
+        var calendarva'gregory'
         switch (this.calendar) {
           case 'gregorian': calendar = 'gregory'; break
           case 'persian': calendar = 'persian'; break
@@ -275,7 +275,7 @@ export default function ({ ssrContext }) {
             }
           }
         } else {
-          this.values.input = this.original.input = value
+          this.values.input = this.original.input = null
           this.values.date = this.original.date = ''
           this.values.time = this.original.time = ''
         }
