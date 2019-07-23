@@ -22,8 +22,32 @@ export function parse ({ proporsal, withSeconds }) {
   return { success: false, quasar: '', iso: '' }
 }
 
+export function getDefault ({ mode }) {
+  let meta, quasar
+  if (mode === 'time') {
+    meta = {
+      year: '1970',
+      month: '01',
+      day: '01',
+    }
+  } else {
+    let today = new Date()
+    meta = {
+      year: ('' + today.getFullYear()).padStart(4, '0'),
+      month: ('' + (today.getMonth() + 1)).padStart(2, '0'),
+      day: ('' + today.getDate()).padStart(2, '0'),
+    }
+  }
+  quasar = `${meta.year}/${meta.month}/${meta.day}`
+  return {
+    meta,
+    quasar
+  }
+}
+
 export function quasar ({ masked, ampm, mode, metas, masks }) {
-  let date = '1970/01/01'
+  let today = getDefault({ mode })
+  let date = today.quasar
   let time = '00:00:00'
   let maskedDate, maskedTime
   switch (mode) {
@@ -41,9 +65,9 @@ export function quasar ({ masked, ampm, mode, metas, masks }) {
   if (maskedDate) {
     let meta = metas.date
     let parts = maskedDate.split(meta.separator)
-    let year = meta.year.order === -1 ? '1970' : parts[meta.year.order]
-    let month = meta.month.order === -1 ? '01' : parts[meta.month.order]
-    let day = meta.day.order === -1 ? '01' : parts[meta.day.order]
+    let year = meta.year.order === -1 ? today.meta.years : parts[meta.year.order]
+    let month = meta.month.order === -1 ? today.meta.month : parts[meta.month.order]
+    let day = meta.day.order === -1 ? today.meta.day : parts[meta.day.order]
     date = `${year}/${month}/${day}`
   }
   if (maskedTime) {

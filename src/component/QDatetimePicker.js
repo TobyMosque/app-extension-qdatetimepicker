@@ -264,9 +264,10 @@ export default function ({ ssrContext }) {
               proporsal = proporsal.replace(/-/g, '/').replace('T', ' ')
             let parts = proporsal.split(' ')
             if (parts.length === 1) {
+              let today = date.getDefault({ mode: this.mode })
               switch (this.mode) {
                 case 'date': proporsal = proporsal + ' 00:00:00'; break
-                case 'time': proporsal = '1970/01/01 ' + proporsal; break
+                case 'time': proporsal = today.quasar + ' ' + proporsal; break
               }
             }
             let parsed = date.parse({ proporsal, withSeconds: this.withSeconds })
@@ -307,6 +308,7 @@ export default function ({ ssrContext }) {
         this.masked = this.original.input
       },
       onSetClick () {
+        let today = date.getDefault({ mode: this.mode })
         switch (true) {
           case this.mode === 'date':
             this.original.date = this.values.date
@@ -326,7 +328,7 @@ export default function ({ ssrContext }) {
             this.$refs.popup.hide()
             break
         }
-        let dateValue = this.original.date || '1970/01/01'
+        let dateValue = this.original.date || today.quasar
         let timeValue = this.original.time || (this.withSeconds ? '00:00:00' : '00:00')
         let proporsal = `${dateValue} ${timeValue}`
         let parsed = date.parse({ proporsal, withSeconds: this.withSeconds })
