@@ -6,7 +6,7 @@
  */
 
 const extendDatetimePicker = function (conf) {
-  conf.boot.push('~quasar-app-extension-qdatetimepicker/src/boot/qdatetimepicker.js')
+  conf.boot.unshift('~quasar-app-extension-qdatetimepicker/src/boot/qdatetimepicker.js')
   conf.build.transpileDependencies.push(/quasar-app-extension-qdatetimepicker[\\/]src/)
   conf.css.push('~quasar-app-extension-qdatetimepicker/src/component/datetime-picker.styl')
 }
