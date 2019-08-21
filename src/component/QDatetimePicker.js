@@ -287,6 +287,7 @@ export default function ({ ssrContext }) {
           this.$emit('input', '')
         } else {
           let proporsal = date.quasar({ 
+            base: this.value,
             masked: value,
             ampm: this.format24h ? void 0 : this.values.suffix,
             mode: this.mode,
