@@ -25,19 +25,19 @@ export function parse ({ proporsal, withSeconds }) {
 export function getDefault ({ base, mode }) {
   let meta, quasar, baseDate
   if (mode === 'time') {
-		baseDate = new Date(base || null)
+    baseDate = new Date(base || '1970-01-01')
   } else {
-		if (base) {
-			baseDate = new Date(base)
-		} else {
-			baseDate = new Date()
-		}
-	}
-	meta = {
-		year: ('' + baseDate.getFullYear()).padStart(4, '0'),
-		month: ('' + (baseDate.getMonth() + 1)).padStart(2, '0'),
-		day: ('' + baseDate.getDate()).padStart(2, '0'),
-	}
+    if (base) {
+      baseDate = new Date(base)
+    } else {
+      baseDate = new Date()
+    }
+  }
+  meta = {
+    year: ('' + baseDate.getFullYear()).padStart(4, '0'),
+    month: ('' + (baseDate.getMonth() + 1)).padStart(2, '0'),
+    day: ('' + baseDate.getDate()).padStart(2, '0'),
+  }
   quasar = `${meta.year}/${meta.month}/${meta.day}`
   return {
     meta,
@@ -48,14 +48,14 @@ export function getDefault ({ base, mode }) {
 export function quasar ({ base, masked, ampm, mode, metas, masks }) {
   let today = getDefault({ base, mode })
   let date = today.quasar
-	let time = '00:00:00'
-	if (base) {
-		const baseDate = new Date(base)
+  let time = '00:00:00'
+  if (base) {
+    const baseDate = new Date(base)
     let hour = (baseDate.getHours() + '').padStart(2, '0')
     let minute = (baseDate.getMinutes() + '').padStart(2, '0')
-		let second = (baseDate.getSeconds() + '').padStart(2, '0')
+    let second = (baseDate.getSeconds() + '').padStart(2, '0')
     time = `${hour}:${minute}:${second}`
-	}
+  }
   let maskedDate, maskedTime
   switch (mode) {
     case 'date':
