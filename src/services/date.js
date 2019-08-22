@@ -25,7 +25,9 @@ export function parse ({ proporsal, withSeconds }) {
 export function getDefault ({ base, mode }) {
   let meta, quasar, baseDate
   if (mode === 'time') {
-    baseDate = new Date(base || '1970-01-01')
+    if (base) {
+      baseDate = new Date(base)
+    }
   } else {
     if (base) {
       baseDate = new Date(base)
@@ -33,10 +35,14 @@ export function getDefault ({ base, mode }) {
       baseDate = new Date()
     }
   }
-  meta = {
-    year: ('' + baseDate.getFullYear()).padStart(4, '0'),
-    month: ('' + (baseDate.getMonth() + 1)).padStart(2, '0'),
-    day: ('' + baseDate.getDate()).padStart(2, '0'),
+  if (baseDate) {
+    meta = {
+      year: ('' + baseDate.getFullYear()).padStart(4, '0'),
+      month: ('' + (baseDate.getMonth() + 1)).padStart(2, '0'),
+      day: ('' + baseDate.getDate()).padStart(2, '0'),
+    }
+  } else {
+    meta = { year: '1970', month: '01', day: '01' }
   }
   quasar = `${meta.year}/${meta.month}/${meta.day}`
   return {

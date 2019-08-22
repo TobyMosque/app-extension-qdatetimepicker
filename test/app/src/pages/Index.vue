@@ -14,27 +14,102 @@
             @input="onLanguageInput">
         </q-select>
       </div>
-      <my-inputs v-model="iso.date"></my-inputs>
-      <my-inputs mode="time" v-model="iso.time"></my-inputs>
-      <my-inputs mode="datetime" v-model="iso.datetime"></my-inputs>
-      <my-inputs dark v-model="iso.date"></my-inputs>
-      <my-inputs dark mode="time" v-model="iso.time"></my-inputs>
-      <my-inputs dark mode="datetime" v-model="iso.datetime"></my-inputs>
+      <div class="full-width q-mb-md">
+        <q-card>
+          <q-card-section class="full-width bg-grey-2">
+            <div class="text-h4 text-center">Default</div>
+            <div class="text-subtitle1 text-center">Light Theme</div>
+          </q-card-section>
+          <div class="row full-width">
+            <my-inputs v-model="iso.date"></my-inputs>
+            <my-inputs mode="time" v-model="iso.time"></my-inputs>
+            <my-inputs mode="datetime" v-model="iso.datetime"></my-inputs>
+          </div>
+        </q-card>
+      </div>
 
-      <my-inputs color="negative" :display-value="displayDate" v-model="iso.date"></my-inputs>
-      <my-inputs color="negative" :display-value="displayTime" mode="time" v-model="iso.time"></my-inputs>
-      <my-inputs color="negative" :display-value="displayDatetime" mode="datetime" v-model="iso.datetime"></my-inputs>
-      <my-inputs color="negative" dark :format24h="format24h" v-model="iso.date"></my-inputs>
-      <my-inputs color="negative" dark :format24h="format24h" mode="time" v-model="iso.time"></my-inputs>
-      <my-inputs color="negative" dark :format24h="format24h" mode="datetime" v-model="iso.datetime"></my-inputs>
+      <div class="full-width q-mb-md">
+        <q-card>
+          <q-card-section class="full-width bg-grey-9 text-white">
+            <div class="text-h4 text-center">Default</div>
+            <div class="text-subtitle1 text-center">Dark Theme</div>
+          </q-card-section>
+          <div class="row full-width">
+            <my-inputs dark v-model="iso.date"></my-inputs>
+            <my-inputs dark mode="time" v-model="iso.time"></my-inputs>
+            <my-inputs dark mode="datetime" v-model="iso.datetime"></my-inputs>
+          </div>
+        </q-card>
+      </div>
 
-      <my-inputs color="positive" v-model="quasar.date"></my-inputs>
-      <my-inputs color="positive" mode="time" standard="quasar" v-model="quasar.time"></my-inputs>
-      <my-inputs color="positive" mode="datetime" v-model="quasar.datetime"></my-inputs>
+      <div class="full-width q-mb-md">
+        <q-card>
+          <q-card-section class="full-width bg-grey-2">
+            <div class="text-h4 text-center">Custom Format</div>
+          </q-card-section>
+          <div class="row full-width">
+            <my-inputs color="negative" :display-value="displayDate" v-model="iso.date"></my-inputs>
+            <my-inputs color="negative" :display-value="displayTime" mode="time" v-model="iso.time"></my-inputs>
+            <my-inputs color="negative" :display-value="displayDatetime" mode="datetime" v-model="iso.datetime"></my-inputs>
+          </div>
+        </q-card>
+      </div>
 
-      <my-inputs dark color="positive" :rules="rules" v-model="quasar.date" :date-options="dateOptions"></my-inputs>
-      <my-inputs dark color="positive" :rules="rules" mode="time" standard="quasar" v-model="quasar.time" :time-options="timeOptions"></my-inputs>
-      <my-inputs dark color="positive" :rules="rules" mode="datetime" v-model="quasar.datetime" :date-options="dateOptions" :time-options="timeOptions"></my-inputs>
+      <div class="full-width q-mb-md">
+        <q-card>
+          <q-card-section class="full-width bg-grey-9 text-white">
+            <div class="text-h4 text-center">Format 24h</div>
+          </q-card-section>
+          <div class="row full-width">
+            <my-inputs color="negative" dark :format24h="format24h" v-model="iso.date"></my-inputs>
+            <my-inputs color="negative" dark :format24h="format24h" mode="time" v-model="iso.time"></my-inputs>
+            <my-inputs color="negative" dark :format24h="format24h" mode="datetime" v-model="iso.datetime"></my-inputs>
+          </div>
+        </q-card>
+      </div>
+
+      <div class="full-width q-mb-md">
+        <q-card>
+          <q-card-section class="full-width bg-grey-2">
+            <div class="text-h4 text-center">Value Format</div>
+            <div class="text-subtitle1 text-center">yyyy/MM/dd HH:mm:ss</div>
+          </q-card-section>
+          <div class="row full-width">
+            <my-inputs color="positive" v-model="quasar.date"></my-inputs>
+            <my-inputs color="positive" mode="time" standard="quasar" v-model="quasar.time"></my-inputs>
+            <my-inputs color="positive" mode="datetime" v-model="quasar.datetime"></my-inputs>
+          </div>
+        </q-card>
+      </div>
+
+      <div class="full-width q-mb-md">
+        <q-card>
+          <q-card-section class="full-width bg-grey-9 text-white">
+            <div class="text-h4 text-center">Validation & Options</div>
+            <div class="text-subtitle1 text-center">Rules, Data Options, Time Options</div>
+          </q-card-section>
+          <div class="row full-width">
+            <my-inputs dark color="positive" :rules="rules" v-model="quasar.date" :date-options="dateOptions"></my-inputs>
+            <my-inputs dark color="positive" :rules="rules" mode="time" standard="quasar" v-model="quasar.time" :time-options="timeOptions"></my-inputs>
+            <my-inputs dark color="positive" :rules="rules" mode="datetime" v-model="quasar.datetime" :date-options="dateOptions" :time-options="timeOptions"></my-inputs>
+          </div>
+        </q-card>
+      </div>
+
+      <div class="full-width q-mb-md">
+        <q-card>
+          <q-card-section class="full-width bg-grey-2">
+            <div class="text-h4 text-center">Shared Value</div>
+            <div class="text-subtitle1 text-center">value shared between date, time and datetime</div>
+          </q-card-section>
+          <div class="row full-width">
+            <my-inputs v-model="iso.datetime"></my-inputs>
+            <my-inputs mode="time" v-model="iso.datetime"></my-inputs>
+            <my-inputs mode="datetime" v-model="iso.datetime"></my-inputs>
+          </div>
+        </q-card>
+      </div>
+
       <div class="col col-md-6 col-12 q-pa-md">
         <q-banner rounded class="bg-primary text-white">
           <template v-slot:avatar>
