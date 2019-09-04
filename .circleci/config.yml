@@ -27,4 +27,4 @@ jobs:
           command: 'cd test/app && quasar build -m spa'
       - run:
           name: Deploy docs to gh-pages branch
-          command: mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config && gh-pages --dotfiles --message "[skip ci] Updates" --dist test/app/dist/spa
+          command: echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config && gh-pages --dotfiles --message "[skip ci] Updates" --dist test/app/dist/spa
