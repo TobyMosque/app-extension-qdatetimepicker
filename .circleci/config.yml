@@ -23,11 +23,8 @@ jobs:
           fingerprints:
             - "e6:8a:ef:c5:2d:66:f3:6e:0f:fc:c4:3a:98:b4:ca:7c"
       - run:
-          name: Keyscan Github (HACK)
-          command: ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-      - run:
           name: build test app
           command: 'cd test/app && quasar build -m spa'
       - run:
           name: Deploy docs to gh-pages branch
-          command: sudo gh-pages --dotfiles --message "[skip ci] Updates" --dist test/app/dist/spa
+          command: sudo ssh-keyscan -H github.com >> ~/.ssh/known_hosts && sudo gh-pages --dotfiles --message "[skip ci] Updates" --dist test/app/dist/spa
