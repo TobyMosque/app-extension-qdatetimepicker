@@ -28,4 +28,4 @@ jobs:
           command: 'cd test/app && quasar build -m spa'
       - run:
           name: Deploy docs to gh-pages branch
-          command: ssh-keyscan [my_host_name] >> ~/.ssh/known_hosts | sudo gh-pages --dotfiles --message "[skip ci] Updates" --dist test/app/dist/spa
+          command: ssh-keyscan github.com >> ~/.ssh/known_hosts | sudo gh-pages --dotfiles --message "[skip ci] Updates" --dist test/app/dist/spa
