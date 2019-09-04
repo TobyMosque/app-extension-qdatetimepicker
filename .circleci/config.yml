@@ -21,10 +21,11 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
       - add_ssh_keys:
           fingerprints:
+            - "16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48"
             - "e6:8a:ef:c5:2d:66:f3:6e:0f:fc:c4:3a:98:b4:ca:7c"
       - run:
           name: build test app
           command: 'cd test/app && quasar build -m spa'
       - run:
           name: Deploy docs to gh-pages branch
-          command: yes YES | sudo gh-pages --dotfiles --message "[skip ci] Updates" --dist test/app/dist/spa
+          command: ssh-keyscan [my_host_name] >> ~/.ssh/known_hosts | sudo gh-pages --dotfiles --message "[skip ci] Updates" --dist test/app/dist/spa
