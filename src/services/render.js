@@ -23,7 +23,7 @@ Render.prototype.main = function () {
   let that = this
   let { h, self } = that
   let isReadonly = self.target === 'self' || !!self.displayValue
-  let isClearable = !!self.values.input && (self.target === 'self' || self.clearable)
+  let isClearable = !!self.values.input && self.clearable
   let component = isReadonly ? QField : QInput
 
   let children = []
