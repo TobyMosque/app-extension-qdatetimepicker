@@ -69,6 +69,11 @@ module.exports = function (ctx) {
     build: {
       rtl: true,
       scopeHoisting: true,
+      uglifyOptions: {
+        compress: {
+          drop_console: process.env.NODE_ENV === 'production'
+        }
+      },
       // vueRouterMode: 'history',
       // vueCompiler: true,
       // gzip: true,
