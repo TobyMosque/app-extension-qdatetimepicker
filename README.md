@@ -18,7 +18,7 @@ quasar ext add qdatetimepicker
 You can use `quasar describe QDatetimePicker`
 
 # Demo
-Can be found [here](https://qdatetimepicker.netlify.com).
+Can be found [here](https://qdatetimepicker.herokuapp.com/).
 
 # Example Code
 ```html

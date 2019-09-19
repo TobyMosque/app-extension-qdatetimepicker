@@ -97,7 +97,7 @@ Render.prototype.factory = function ({ component, ref, children, cbOptions }) {
   const { value, rules, ...props } = this.self.$props
   const { input, ...listeners } = this.self.$listeners
   const { append, ...scopedSlots } = this.self.$scopedSlots
-  const attrs = this.self.$attrs
+  const { ...attrs } = this.self.$attrs
   const options = {
     attrs,
     props,

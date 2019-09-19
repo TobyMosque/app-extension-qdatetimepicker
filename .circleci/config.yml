@@ -19,13 +19,9 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-      - add_ssh_keys:
-          fingerprints:
-            - "16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48"
-            - "e6:8a:ef:c5:2d:66:f3:6e:0f:fc:c4:3a:98:b4:ca:7c"
       - run:
           name: build test app
-          command: 'cd test/app && quasar build -m spa'
+          command: 'cd test/app && quasar build -m ssr'
       - run:
           name: Deploy docs to gh-pages branch
-          command: ssh-keyscan -t rsa github.com | tee github-key-temp | ssh-keygen -lf - && cat github-key-temp >> ~/.ssh/known_hosts && sudo gh-pages --dotfiles --message "[skip ci] Updates" --dist test/app/dist/spa
+          command: 'sudo gh-pages --dotfiles --message "[skip ci] Updates" --branch master --repo https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git --dist test/app/dist/ssr'
