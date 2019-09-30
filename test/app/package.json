@@ -20,7 +20,6 @@
   "dependencies": {
     "@quasar/extras": "^1.2.0",
     "axios": "^0.18.0",
-    "firebase-functions": "^3.2.0",
     "quasar": "^1.0.5",
     "vue-i18n": "^7.3.3"
   },
