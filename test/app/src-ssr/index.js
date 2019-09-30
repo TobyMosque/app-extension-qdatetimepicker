@@ -12,6 +12,7 @@
  */
 
 const
+  functions = require('firebase-functions'),
   express = require('express'),
   compression = require('compression')
 
@@ -69,3 +70,5 @@ app.get('*', (req, res) => {
 app.listen(port, () => {
   console.log(`Server listening at port ${port}`)
 })
+
+exports.api = functions.https.onRequest(app)
