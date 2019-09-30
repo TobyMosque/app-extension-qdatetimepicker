@@ -11,7 +11,7 @@ jobs:
           - v1-dependencies-
       - run:
           name: Install and configure dependencies
-          command: 'sudo npm install -g @quasar/cli@latest && sudo npm install -g gh-pages@latest && sudo npm install -g firebase-tools@latest && git config user.email "ci-build@tobymosque.net" && git config user.name "ci-build"'
+          command: 'sudo npm install -g @quasar/cli@latest && sudo npm install -g gh-pages@latest && git config user.email "ci-build@tobymosque.net" && git config user.name "ci-build"'
       - run:
           name: installing dependencies
           command: 'cd test/app && yarn && quasar upgrade -i'
@@ -25,6 +25,4 @@ jobs:
       - run:
           name: Deploy docs to heroku branch
           command: 'sudo gh-pages --dotfiles --message "[skip ci] Updates" --branch master --repo https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git --dist test/app/dist/ssr'
-      - run:
-          name: Deploy docs to firebase host
-          command: 'cd test/app && sudo firebase deploy --project $FIREBASE_APP_NAME --token "$FIREBASE_API_KEY"'
+      
