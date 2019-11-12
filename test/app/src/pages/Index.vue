@@ -213,13 +213,13 @@ export default {
   },
   computed: {
     displayDate () {
-      return `iso: ${this.iso.date}`
+      return 'iso: ' + this.iso.date
     },
     displayTime () {
-      return `iso: ${this.iso.time}`
+      return 'iso: ' + this.iso.time
     },
     displayDatetime () {
-      return `iso: ${this.iso.datetime}`
+      return 'iso: ' + this.iso.datetime
     },
     language: {
       get () { return this.$store.state.homePage.language },
@@ -232,7 +232,7 @@ export default {
   },
   methods: {
     async onLanguageInput () {
-      let lang = await import(`quasar/lang/${this.language}`)
+      let lang = await import('quasar/lang/' + this.language)
       this.$q.lang.set(lang.default)
     },
     dateOptions (date) {
