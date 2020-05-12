@@ -114,7 +114,7 @@
       "desc": "If the value is 'true' or a 'function', the internal QInput will be readonly. If the value is 'true' the calendar and numeric system used to format the date will not be forced to be the gregorian calendar and latin numbers. If value is a 'string', the format function will be ignored and the 'display-value' will be used directly in the 'input' (default: 'false')",
       "default": "false"
     },
-    "display-icon": {
+    "icon": {
       "type": [ "String" ],
       "desc": "The icon of the picker (default: 'access_time' when the mode is 'time', otherwise 'event')"
     },
