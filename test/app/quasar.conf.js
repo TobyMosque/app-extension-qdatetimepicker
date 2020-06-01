@@ -68,6 +68,7 @@ module.exports = function (ctx) {
 
     build: {
       rtl: true,
+      modern: true,
       scopeHoisting: true,
       uglifyOptions: {
         compress: {

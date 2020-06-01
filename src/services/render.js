@@ -11,7 +11,7 @@ import {
   QTabs,
   QTab,
   QTabPanels,
-  QTabPanel,
+  QTabPanel
 } from 'quasar'
 
 const Render = function (self, h) {

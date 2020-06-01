@@ -1,6 +1,6 @@
 {
   "name": "quasar-app-extension-qdatetimepicker",
-  "version": "1.0.0-rc.9",
+  "version": "1.0.0-rc.10",
   "description": "QDatetimePicker for Quasar",
   "author": "Tobias Mesquita <tobias.mesquita@gmail.com>",
   "main": "src/index.js",
@@ -24,7 +24,11 @@
   },
   "homepage": "https://github.com/TobyMosque/app-extension-qdatetimepicker#readme",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/TobyMosque/app-extension-qdatetimepicker.git"
+    "type": "git",
+    "url": "https://github.com/TobyMosque/app-extension-qdatetimepicker.git"
+  },
+  "devDependencies": {
+    "quasar": "^1.12.2",
+    "vue": "^2.6.11"
   }
 }
