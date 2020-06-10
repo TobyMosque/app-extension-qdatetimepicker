@@ -333,12 +333,20 @@ export default function ({ ssrContext }) {
             this.$refs.popup.hide()
             break
         }
-        let dateValue = this.original.date || today.quasar
-        let timeValue = this.original.time || (this.withSeconds ? '00:00:00' : '00:00')
-        let proporsal = `${dateValue} ${timeValue}`
-        let parsed = date.parse({ proporsal, withSeconds: this.withSeconds })
-        if (parsed.success) {
-          this.__updateDates(parsed)
+        let dateValue = this.original.date // || today.quasar
+        let timeValue = this.original.time // || (this.withSeconds ? '00:00:00' : '00:00')
+        if (!dateValue && timeValue) {
+          dateValue = today.quasar
+        }
+        if (!timeValue && dateValue) {
+          timeValue =  (this.withSeconds ? '00:00:00' : '00:00')
+        }
+        if (dateValue && timeValue) {
+          let proporsal = `${dateValue} ${timeValue}`
+          let parsed = date.parse({ proporsal, withSeconds: this.withSeconds })
+          if (parsed.success) {
+            this.__updateDates(parsed)
+          }
         }
       },
       onPopupShow () {

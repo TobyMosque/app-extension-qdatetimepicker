@@ -22,8 +22,8 @@ const Render = function (self, h) {
 Render.prototype.main = function () {
   let that = this
   let { h, self } = that
-  let isReadonly = self.target === 'self' || !!self.displayValue
-  let isClearable = !!self.values.input && self.clearable
+  let isReadonly = self.disable || self.target === 'self' || !!self.displayValue
+  let isClearable = !!self.values.input && self.clearable && !self.disable && !self.readonly
   let component = isReadonly ? QField : QInput
 
   let children = []
@@ -136,6 +136,7 @@ Render.prototype.suffix = function () {
     class: `text-${self.color || 'primary'} cursor-pointer q-pr-xs`,
     on: {
       click (event) {
+        if (!self.disable && !self.readonly)
         self.toggleSuffix()
       }
     }
