@@ -49,6 +49,10 @@ const { value, clearable, ...props } = {
       return ['self', 'icon'].indexOf(value) !== -1
     }
   },
+  icon: {
+    type: String,
+    default: undefined
+  },
   defaultStandard: {
     type: String,
     default: 'iso',
