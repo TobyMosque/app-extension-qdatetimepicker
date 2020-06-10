@@ -51,7 +51,7 @@ const { value, clearable, ...props } = {
   },
   icon: {
     type: String,
-    default: 'event',
+    default: undefined
   },
   defaultStandard: {
     type: String,
