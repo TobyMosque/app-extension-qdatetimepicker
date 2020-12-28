@@ -201,9 +201,9 @@ export default function ({ ssrContext }) {
         immediate: true,
         handler () {
           if (!this.value) {
-            this.standard = this.defaultStandard 
+            this.standard = this.defaultStandard
           } else {
-            let standard = this.defaultStandard 
+            let standard = this.defaultStandard
             switch (true) {
               case this.value.indexOf('-') !== -1: standard = 'iso'; break
               case this.value.indexOf('/') !== -1: standard = 'quasar'; break
@@ -311,7 +311,7 @@ export default function ({ ssrContext }) {
         if (!value) {
           this.$emit('input', '')
         } else {
-          let proporsal = date.quasar({ 
+          let proporsal = date.quasar({
             base: this.value,
             masked: value,
             ampm: this.format24h ? void 0 : this.values.suffix,
@@ -335,6 +335,7 @@ export default function ({ ssrContext }) {
       },
       onSetClick () {
         let today = date.getDefault({ mode: this.mode })
+        let commitedChanges = true
         switch (true) {
           case this.mode === 'date':
             this.original.date = this.values.date
@@ -347,6 +348,7 @@ export default function ({ ssrContext }) {
           case this.mode === 'datetime' && this.tab === 'date':
             this.original.date = this.values.date
             this.tab = 'time'
+            commitedChanges = false
             break
           case this.mode === 'datetime' && this.tab === 'time':
             this.original.date = this.values.date
@@ -367,6 +369,9 @@ export default function ({ ssrContext }) {
           let parsed = date.parse({ proporsal, withSeconds: this.withSeconds })
           if (parsed.success) {
             this.__updateDates(parsed)
+          }
+          if (commitedChanges) {
+            this.$emit('commit', parsed)
           }
         }
       },
