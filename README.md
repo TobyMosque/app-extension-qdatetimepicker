@@ -204,6 +204,53 @@ icons.date = 'mdi-calendar'
 icons.time = 'mdi-clock-outline'
 ```
 
+## SSR note
+
+To avoid hydratations erros, you'll need to ensure any change made at the server side will be reflected at the client side.
+That will not be a problem if you update the defaults at the both sides (server and client).
+But if you doing that in the preFetch, so you'll need to create a boot who will serialize the defaults at the server-side and another one who will deserialize at the client-side.
+
+**src/boot/qdtp.server.js**
+```js
+export default async function ({ app, ssrContext }) {
+  ssrContext.rendered = () => {
+    ssrContext.qdtpDefaults = JSON.stringify(app.qdtp)
+  }
+}
+```
+**src/boot/qdtp.client.js**
+```js
+export default async function ({ app }) {
+  const _defaults = JSON.parse(window.__QDTP_DEFAULTS__)
+  for (const key in _defaults.icons) {
+    app.qdtp.icons = _defaults.icons[key]
+  }
+}
+```
+**quasar.config.js**
+```js
+boot: [
+  { server: false, path: 'qdtp.client' },
+  { client: false, path: 'qdtp.server' }
+]
+```
+**src/index.template.html**
+```html
+<html>
+  <head>
+    <!-- DO NOT need to do any change to the head content -->
+  </head>
+  <body>
+    <!-- DO NOT touch the following DIV -->
+    <div id="q-app"></div>
+    <script>
+      // this script is all what you need to add to the template.
+      window.__QDTP_DEFAULTS__ = {{{ qdtpDefaults }}};
+    </script>
+  </body>
+</html>
+```
+
 # QDatetimePicker Vue Properties
 | Vue&nbsp;Property | Type	|  Description |
 |---|---|---|
