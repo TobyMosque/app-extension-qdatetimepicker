@@ -161,6 +161,49 @@ We need help translating the language files. Below are listed the available ones
 
 ---
 
+# change default icons at Runtime
+default icons are reactive, so all components will update properly if you change the $qdtp.icons object.
+
+example 01: in a boot
+```js
+import { boot } from 'quasar/wrappers'
+
+export default boot(function ({ app }) {
+  app.qdtp.icons.date = 'mdi-calendar'
+  app.qdtp.icons.time = 'mdi-clock-outline'
+})
+```
+
+example 02: in a component
+```js
+export default {
+  mounted () {
+    this.$qdtp.icons.date = 'mdi-calendar'
+    this.$qdtp.icons.time = 'mdi-clock-outline'
+  }
+}
+```
+
+example 03: in a vuex module
+```js
+export default {
+  actions: {
+    updateIcons () {
+      this.$qdtp.icons.date = 'mdi-calendar'
+      this.$qdtp.icons.time = 'mdi-clock-outline'
+    }
+  }
+}
+```
+
+example 04: everywhere else
+```js
+import { icons } from 'quasar-app-extension-qdatetimepicker/src/component'
+
+icons.date = 'mdi-calendar'
+icons.time = 'mdi-clock-outline'
+```
+
 # QDatetimePicker Vue Properties
 | Vue&nbsp;Property | Type	|  Description |
 |---|---|---|
@@ -192,7 +235,9 @@ We need help translating the language files. Below are listed the available ones
 | mode | String | Display Mode (`date`, `time`, `datetime`) (default: `date`) |
 | format24h | Boolean | Show the timepicker in 24 hour format. The masked value will not be affected. |
 | display-value | Boolean or String | If the value is `true` or a `string`, the internal QInput will be readonly. If the value is `true` the calendar and numeric system used to format the date will not be forced to be the gregorian calendar and latin numbers. If value is a `string`, the format function will be ignored and the `display-value` will be used directly in the `input` (default: `false`) |
-| icon | String | The icon of the picker (default: `access_time` when the mode is `time`, otherwise `event`) |
+| icon | String | The icon of the picker (default: `access_time` when the mode is `time`, otherwise `event`) (obs: `date-icon` and/or `time-icon` props has a high priority) |
+| date-icon | String | The icon of the picker when the mode is equals to `date` or `datetime` (default: `event`) |
+| time-icon | String | The icon of the picker when the mode is equals to `time` (default: `access_time`) |
 | landscape | Boolean | Show the picker in landscape mode (default: false) |
 | today-btn | Boolean | Display a button that selects the current day (`date` and `datetime` modes only) (default: false) |
 | now-btn | Boolean | Display a button that selects the current time (`time` and `datetime` modes only) (default: false) |

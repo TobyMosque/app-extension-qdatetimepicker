@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import * as meta from 'quasar-app-extension-qdatetimepicker/src/services/meta.js'
 import * as date from 'quasar-app-extension-qdatetimepicker/src/services/date.js'
-import Render from 'quasar-app-extension-qdatetimepicker/src/services/render.js'
+import Render, { icons } from 'quasar-app-extension-qdatetimepicker/src/services/render.js'
 
 import {
   dom,
@@ -50,6 +50,14 @@ const { value, clearable, ...props } = {
     }
   },
   icon: {
+    type: String,
+    default: undefined
+  },
+  dateIcon: {
+    type: String,
+    default: undefined
+  },
+  timeIcon: {
     type: String,
     default: undefined
   },
@@ -370,3 +378,5 @@ export default function ({ ssrContext }) {
     }
   })
 }
+
+export { icons }

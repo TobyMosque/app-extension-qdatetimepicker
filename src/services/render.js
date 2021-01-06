@@ -14,6 +14,12 @@ import {
   QTabPanel
 } from 'quasar'
 
+import Vue from 'vue'
+const icons = new Vue.observable({
+  date: 'event',
+  time: 'access_time'
+})
+
 const Render = function (self, h) {
   this.h = h
   this.self = self
@@ -146,10 +152,12 @@ Render.prototype.suffix = function () {
 
 Render.prototype.trigger = function () {
   let { h, self } = this
+  let icon = self.mode === 'time' ? self.timeIcon : self.dateIcon;
+  let _default = self.mode === 'time' ? icons.time : icons.date
   let trigger = h(QIcon, {
     staticClass: 'cursor-pointer',
     props: {
-      name: self.icon || (self.mode === 'time' ? 'access_time' : 'event')
+      name: icon || self.icon || _default
     }
   }, [this.popup()])
   return trigger
@@ -295,14 +303,14 @@ Render.prototype.tabsTitle = function () {
     h(QTab, {
       props: {
         name: 'date',
-        icon: 'event',
+        icon: self.dateIcon || icons.date,
         label: self.isoLang.dateTimePicker.date
       }
     }, []),
     h(QTab, {
       props: {
         name: 'time',
-        icon: 'access_time',
+        icon: self.timeIcon || icons.time,
         label: self.isoLang.dateTimePicker.time
       }
     }, [])
@@ -377,3 +385,4 @@ Render.prototype.time = function () {
 }
 
 export default Render
+export { icons }

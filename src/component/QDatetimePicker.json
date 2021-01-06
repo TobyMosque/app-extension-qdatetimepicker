@@ -118,6 +118,14 @@
       "type": [ "String" ],
       "desc": "The icon of the picker (default: 'access_time' when the mode is 'time', otherwise 'event')"
     },
+    "date-icon": {
+      "type": [ "String" ],
+      "desc": "The icon of the picker when the mode is equals to date (default: 'event')"
+    },
+    "time-icon": {
+      "type": [ "String" ],
+      "desc": "The icon of the picker when the mode is equals to time (default: 'access_time')"
+    },
     "landscape": {
       "type": [ "Boolean" ],
       "desc": "Show the picker in landscape mode (default: 'false')"

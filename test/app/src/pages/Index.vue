@@ -129,7 +129,7 @@
         <q-banner rounded class="bg-grey-10 text-white">
           <template v-slot:avatar>
             <q-avatar>
-              <img src="statics/git-octupus.png">
+              <img src="git-octupus.png">
             </q-avatar>
           </template>
           Quasar App Extension QDatetimePicker Repository

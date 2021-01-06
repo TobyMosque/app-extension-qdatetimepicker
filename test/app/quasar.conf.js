@@ -16,9 +16,9 @@ module.exports = function (ctx) {
 
     extras: [
       'roboto-font',
-      'material-icons' // optional, you are not bound to it
+      'material-icons', // optional, you are not bound to it
       // 'ionicons-v4',
-      // 'mdi-v3',
+      'mdi-v5'
       // 'fontawesome-v5',
       // 'eva-icons'
     ],
@@ -63,12 +63,8 @@ module.exports = function (ctx) {
       // iconSet: 'ionicons-v4'
       // lang: 'de' // Quasar language
     },
-
-    supportIE: true,
-
     build: {
       rtl: true,
-      modern: true,
       scopeHoisting: true,
       uglifyOptions: {
         compress: {
@@ -100,12 +96,16 @@ module.exports = function (ctx) {
     animations: [],
 
     ssr: {
-      pwa: false
+      pwa: true
     },
 
     pwa: {
       // workboxPluginMode: 'InjectManifest',
-      // workboxOptions: {},
+      workboxOptions: {
+        cleanupOutdatedCaches: true,
+        skipWaiting: true,
+        clientsClaim: true
+      },
       manifest: {
         // name: 'Quasar App',
         // short_name: 'Quasar-PWA',
@@ -116,27 +116,27 @@ module.exports = function (ctx) {
         theme_color: '#027be3',
         icons: [
           {
-            'src': 'statics/icons/icon-128x128.png',
+            'src': 'icons/icon-128x128.png',
             'sizes': '128x128',
             'type': 'image/png'
           },
           {
-            'src': 'statics/icons/icon-192x192.png',
+            'src': 'icons/icon-192x192.png',
             'sizes': '192x192',
             'type': 'image/png'
           },
           {
-            'src': 'statics/icons/icon-256x256.png',
+            'src': 'icons/icon-256x256.png',
             'sizes': '256x256',
             'type': 'image/png'
           },
           {
-            'src': 'statics/icons/icon-384x384.png',
+            'src': 'icons/icon-384x384.png',
             'sizes': '384x384',
             'type': 'image/png'
           },
           {
-            'src': 'statics/icons/icon-512x512.png',
+            'src': 'icons/icon-512x512.png',
             'sizes': '512x512',
             'type': 'image/png'
           }

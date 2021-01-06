@@ -1,5 +1,6 @@
-import QDatetimePicker from './QDatetimePicker.js'
+import QDatetimePicker, { icons } from './QDatetimePicker.js'
 
 export {
-  QDatetimePicker
+  QDatetimePicker,
+  icons
 }
