@@ -210,30 +210,8 @@ To avoid hydratations erros, you'll need to ensure any change made at the server
 That will not be a problem if you update the defaults at the both sides (server and client).
 But if you doing that in the preFetch, so you'll need to create a boot who will serialize the defaults at the server-side and another one who will deserialize at the client-side.
 
-**src/boot/qdtp.server.js**
-```js
-export default async function ({ app, ssrContext }) {
-  ssrContext.rendered = () => {
-    ssrContext.qdtpDefaults = JSON.stringify(app.qdtp)
-  }
-}
-```
-**src/boot/qdtp.client.js**
-```js
-export default async function ({ app }) {
-  const _defaults = JSON.parse(window.__QDTP_DEFAULTS__)
-  for (const key in _defaults.icons) {
-    app.qdtp.icons = _defaults.icons[key]
-  }
-}
-```
-**quasar.config.js**
-```js
-boot: [
-  { server: false, path: 'qdtp.client' },
-  { client: false, path: 'qdtp.server' }
-]
-```
+But don't worry, that isn't as bad as seems, this extension already does the most of the work, all what you need to do is add `{{{qdtpScript}}}` after `div#q-app` in the `index.template.html`
+
 **src/index.template.html**
 ```html
 <html>
@@ -243,10 +221,7 @@ boot: [
   <body>
     <!-- DO NOT touch the following DIV -->
     <div id="q-app"></div>
-    <script>
-      // this script is all what you need to add to the template.
-      window.__QDTP_DEFAULTS__ = {{{ qdtpDefaults }}};
-    </script>
+    {{{qdtpScript}}}
   </body>
 </html>
 ```
@@ -296,6 +271,7 @@ boot: [
 | date-options | Function or Array | A list of events to highlight on the calendar; If using a function, it receives the date as a String and must return a Boolean (matches or not) |
 | time-options | Function | Optionally configure what time the user allowed to set |
 | with-seconds | Boolean | Allow the time to be set with seconds |
+| disable-popup | Boolean | Removes the `Picker`(a.k.a popup) of the `DatetimePicker`, turning the component in a `DatetimeInput`. Ideal if you wanna the user to type the date and/or time. |
 | default-standard | String | serialization standard, the property will be ignored if value isn't null (`iso`, `quasar`) (eg.: `iso`: `yyyy-MM-ddTHH:mm`, `quasar`: `yyyy/MM/dd HH:mm`) (default: `iso`) |
 | auto-update-value | Boolean | When the last action in selection mode is completed, the value is updated automatically |
 

@@ -68,6 +68,10 @@ const { value, clearable, ...props } = {
       return ['iso', 'quasar'].indexOf(value) !== -1
     }
   },
+  disablePopup: {
+    type: Boolean,
+    default: false
+  },
   displayValue: {
     type: [ Boolean, String ],
     default: false
@@ -180,6 +184,15 @@ export default function ({ ssrContext }) {
           return `${this.masks.date} ${this.masks.time}`
         } else {
           return this.masks.date || this.masks.time
+        }
+      },
+      isReadonly () {
+        return this.disable || this.target === 'self' || !!this.displayValue
+      },
+      hasPopup () {
+        switch (this.popupBehavior) {
+          case 'never': return false
+          case 'always': return true
         }
       }
     },

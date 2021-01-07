@@ -28,12 +28,11 @@ const Render = function (self, h) {
 Render.prototype.main = function () {
   let that = this
   let { h, self } = that
-  let isReadonly = self.disable || self.target === 'self' || !!self.displayValue
+  
   let isClearable = !!self.values.input && self.clearable && !self.disable && !self.readonly
-  let component = isReadonly ? QField : QInput
-
+  let component = self.isReadonly ? QField : QInput
   let children = []
-  if (isReadonly) {
+  if (self.isReadonly && !self.disablePopup) {
     children.push(this.popup())
   }
 
@@ -49,7 +48,7 @@ Render.prototype.main = function () {
         if (isClearable) {
           icons.push(that.clear())
         }
-        if (!isReadonly) {
+        if (!self.isReadonly && !self.disablePopup) {
           icons.push(that.trigger())
         }
         return icons
@@ -63,7 +62,7 @@ Render.prototype.main = function () {
         })
       }
 
-      if (!isReadonly) {
+      if (!self.isReadonly) {
         options.props.clearable = false
         options.props.mask = self.mask
         options.props.value = self.values.input || ''
@@ -154,12 +153,13 @@ Render.prototype.trigger = function () {
   let { h, self } = this
   let icon = self.mode === 'time' ? self.timeIcon : self.dateIcon;
   let _default = self.mode === 'time' ? icons.time : icons.date
+  let _children = !self.disablePopup ? [this.popup()] : []
   let trigger = h(QIcon, {
     staticClass: 'cursor-pointer',
     props: {
       name: icon || self.icon || _default
     }
-  }, [this.popup()])
+  }, _children)
   return trigger
 }
 
