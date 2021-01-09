@@ -4,8 +4,6 @@ QDatetimePicker (quasar-app-extension-qdatetimepicker)
 QDatetimePicker is a `UI App Extension` for [Quasar Framework v1](https://v1.quasar-framework.org/). It will not work with legacy versions of Quasar Framework.
 
 This work is currently in `beta` and minor changes may still happen. Your help with testing is greatly appreciated.
-# Bugs
-1. When the picker popup hides because the user Cancels or Blurs off, the display date should return to the initial value. Otherwise, they can change the date and/or time then cancel and the display date shows the changed date/time even if it was not Set
 
 # Notes
 Minimum required version is Quasar 1.0.0.
