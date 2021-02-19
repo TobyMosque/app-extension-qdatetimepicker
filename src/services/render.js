@@ -354,6 +354,7 @@ Render.prototype.date = function () {
       options.props.options = self.dateOptions
       options.props.mask = self.dateMask
       options.props.value = self.values.date
+      options.props.minimal = self.minimal
       options.on.input = function (value) {
         self.values.date = value
         if (self.autoUpdateValue) {

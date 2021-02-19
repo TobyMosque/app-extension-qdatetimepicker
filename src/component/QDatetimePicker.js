@@ -81,7 +81,8 @@ const { value, clearable, ...props } = {
   hideTabs: {
     type: Boolean,
     default: false
-  }
+  },
+  minimal: Boolean
 }
 delete props.fit.default
 delete props.cover.default
