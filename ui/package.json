@@ -1,6 +1,6 @@
 {
   "name": "@toby.mosque/quasar-ui-qdatetimepicker",
-  "version": "0.0.1",
+  "version": "1.0.1-0",
   "author": "Tobias Mesquita <tobias.mesquita@gmail.com>",
   "description": "Quasar Datetime Picker",
   "license": "MIT",
