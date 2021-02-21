@@ -201,9 +201,9 @@ export default function ({ ssrContext }) {
         immediate: true,
         handler () {
           if (!this.value) {
-            this.standard = this.defaultStandard 
+            this.standard = this.defaultStandard
           } else {
-            let standard = this.defaultStandard 
+            let standard = this.defaultStandard
             switch (true) {
               case this.value.indexOf('-') !== -1: standard = 'iso'; break
               case this.value.indexOf('/') !== -1: standard = 'quasar'; break
@@ -311,7 +311,7 @@ export default function ({ ssrContext }) {
         if (!value) {
           this.$emit('input', '')
         } else {
-          let proporsal = date.quasar({ 
+          let proporsal = date.quasar({
             base: this.value,
             masked: value,
             ampm: this.format24h ? void 0 : this.values.suffix,
@@ -335,23 +335,27 @@ export default function ({ ssrContext }) {
       },
       onSetClick () {
         let today = date.getDefault({ mode: this.mode })
+        // MH added
+        let commitedChanges = true
         switch (true) {
           case this.mode === 'date':
             this.original.date = this.values.date
-            this.$refs.popup.hide()
+            // this.$refs.popup.hide() // MH removed
             break
           case this.mode === 'time':
             this.original.time = this.values.time
-            this.$refs.popup.hide()
+            // this.$refs.popup.hide() // MH removed
             break
           case this.mode === 'datetime' && this.tab === 'date':
             this.original.date = this.values.date
             this.tab = 'time'
+            // MH added
+            commitedChanges = false
             break
           case this.mode === 'datetime' && this.tab === 'time':
             this.original.date = this.values.date
             this.original.time = this.values.time
-            this.$refs.popup.hide()
+            // this.$refs.popup.hide() // MH removed
             break
         }
         let dateValue = this.original.date // || today.quasar
@@ -360,7 +364,7 @@ export default function ({ ssrContext }) {
           dateValue = today.quasar
         }
         if (!timeValue && dateValue) {
-          timeValue =  (this.withSeconds ? '00:00:00' : '00:00')
+          timeValue = (this.withSeconds ? '00:00:00' : '00:00')
         }
         if (dateValue && timeValue) {
           let proporsal = `${dateValue} ${timeValue}`
@@ -369,13 +373,27 @@ export default function ({ ssrContext }) {
             this.__updateDates(parsed)
           }
         }
+        // MH Bug Fix:
+        // Moved the popup.hide() to here so the inputs are updated above BEFORE we close the popup.
+        // Then, at the time you hear the events when the popup closes, you know the field values
+        // are the same as in the picker.
+        if (commitedChanges) {
+          this.$refs.popup.hide(true) // MH: added the commit boolean. See: onPopupHide()
+        }
       },
       onPopupShow () {
         this.tab = 'date'
       },
-      onPopupHide () {
+      onPopupHide (commit) {
         this.values.date = this.original.date
         this.values.time = this.original.time
+
+        // MH added this (and the commit arg):
+        if (commit) {
+          this.$emit('commit')
+        } else {
+          this.$emit('cancel')
+        }
       },
       toggleSuffix () {
         this.values.suffix = this.values.suffix === 'PM' ? 'AM' : 'PM'
