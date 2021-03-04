@@ -8,13 +8,13 @@
 
 function extendConf (conf) {
   // register our boot file
-  conf.boot.push('~quasar-app-extension-q-datetime-picker/src/boot/register.js')
+  conf.boot.push('~@toby.mosque/quasar-app-extension-qdatetimepicker/src/boot/register.js')
 
   // make sure app extension files & ui package gets transpiled
-  conf.build.transpileDependencies.push(/quasar-app-extension-q-datetime-picker[\\/]src/)
+  conf.build.transpileDependencies.push(/@toby.mosque[\\/]quasar-app-extension-qdatetimepicker[\\/]src/)
 
   // make sure the stylesheet goes through webpack to avoid SSR issues
-  conf.css.push('~quasar-ui-q-datetime-picker/src/index.sass')
+  conf.css.push('~@toby.mosque/quasar-ui-qdatetimepicker/src/index.sass')
 }
 
 module.exports = function (api) {

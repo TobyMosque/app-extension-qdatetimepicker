@@ -14,6 +14,6 @@ export default {
   Component,
   install (Vue) {
     Vue.component(Component.name, Component)
-    
+    this.$qdtp = { defaults }
   }
 }

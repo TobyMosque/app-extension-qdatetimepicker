@@ -1,6 +1,6 @@
 {
   "name": "@toby.mosque/quasar-ui-qdatetimepicker",
-  "version": "1.0.1-0",
+  "version": "1.0.2-rc.8",
   "author": "Tobias Mesquita <tobias.mesquita@gmail.com>",
   "description": "Quasar Datetime Picker",
   "license": "MIT",
@@ -15,7 +15,8 @@
     "dev:electron": "cd dev && yarn 'dev:electron' && cd ..",
     "build": "node build/index.js",
     "build:js": "node build/script.javascript.js",
-    "build:css": "node build/script.css.js"
+    "build:css": "node build/script.css.js",
+    "_publish": "yarn build && npm publish"
   },
   "repository": {
     "type": "git",
@@ -39,7 +40,8 @@
     "rtlcss": "^2.6.1",
     "sass": "^1.29.0",
     "uglify-es": "^3.3.9",
-    "zlib": "^1.0.5"
+    "zlib": "^1.0.5",
+    "vue": "^2.6.0"
   },
   "browserslist": [
     "last 1 version, not dead, ie >= 11"

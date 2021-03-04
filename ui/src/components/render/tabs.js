@@ -5,13 +5,13 @@ export function title ({ self, props, h }) {
   return h(QTabs, {
     class: `bg-${props.color || 'primary'} text-white`,
     props: {
-      value: props.tab,
+      value: self.tab,
       vertical: props.landscape,
       dense: true
     },
     on: {
       input (value) {
-        props.tab = value
+        self.tab = value
       }
     }
   }, [

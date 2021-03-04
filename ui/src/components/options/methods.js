@@ -1,5 +1,6 @@
 import { QDate, QTime, QInput, QDialog, QMenu } from 'quasar'
 import date from '../../utils/date'
+import loadLang from '../../utils/lang'
 
 const methods = {
   __sleep (delay) {
@@ -9,11 +10,11 @@ const methods = {
     let isoName = this.$q.lang.isoName || this.__properties.lang || navigator.language
     let lang
     try {
-      lang = require(`../../lang/${isoName}`)
+      lang = loadLang(isoName)
     } catch (e) {
-      lang = require(`../../lang/en-us`)
+      lang = loadLang("en-us")
     }
-    this.$set(this, 'isoLang', lang.default)
+    this.$set(this, 'isoLang', lang)
   },
   __updateDates (parsed) {
     let parts = parsed.quasar.split(' ')
@@ -145,16 +146,20 @@ const components = [
   { name: 'dialog', component: QDialog },
   { name: 'menu', component: QMenu }
 ]
-for (const item of components) {
+for (const i in components) {
+  const item = components[i]
   const keys = Object.keys(item.component.options.methods || {})
-  for (const key of keys) {
+  for (const j in keys) {
+    const key = keys[j]
     const qtd = count.get(key) || ( methods[key] ? 1 : 0)
     count.set(key, qtd + 1)
   }
 }
-for (const item of components) {
+for (const i in components) {
+  const item = components[i]
   const keys = Object.keys(item.component.options.methods || {})
-  for (const key of keys) {
+  for (const j in keys) {
+    const key = keys[j]
     const qtd = count.get(key)
     const name = qtd > 1 ? `${item.name}${key.substr(0, 1).toUpperCase()}${key.substr(1)}` : key
     methods[name] = function (...args) {

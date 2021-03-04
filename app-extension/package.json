@@ -1,6 +1,6 @@
 {
   "name": "@toby.mosque/quasar-app-extension-qdatetimepicker",
-  "version": "0.0.1",
+  "version": "1.0.2-rc.8",
   "description": "Quasar Datetime Picker Extension",
   "author": "Tobias Mesquita <tobias.mesquita@gmail.com>",
   "license": "MIT",
@@ -12,7 +12,7 @@
   "bugs": "https://github.com/TobyMosque/app-extension-qdatetimepicker/issues",
   "homepage": "https://qdatetimepicker.herokuapp.com",
   "dependencies": {
-    "@toby.mosque/quasar-ui-qdatetimepicker": "latest"
+    "@toby.mosque/quasar-ui-qdatetimepicker": "^1.0.2-rc.8"
   },
   "engines": {
     "node": ">= 8.9.0",

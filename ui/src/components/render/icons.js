@@ -22,7 +22,7 @@ export function clear ({ self, props, h }) {
     on: {
       click (e) {
         e.stopPropagation()
-        props.values.input = ''
+        self.values.input = ''
         self.onInputFilled()
       }
     }

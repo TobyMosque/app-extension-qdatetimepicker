@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   lang: 'pt',
   dateTimePicker: {
     date: 'Data',

@@ -1,17 +1,5 @@
 export default {
   watch: {
-    iso: {
-      deep: true,
-      handler () {
-        console.log(this.iso)
-      }
-    },
-    quasar: {
-      deep: true,
-      handler () {
-        console.log(this.quasar)
-      }
-    },
     '$q.lang.isoName': {
       immediate: true,
       handler (value) {

@@ -1,4 +1,9 @@
-import Vue from 'vue'
-import VuePlugin from 'quasar-ui-q-datetime-picker'
+import VuePlugin, { defaults } from '@toby.mosque/quasar-ui-qdatetimepicker'
 
-Vue.use(VuePlugin)
+export default function ({ Vue, store }) {
+  if (store) {
+    store.$qdtp = { defaults }
+  }
+  Vue.use(VuePlugin)
+}
+

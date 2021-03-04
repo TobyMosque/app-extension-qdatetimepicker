@@ -61,7 +61,7 @@ const computed = {
   __properties () {
     const props =  keys.reduce((props, key) => {
       const $value = this[key]
-      const $default = defaults[key]
+      const $default = this.$q.dark.isActive ? defaults.dark[key] : defaults.light[key]
       props[key] = $value === undefined ? $default : $value
       return props
     }, {})

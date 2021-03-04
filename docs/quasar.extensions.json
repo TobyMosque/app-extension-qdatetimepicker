@@ -1,0 +1,8 @@
+{
+  "@toby.mosque/qdatetimepicker": {},
+  "@quasar/qribbon": {},
+  "@quasar/qmarkdown": {
+    "import_md": false,
+    "import_vmd": false
+  }
+}

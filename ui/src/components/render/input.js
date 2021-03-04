@@ -6,7 +6,7 @@ import icons from './icons'
 export default function render ({ self, props, h }) {
   const options = optionsFn({ self, ref: 'input' })
 
-  const isClearable = !!props.values.input && props.clearable && !props.disable && !props.readonly
+  const isClearable = !!self.values.input && props.clearable && !props.disable && !props.readonly
   const component = self.isReadonly ? QField : QInput
   const children = []
   if (self.isReadonly && !props.disablePopup) {
@@ -38,10 +38,19 @@ export default function render ({ self, props, h }) {
   if (!self.isReadonly) {
     options.props.clearable = false
     options.props.mask = self.mask
-    options.props.value = props.values.input || ''
+    options.props.value = self.values.input || ''
     options.on.input = function (value) {
-      props.values.input = value
-      if (props.values.input.length === self.mask.length || props.values.input.length === 0) {
+      self.values.input = value
+      let oldValue = "" + self.values.input
+      let isFilled = oldValue.length === self.mask.length
+      let isEmpty = oldValue.length === 0
+      if (props.fillMask !== false) {
+        const character = !props.fillMask || typeof props.fillMask !== "string" ? "_" : props.fillMask
+        isFilled = oldValue.indexOf(character) === -1
+        isEmpty = oldValue.replace(new RegExp(character, "gi"), "#") === self.mask
+      }
+
+      if (isFilled || isEmpty) {
         self.onInputFilled()
       }
     }
@@ -51,15 +60,15 @@ export default function render ({ self, props, h }) {
     options.on.keyup = function (value) {
       switch (true) {
         case props.format24h: return
-        case event.keyCode === 65 && props.values.suffix === 'PM':
-        case event.keyCode === 80 && props.values.suffix === 'AM': self.toggleSuffix(); break
+        case event.keyCode === 65 && self.values.suffix === 'PM':
+        case event.keyCode === 80 && self.values.suffix === 'AM': self.toggleSuffix(); break
         case event.shiftKey: return
         case event.keyCode === 38:
         case event.keyCode === 40: self.toggleSuffix()
       }
     }
   } else {
-    const text = typeof props.displayValue === 'string' ? props.displayValue : props.values.input
+    const text = typeof props.displayValue === 'string' ? props.displayValue : self.values.input
     options.props.stackLabel = !!text
     options.scopedSlots.control = function () {
       return h('span', {}, text || '')

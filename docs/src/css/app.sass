@@ -1,0 +1,53 @@
+// app global css in Sass form
+body.body--dark
+  color: $grey-1
+  --q-color-primary: #26a69a
+  --q-color-secondary: #027BE3
+  --q-color-accent: #9C27B0
+  --q-color-positive: #21BA45
+  --q-color-negative: #C10015
+  --q-color-info: #31CCEC
+  --q-color-warning: #F2C037
+  --q-color-qdtp-main: #{$grey-10}
+  --q-color-qdtp-invert: white
+  --q-color-qdtp-content: #{$grey-9}
+  --q-color-qdtp-content-2: #{$grey-8}
+body.body--light
+  color: $grey-10
+  --q-color-primary: #027BE3
+  --q-color-secondary: #26A69A
+  --q-color-accent: #9C27B0
+  --q-color-positive: #21BA45
+  --q-color-negative: #C10015
+  --q-color-info: #31CCEC
+  --q-color-warning: #F2C037
+  --q-color-qdtp-main: white
+  --q-color-qdtp-invert: #{$grey-10}
+  --q-color-qdtp-content: #{$grey-2}
+  --q-color-qdtp-content-2: #{$grey-4}
+.text-main
+  color: var(--q-color-qdtp-main)
+.text-invert
+  color: var(--q-color-qdtp-invert)
+.text-content
+  color: var(--q-color-qdtp-content)
+.text-content-2
+  color: var(--q-color-qdtp-content-2)
+.bg-main
+  background: var(--q-color-qdtp-main)
+.bg-invert
+  background: var(--q-color-qdtp-invert)
+.bg-content
+  background: var(--q-color-qdtp-content)
+.bg-content-2
+  background: var(--q-color-qdtp-content-2)
+body.body--light,
+body.body--dark
+  .bg-main
+    .q-markdown
+      blockquote.q-markdown--note,
+      pre,
+      pre code,
+      .q-markdown--code,
+      .q-markdown--line-numbers-wrapper
+        background: var(--q-color-qdtp-main)
