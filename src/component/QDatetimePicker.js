@@ -278,6 +278,13 @@ export default function ({ ssrContext }) {
           })
         }
         let current = this.standard === 'quasar' ? this.values.quasar : this.values.iso
+        if (this.standard === 'iso') {
+          if (this.mode === 'time'){
+            current = current.split('T')[1]
+          } else if (this.mode === 'date'){
+            current = current.split('T')[0]
+          }
+        }
         this.$emit('input', current)
       },
       __updateValue (force = false) {
