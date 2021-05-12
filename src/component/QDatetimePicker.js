@@ -201,9 +201,9 @@ export default function ({ ssrContext }) {
         immediate: true,
         handler () {
           if (!this.value) {
-            this.standard = this.defaultStandard 
+            this.standard = this.defaultStandard
           } else {
-            let standard = this.defaultStandard 
+            let standard = this.defaultStandard
             switch (true) {
               case this.value.indexOf('-') !== -1: standard = 'iso'; break
               case this.value.indexOf('/') !== -1: standard = 'quasar'; break
@@ -292,9 +292,9 @@ export default function ({ ssrContext }) {
           let current = this.standard === 'quasar' ? this.values.quasar : this.values.iso
           if (force || current !== this.value) {
             let proporsal = this.value
-            if (this.standard === 'iso')
-              proporsal = proporsal.replace(/-/g, '/').replace('T', ' ')
-            let parts = proporsal.split(' ')
+            if (this.standard === 'quasar')
+              proporsal = proporsal.replace('/', /-/g).replace(' ', 'T')
+            let parts = proporsal.split('T')
             if (parts.length === 1) {
               let today = date.getDefault({ mode: this.mode })
               switch (this.mode) {
@@ -318,7 +318,7 @@ export default function ({ ssrContext }) {
         if (!value) {
           this.$emit('input', '')
         } else {
-          let proporsal = date.quasar({ 
+          let proporsal = date.quasar({
             base: this.value,
             masked: value,
             ampm: this.format24h ? void 0 : this.values.suffix,
