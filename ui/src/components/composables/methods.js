@@ -1,6 +1,7 @@
-import { h, nextTick, createApp } from 'vue'
+import { h, nextTick, createApp, getCurrentInstance } from 'vue'
 import { Quasar, QDate, QTime, QInput, QDialog, QMenu } from 'quasar'
 import loadLang from '../../utils/lang'
+import date from '../../utils/date'
 
 function getBaseComponentMethods () {
   const root = document.createElement('div')
@@ -66,134 +67,136 @@ function checkUniqueMethodNames () {
 }
 checkUniqueMethodNames()
 
-export default function useMethods(props, emit, _computed, _data, _refs) {
+export default function useMethods({ props, emit, computed, data, refs }) {
+  const vm = getCurrentInstance().proxy
   function __sleep () {
     return new Promise(resolve => setTimeout(resolve, delay))
   }
 
   function __configLanguage () {
-    let isoName = Quasar.lang.isoName || _computed.__properties.value.lang.value || navigator.language
+    let isoName = Quasar.lang.isoName || computed.__properties.value.lang || navigator.language
     let lang
     try {
       lang = loadLang(isoName)
     } catch (e) {
       lang = loadLang("en-us")
     }
-    _data.isoLang.value = lang
+    data.isoLang.value = lang
   }
 
   function __updateDates (parsed) {
     let parts = parsed.quasar.split(' ')
-    _data.values.value.quasar = parsed.quasar
-    _data.values.value.iso = parsed.iso
-    _data.values.value.date = _data.original.value.date = parts[0]
-    _data.values.value.time = _data.original.value.time = parts[1]
+    data.values.value.quasar = parsed.quasar
+    data.values.value.iso = parsed.iso
+    data.values.value.date = data.original.value.date = parts[0]
+    data.values.value.time = data.original.value.time = parts[1]
 
     let formatted = date.masked({
-      values: _data.values.value,
-      metas: _data.metas.value,
-      masks: _data.masks.value
+      values: data.values.value,
+      metas: data.metas.value,
+      masks: data.masks.value
     })
     let masked = props.format24h ? formatted.format24 : formatted.format12
-    if (_data.values.value.suffix !== formatted.ampm || _data.values.value.original !== masked) {
+    if (data.values.value.suffix !== formatted.ampm || data.values.value.original !== masked) {
       nextTick().then(() => {
-        _data.values.value.suffix = formatted.ampm
-        _data.values.value.input = _data.values.value.original = masked
+        data.values.value.suffix = formatted.ampm
+        data.values.value.input = data.values.value.original = masked
       })
     }
-    let current = _data.standard.value === 'quasar' ? _data.values.value.quasar : _data.values.value.iso
+    let current = data.standard.value === 'quasar' ? data.values.value.quasar : data.values.value.iso
     emit('update:modelValue', current)
   }
 
   function __updateValue (force = false) {
     if (props.value) {
-      let current = _data.standard.value === 'quasar' ? _data.values.value.quasar : _data.values.value.iso
+      let current = data.standard.value === 'quasar' ? data.values.value.quasar : data.values.value.iso
       if (force || current !== props.value) {
         let proporsal = props.value
-        if (_data.standard.value === 'iso')
+        if (data.standard.value === 'iso')
           proporsal = proporsal.replace(/-/g, '/').replace('T', ' ')
         let parts = proporsal.split(' ')
         if (parts.length === 1) {
-          let today = date.getDefault({ mode: _computed.__properties.value.mode.value })
-          switch (_computed.__properties.value.mode.value) {
+          let today = date.getDefault({ mode: computed.__properties.value.mode })
+          switch (computed.__properties.value.mode) {
             case 'date': proporsal = proporsal + ' 00:00:00'; break
             case 'time': proporsal = today.quasar + ' ' + proporsal; break
           }
         }
-        let parsed = date.parse({ proporsal, withSeconds: _computed.__properties.value.withSeconds.value })
+        let parsed = date.parse({ proporsal, withSeconds: computed.__properties.value.withSeconds })
         if (parsed.success) {
           __updateDates(parsed)
         }
       }
     } else {
-      _data.values.value.input = _data.original.value.input = ''
-      _data.values.value.date = _data.original.value.date = ''
-      _data.values.value.time = _data.original.value.time = ''
+      data.values.value.input = data.original.value.input = ''
+      data.values.value.date = data.original.value.date = ''
+      data.values.value.time = data.original.value.time = ''
     }
   }
 
   function onInputFilled () {
-    let { input: value } = _data.values.value
+    let { input: value } = data.values.value
     if (!value) {
       emit('update:modelValue', '')
     } else {
       let proporsal = date.quasar({ 
         base: props.value,
         masked: value,
-        ampm: _computed.__properties.value.format24h.value ? void 0 : _data.values.value.suffix,
+        ampm: computed.__properties.value.format24h ? void 0 : data.values.value.suffix,
         mode: props.mode,
-        metas: _data.metas.value,
-        masks: _data.masks.value
+        metas: data.metas.value,
+        masks: data.masks.value
       })
-      let parsed = date.parse({ proporsal, withSeconds: _computed.__properties.value.withSeconds.value })
+      let parsed = date.parse({ proporsal, withSeconds: computed.__properties.value.withSeconds })
       if (parsed.success) {
         __updateDates(parsed)
       } else {
-        let { input: original } = _data.original.value
+        let { input: original } = data.original.value
         nextTick().then(() => {
-          _data.values.value.input = original
+          data.values.value.input = original
         })
       }
     }
   }
 
   function onInputBlur () {
-    _data.masked.value = _data.original.value.input
+    data.masked.value = data.original.value.input
   }
 
   function onSetClick () {
-    let today = date.getDefault({ mode: _computed.__properties.value.mode.value })
-    const mode = _computed.__properties.value.mode.value
+    
+    let today = date.getDefault({ mode: computed.__properties.value.mode })
+    const mode = computed.__properties.value.mode
     switch (true) {
       case mode === 'date':
-        _data.original.value.date = _data.values.value.date
-        _refs.popup.value.hide()
+        data.original.value.date = data.values.value.date
+        vm.$refs.popup.hide()
         break
       case mode === 'time':
-        _data.original.value.time = _data.values.value.time
-        _refs.popup.value.hide()
+        data.original.value.time = data.values.value.time
+        vm.$refs.popup.hide()
         break
-      case mode === 'datetime' && _data.tab.value === 'date':
-        _data.original.value.date = _data.values.value.date
-        _data.tab.value = 'time'
+      case mode === 'datetime' && data.tab.value === 'date':
+        data.original.value.date = data.values.value.date
+        data.tab.value = 'time'
         break
-      case mode === 'datetime' && _data.tab.value === 'time':
-        _data.original.value.date = _data.values.value.date
-        _data.original.value.time = _data.values.value.time
-        _refs.popup.value.hide()
+      case mode === 'datetime' && data.tab.value === 'time':
+        data.original.value.date = data.values.value.date
+        data.original.value.time = data.values.value.time
+        vm.$refs.popup.hide()
         break
     }
-    let dateValue = _data.original.value.date // || today.quasar
-    let timeValue = _data.original.value.time // || (this.withSeconds ? '00:00:00' : '00:00')
+    let dateValue = data.original.value.date // || today.quasar
+    let timeValue = data.original.value.time // || (this.withSeconds ? '00:00:00' : '00:00')
     if (!dateValue && timeValue) {
       dateValue = today.quasar
     }
     if (!timeValue && dateValue) {
-      timeValue =  (_computed.__properties.value.withSeconds.value ? '00:00:00' : '00:00')
+      timeValue =  (computed.__properties.value.withSeconds.value ? '00:00:00' : '00:00')
     }
     if (dateValue && timeValue) {
       let proporsal = `${dateValue} ${timeValue}`
-      let parsed = date.parse({ proporsal, withSeconds: _computed.__properties.value.withSeconds.value })
+      let parsed = date.parse({ proporsal, withSeconds: computed.__properties.value.withSeconds })
       if (parsed.success) {
         __updateDates(parsed)
       }
@@ -201,17 +204,17 @@ export default function useMethods(props, emit, _computed, _data, _refs) {
   }
 
   function onPopupShow () {
-    _data.tab.value = 'date'
+    data.tab.value = 'date'
   }
 
   function onPopupHide () {
-    _data.values.value.date = _data.original.value.date
-    _data.values.value.time = _data.original.value.time
+    data.values.value.date = data.original.value.date
+    data.values.value.time = data.original.value.time
   }
 
   function toggleSuffix () {
-    _data.values.value.suffix = _data.values.value.suffix === 'PM' ? 'AM' : 'PM'
-    if (_data.values.input.value.length === _computed.mask.value.length) {
+    data.values.value.suffix = data.values.value.suffix === 'PM' ? 'AM' : 'PM'
+    if (data.values.value.input.length === computed.mask.value.length) {
       onInputFilled()
     }
   }
@@ -220,7 +223,7 @@ export default function useMethods(props, emit, _computed, _data, _refs) {
   for (const { key, methods } of baseComponentMethods) {
     for (const { name, uname } of methods) {
       baseMethods[uname] = function (...args) {
-        let root = _refs[key]
+        let root = refs[key]
         if (root != undefined) {
           return root[name].apply(root, args)
         }

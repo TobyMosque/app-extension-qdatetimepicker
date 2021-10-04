@@ -2,13 +2,13 @@ import { computed } from 'vue'
 import { keys, defaults } from './props'
 import { Dark, Quasar } from 'quasar'
 
-export default function useComputed(props, data) {
+export default function useComputed({ props, data }) {
 
   const __properties = computed(() => {
     const _props =  keys.reduce((_props, key) => {
       const $value = props[key]
       const $default = Dark.isActive ? defaults.dark[key] : defaults.light[key]
-      _props[key] = $value === undefined ? $default : $value
+      _props[key] = $value === undefined ? $default.value : $value
       return _props
     }, {})
     return _props
@@ -16,7 +16,7 @@ export default function useComputed(props, data) {
 
   const intlLocale = computed(() => {
     var calendar = 'gregory'
-    switch (__properties.value.calendar.value) {
+    switch (__properties.value.calendar) {
       case 'gregorian': calendar = 'gregory'; break
       case 'persian': calendar = 'persian'; break
     }
@@ -24,16 +24,16 @@ export default function useComputed(props, data) {
   })
 
   const locale = computed(() => {
-    return (__properties.value.lang.value || Quasar.lang.isoName || navigator.language) + intlLocale.value
+    return (__properties.value.lang || Quasar.lang.isoName || navigator.language) + intlLocale.value
   })
 
 
   const displayDate = computed(() => {
-    return ['date', 'datetime'].indexOf(__properties.value.mode.value) !== -1
+    return ['date', 'datetime'].indexOf(__properties.value.mode) !== -1
   })
 
   const displayTime = computed(() => {
-    return ['time', 'datetime'].indexOf(__properties.value.mode.value) !== -1
+    return ['time', 'datetime'].indexOf(__properties.value.mode) !== -1
   })
 
   const intlDateOptions = computed(() => {
@@ -44,7 +44,7 @@ export default function useComputed(props, data) {
     let options = {}
     if (displayTime.value) {
       options = { hour: '2-digit', minute: '2-digit', hour12: !props.format24h }
-      if (__properties.value.withSeconds.value) {
+      if (__properties.value.withSeconds) {
         options.second = '2-digit'
       }
     }
@@ -64,10 +64,10 @@ export default function useComputed(props, data) {
   })
 
   const mask = computed(() => {
-    if (this.masks.date && this.masks.time) {
-      return `${this.masks.date} ${this.masks.time}`
+    if (data.masks.value.date && data.masks.value.time) {
+      return `${data.masks.value.date} ${data.masks.value.time}`
     } else {
-      return this.masks.date || this.masks.time
+      return data.masks.value.date || data.masks.value.time
     }
   })
 
@@ -80,7 +80,7 @@ export default function useComputed(props, data) {
   })
 
   const isReadonly = computed(() => {
-    return __properties.value.disable.value || __properties.value.target.value === 'self' || !!__properties.value.displayValue.value
+    return __properties.value.disable || __properties.value.target === 'self' || !!__properties.value.displayValue
   })
 
   return {

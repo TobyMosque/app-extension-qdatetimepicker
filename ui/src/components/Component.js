@@ -1,26 +1,27 @@
-import { h, getCurrentInstance } from 'vue'
-import { QBadge } from 'quasar'
 import props from './composables/props'
 import useData from './composables/data'
 import useRefs from './composables/refs'
 import useComputed from './composables/computed'
 import useMethods from './composables/methods'
+import useWatch from './composables/watch'
+import input from './render/input'
 
 export default {
   name: 'QDateTimePicker',
   props,
-  setup (props, { emit, expose }) {
-    const _data = useData()
-    const _refs = useRefs()
-    const _computed = useComputed(props, _data)
-    const _methods = useMethods(props, emit, _computed, _data, _refs)
-    expose(Object.assign({}, _data, _computed, _refs, _methods))
+  setup (props, ctx) {
+    const { emit, expose } = ctx
+    const refs = useRefs()
+    const data = useData()
+    const computed = useComputed({ props, data })
+    const methods = useMethods({ props, emit, refs, data, computed })
+    const vmCtx = { refs, data, computed, methods }
+    const watch = useWatch({ props, data, computed, methods })
+    expose(Object.assign({}, refs, data, computed, methods))
     
     return () => {
-      return h(QBadge, {
-        class: 'QDateTimePicker',
-        label: 'QDateTimePicker'
-      })
+      const _props = computed.__properties.value
+      return input(_props, ctx, vmCtx)
     }
   }
 }
