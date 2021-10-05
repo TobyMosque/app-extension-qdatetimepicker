@@ -31,6 +31,7 @@ export default {
   name: 'MyLayout',
 
   setup () {
+    
     return {
       version
     }

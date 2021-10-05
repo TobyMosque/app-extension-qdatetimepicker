@@ -10,18 +10,18 @@ export default {
   name: 'QDateTimePicker',
   props,
   setup (props, ctx) {
-    const { emit, expose } = ctx
+    const { attrs, emit, expose } = ctx
     const refs = useRefs()
     const data = useData()
     const computed = useComputed({ props, data })
-    const methods = useMethods({ props, emit, refs, data, computed })
+    const methods = useMethods({ props, attrs, emit, refs, data, computed })
     const vmCtx = { refs, data, computed, methods }
-    const watch = useWatch({ props, data, computed, methods })
+    const watch = useWatch({ props, attrs, data, computed, methods })
     expose(Object.assign({}, refs, data, computed, methods))
     
     return () => {
-      const _props = computed.__properties.value
-      return input(_props, ctx, vmCtx)
+      const _props = Object.assign({ modelValue: attrs.modelValue }, computed.__properties.value)
+      return [input(_props, ctx, vmCtx)]
     }
   }
 }

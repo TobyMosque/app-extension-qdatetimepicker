@@ -1,14 +1,14 @@
 import { computed } from 'vue'
 import { keys, defaults } from './props'
-import { Dark, Quasar } from 'quasar'
+import { Dark, useQuasar } from 'quasar'
 
 export default function useComputed({ props, data }) {
-
+  const quasar = useQuasar()
   const __properties = computed(() => {
     const _props =  keys.reduce((_props, key) => {
       const $value = props[key]
       const $default = Dark.isActive ? defaults.dark[key] : defaults.light[key]
-      _props[key] = $value === undefined ? $default.value : $value
+      _props[key] = $value === undefined ? $default : $value
       return _props
     }, {})
     return _props
@@ -24,7 +24,7 @@ export default function useComputed({ props, data }) {
   })
 
   const locale = computed(() => {
-    return (__properties.value.lang || Quasar.lang.isoName || navigator.language) + intlLocale.value
+    return (__properties.value.lang || quasar.lang.isoName || navigator.language) + intlLocale.value
   })
 
 

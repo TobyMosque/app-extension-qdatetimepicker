@@ -1,4 +1,4 @@
-import { h } from 'vue'
+import { h, getCurrentInstance } from 'vue'
 import { QInput, QField } from 'quasar'
 import { optionsFn } from './utils'
 import popup from './popup'
@@ -8,16 +8,20 @@ export default function (props, renderCtx, vmCtx) {
   const { data, computed, methods } = vmCtx
   const inputCtx = Object.assign({ ref: 'input' }, vmCtx)
   const options = optionsFn(renderCtx, inputCtx)
+  const vm = getCurrentInstance().proxy
 
   const isClearable = !!data.values.value.input && props.clearable && !props.disable && !props.readonly
   const component = computed.isReadonly.value ? QField : QInput
 
   const children = []
   if (computed.isReadonly.value && !props.disablePopup) {
-    children.push(popup({ self, props, h }))
+    children.push(popup(props, renderCtx, vmCtx))
   }
-
+  
   options.slots.append = function () {
+    if (props.target === 'self') {
+      console.log(props.target)
+    }
     const components = []
     if (!props.format24h && computed.ampmSuffix.value && typeof props.displayValue !== 'string') {
       components.push(icons.suffix(props, renderCtx, vmCtx))
@@ -34,7 +38,7 @@ export default function (props, renderCtx, vmCtx) {
   if (props.rules) {
     options.props.rules = props.rules.map(rule => {
       return (val) => {
-        return rule(props.value)
+        return rule(props.modelValue)
       }
     })
   }
@@ -42,7 +46,7 @@ export default function (props, renderCtx, vmCtx) {
   if (!self.isReadonly) {
     options.props.clearable = false
     options.props.mask = computed.mask.value
-    options.props.modelValue = data.values.value.input || ''
+    options.props.modelValue = data.values.value.input || 'xx/xx/xxxx'
     options.props['onUpdate:modelValue'] = function (value) {
       data.values.value.input = value
       let oldValue = "" + data.values.value.input
@@ -78,6 +82,8 @@ export default function (props, renderCtx, vmCtx) {
       return h('span', {}, text || '')
     }
   }
-
+  options.slots.default = function (_) {
+    return children
+  }
   return h(component, options.props, options.slots)
 }

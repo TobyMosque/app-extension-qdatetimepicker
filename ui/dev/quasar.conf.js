@@ -33,8 +33,10 @@ module.exports = function (ctx) {
       // iconSet: 'material-icons', // Quasar icon set
       // lang: 'en-US', // Quasar language pack
 
-      config: {},
-
+      config: {
+        dark: 'auto'
+      },
+      
       // Quasar plugins
       plugins: []
     },

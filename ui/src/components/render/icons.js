@@ -1,5 +1,5 @@
 import { h } from 'vue'
-import Quasar, { QIcon } from 'quasar'
+import { useQuasar, QIcon } from 'quasar'
 import popup from './popup'
 
 export function suffix (props, renderCtx, vmCtx) {
@@ -19,10 +19,11 @@ export function suffix (props, renderCtx, vmCtx) {
 }
 
 export function clear (props, renderCtx, vmCtx) {
+  const quasar = useQuasar()
   const { methods, data } = vmCtx
   return h(QIcon, {
     staticClass: 'cursor-pointer',
-    name: props.clearIcon || Quasar.iconSet.field.clear,
+    name: props.clearIcon || quasar.iconSet.field.clear,
     onClick (e) {
       e.stopPropagation()
       data.values.value.input = ''

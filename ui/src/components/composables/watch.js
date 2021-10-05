@@ -1,15 +1,15 @@
 import { watch } from 'vue'
 import meta from '../../utils/meta'
 
-export default function useWatch({ props, data, computed, methods }) {
+export default function useWatch({ props, attrs, data, computed, methods }) {
   watch(() => computed.__properties.value.defaultStandard, () => {
-    if (!props.value) {
+    if (!attrs.modelValue) {
       data.standard.value = computed.__properties.value.defaultStandard
     } else {
       let standard = computed.__properties.value.defaultStandard
       switch (true) {
-        case props.value.indexOf('-') !== -1: standard = 'iso'; break
-        case props.value.indexOf('/') !== -1: standard = 'quasar'; break
+        case attrs.modelValue.indexOf('-') !== -1: standard = 'iso'; break
+        case attrs.modelValue.indexOf('/') !== -1: standard = 'quasar'; break
       }
       data.standard.value = standard
     }
@@ -40,7 +40,7 @@ export default function useWatch({ props, data, computed, methods }) {
     methods.__updateValue(true)
   }, { immediate: true })
 
-  watch(() => props.value, () => {
+  watch(() => attrs.modelValue, () => {
     methods.__updateValue()
   }, { immediate: true })
 }

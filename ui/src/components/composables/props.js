@@ -1,13 +1,13 @@
 import { QDate, QTime, QInput, QDialog, QMenu } from 'quasar'
 import { getType } from '../../utils'
 import { Dark } from 'quasar'
-import { reactive, toRefs } from 'vue'
+import { reactive } from 'vue'
 
-const { value: timeValue, options: timeOptions, mask: timeMask, ...timeProps } = QDate.props
-const { value: dateValue, options: dateOptions, mask: dateMask, ...dateProps } = QTime.props
-const { value: inputValue, mask: maskInput, ...inputProps } = QInput.props
-const { value: dialogValue, ...dialogProps } = QDialog.props
-const { value: menuValue, ...menuProps } = QMenu.props
+const { 'onUpdate:modelValue': onUpdateTimeValue, modelValue: timeValue, options: timeOptions, mask: timeMask, ...timeProps } = QDate.props
+const { 'onUpdate:modelValue': onUpdateDateValue, modelValue: dateValue, options: dateOptions, mask: dateMask, ...dateProps } = QTime.props
+const { 'onUpdate:modelValue': onUpdateInputValue, modelValue: inputValue, mask: maskInput, ...inputProps } = QInput.props
+const { 'onUpdate:modelValue': onUpdateDialogValue, modelValue: dialogValue, ...dialogProps } = QDialog.props
+const { 'onUpdate:modelValue': onUpdateMenuValue, modelValue: menuValue, ...menuProps } = QMenu.props
 
 const defaultProps = {
   ...dateProps,
@@ -112,10 +112,8 @@ const properties = keys.reduce((props, key) => {
   return props
 }, {})
 
-const defaultsLight = reactive(Object.assign({}, defaultOpts));
-const defaultsDark = reactive(Object.assign({}, defaultOpts));
-defaults.light = toRefs(defaultsLight);
-defaults.dark = toRefs(defaultsDark);
+defaults.light = reactive(Object.assign({}, defaultOpts));
+defaults.dark = reactive(Object.assign({}, defaultOpts));
 properties.value = String 
 
 export { keys, defaults }

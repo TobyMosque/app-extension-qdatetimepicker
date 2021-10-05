@@ -6,6 +6,7 @@ export default function useData() {
     popup: false,
     standard: '',
     configured: false,
+    popupValue: false,
     original: {
       input: '',
       date: '',

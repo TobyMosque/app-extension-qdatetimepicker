@@ -1,5 +1,5 @@
 import { h, nextTick, createApp, getCurrentInstance } from 'vue'
-import { Quasar, QDate, QTime, QInput, QDialog, QMenu } from 'quasar'
+import { Quasar, QDate, QTime, QInput, QDialog, QMenu, useQuasar } from 'quasar'
 import loadLang from '../../utils/lang'
 import date from '../../utils/date'
 
@@ -67,14 +67,15 @@ function checkUniqueMethodNames () {
 }
 checkUniqueMethodNames()
 
-export default function useMethods({ props, emit, computed, data, refs }) {
+export default function useMethods({ props, attrs, emit, computed, data, refs }) {
   const vm = getCurrentInstance().proxy
+  const quasar = useQuasar()
   function __sleep () {
     return new Promise(resolve => setTimeout(resolve, delay))
   }
 
   function __configLanguage () {
-    let isoName = Quasar.lang.isoName || computed.__properties.value.lang || navigator.language
+    let isoName = quasar.lang.isoName || computed.__properties.value.lang || navigator.language
     let lang
     try {
       lang = loadLang(isoName)
@@ -98,7 +99,8 @@ export default function useMethods({ props, emit, computed, data, refs }) {
     })
     let masked = props.format24h ? formatted.format24 : formatted.format12
     if (data.values.value.suffix !== formatted.ampm || data.values.value.original !== masked) {
-      nextTick().then(() => {
+      const nt = nextTick()
+      requestAnimationFrame(() => {
         data.values.value.suffix = formatted.ampm
         data.values.value.input = data.values.value.original = masked
       })
@@ -108,10 +110,10 @@ export default function useMethods({ props, emit, computed, data, refs }) {
   }
 
   function __updateValue (force = false) {
-    if (props.value) {
+    if (attrs.modelValue) {
       let current = data.standard.value === 'quasar' ? data.values.value.quasar : data.values.value.iso
-      if (force || current !== props.value) {
-        let proporsal = props.value
+      if (force || current !== attrs.modelValue) {
+        let proporsal = attrs.modelValue
         if (data.standard.value === 'iso')
           proporsal = proporsal.replace(/-/g, '/').replace('T', ' ')
         let parts = proporsal.split(' ')
@@ -140,7 +142,7 @@ export default function useMethods({ props, emit, computed, data, refs }) {
       emit('update:modelValue', '')
     } else {
       let proporsal = date.quasar({ 
-        base: props.value,
+        base: attrs.modelValue,
         masked: value,
         ampm: computed.__properties.value.format24h ? void 0 : data.values.value.suffix,
         mode: props.mode,
@@ -164,7 +166,7 @@ export default function useMethods({ props, emit, computed, data, refs }) {
   }
 
   function onSetClick () {
-    
+    console.log('x')
     let today = date.getDefault({ mode: computed.__properties.value.mode })
     const mode = computed.__properties.value.mode
     switch (true) {
