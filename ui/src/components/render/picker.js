@@ -11,7 +11,6 @@ export function date (props, renderCtx, vmCtx) {
   options.props.options = props.dateOptions
   options.props.mask = props.dateMask
   options.props.modelValue = data.values.value.date
-  console.log(options.props.modelValue)
   options.props['onUpdate:modelValue'] = function (value) {
     data.values.value.date = value
     if (props.autoUpdateValue) {

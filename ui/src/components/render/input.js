@@ -3,6 +3,7 @@ import { QInput, QField } from 'quasar'
 import { optionsFn } from './utils'
 import popup from './popup'
 import icons from './icons'
+import { getType } from '../../utils'
 
 export default function (props, renderCtx, vmCtx) {
   const { data, computed, methods } = vmCtx
@@ -19,9 +20,6 @@ export default function (props, renderCtx, vmCtx) {
   }
   
   options.slots.append = function () {
-    if (props.target === 'self') {
-      console.log(props.target)
-    }
     const components = []
     if (!props.format24h && computed.ampmSuffix.value && typeof props.displayValue !== 'string') {
       components.push(icons.suffix(props, renderCtx, vmCtx))
@@ -43,7 +41,7 @@ export default function (props, renderCtx, vmCtx) {
     })
   }
 
-  if (!self.isReadonly) {
+  if (!computed.isReadonly.value) {
     options.props.clearable = false
     options.props.mask = computed.mask.value
     options.props.modelValue = data.values.value.input || 'xx/xx/xxxx'
@@ -85,5 +83,21 @@ export default function (props, renderCtx, vmCtx) {
   options.slots.default = function (_) {
     return children
   }
+  
+  const classType = getType(options.props.class)
+  switch (classType) {
+    case "string":
+      options.props.class = 'q-datetimepicker ' + options.props.class
+      break;
+    case "object":
+      if (Array.isArray(options.props.class)) {
+        options.props.class.push(q-datetimepicker)
+      } else {
+        options.props.class['q-datetimepicker'] = true
+      }
+    default:
+      options.props.class = 'q-datetimepicker'
+  }
+  // q-datetimepicker
   return h(component, options.props, options.slots)
 }

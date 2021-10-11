@@ -23,7 +23,6 @@ export default function render (props, renderCtx, vmCtx) {
     options.props.fit = false
     options.props.cover = true
   }
-  console.log(options.props.modelValue)
   options.slots.default = function (_) {
     return [card(props, renderCtx, vmCtx)]
   }

@@ -5,7 +5,6 @@ import picker from './picker'
 import tabs from './tabs'
 
 export function content (props, renderCtx, vmCtx) {
-  console.log(props.mode)
   switch (props.mode) {
     case 'date': return picker.date(props, renderCtx, vmCtx)
     case 'time': return picker.time(props, renderCtx, vmCtx)

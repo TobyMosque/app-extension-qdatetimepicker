@@ -4,6 +4,9 @@ import loadLang from '../../utils/lang'
 import date from '../../utils/date'
 
 function getBaseComponentMethods () {
+  if (process.env.SERVER) {
+    return []
+  }
   const root = document.createElement('div')
   const builder = createApp({
     setup () {
@@ -49,21 +52,23 @@ function checkUniqueMethodNames () {
   mapper.set('onPopupShow', 1)
   mapper.set('onPopupHide', 1)
   mapper.set('toggleSuffix', 1)
-  for (const { methods } of baseComponentMethods) {
-    for (const { name } of methods) {
+  baseComponentMethods.forEach(function (baseComponentMethod) {
+    const { methods } = baseComponentMethod
+    methods.forEach(function (method) {
+      const { name } = method
       const qtd = mapper.get(name) || 0
       mapper.set(name, qtd + 1)
-    }
-  }
-  for (const baseComponentMethod of baseComponentMethods) {
+    })
+  })
+  baseComponentMethods.forEach(function (baseComponentMethod) {
     const { key, methods } = baseComponentMethod
-    for (const method of methods) {
+    methods.forEach(function (method) {
       const qtd = mapper.get(method.name)
       if (qtd > 1) {
         method.uname = `${key}${method.name.substr(0, 1).toUpperCase()}${method.name.substr(1)}`
       }
-    }
-  }
+    })
+  })
 }
 checkUniqueMethodNames()
 
@@ -100,7 +105,7 @@ export default function useMethods({ props, attrs, emit, computed, data, refs })
     let masked = props.format24h ? formatted.format24 : formatted.format12
     if (data.values.value.suffix !== formatted.ampm || data.values.value.original !== masked) {
       const nt = nextTick()
-      requestAnimationFrame(() => {
+      nt.then(() => {
         data.values.value.suffix = formatted.ampm
         data.values.value.input = data.values.value.original = masked
       })
@@ -166,7 +171,6 @@ export default function useMethods({ props, attrs, emit, computed, data, refs })
   }
 
   function onSetClick () {
-    console.log('x')
     let today = date.getDefault({ mode: computed.__properties.value.mode })
     const mode = computed.__properties.value.mode
     switch (true) {
@@ -222,16 +226,18 @@ export default function useMethods({ props, attrs, emit, computed, data, refs })
   }
 
   const baseMethods = {}
-  for (const { key, methods } of baseComponentMethods) {
-    for (const { name, uname } of methods) {
+  baseComponentMethods.forEach(function (baseComponentMethod) {
+    const { key, methods } = baseComponentMethod
+    methods.forEach(function (method) {
+      const { name, uname } = method
       baseMethods[uname] = function (...args) {
         let root = refs[key]
         if (root != undefined) {
           return root[name].apply(root, args)
         }
       }
-    }
-  }
+    })
+  })
 
   return Object.assign({
     __sleep,

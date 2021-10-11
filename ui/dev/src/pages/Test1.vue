@@ -8,13 +8,22 @@
         <ThemeEditor name="Dark" field="dark" />
       </div>
       <div class="col col-4">
-        <ThemeViewer name="Date & Time" mode="datetime" />
+        <ThemeViewer name="Date & Time (ISO)" mode="datetime" />
       </div>
       <div class="col col-4">
-        <ThemeViewer name="Date" mode="date" />
+        <ThemeViewer name="Date (ISO)" mode="date" />
       </div>
       <div class="col col-4">
-        <ThemeViewer name="Time" mode="time" />
+        <ThemeViewer name="Time (ISO)" mode="time" />
+      </div>
+      <div class="col col-4">
+        <ThemeViewer name="Date & Time (Quasar)" standard="quasar" mode="datetime" />
+      </div>
+      <div class="col col-4">
+        <ThemeViewer name="Date (Quasar)" standard="quasar" mode="date" />
+      </div>
+      <div class="col col-4">
+        <ThemeViewer name="Time (Quasar)" standard="quasar" mode="time" />
       </div>
     </div>
   </q-page>

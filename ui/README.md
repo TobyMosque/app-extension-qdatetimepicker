@@ -21,7 +21,7 @@ Create and register a boot file:
 
 ```js
 import Vue from 'vue'
-import Plugin from 'quasar-ui-qdatetimepicker'
+import Plugin from '@toby.mosque/quasar-ui-qdatetimepicker'
 import 'quasar-ui-qdatetimepicker/dist/index.css'
 
 Vue.use(Plugin)
@@ -33,7 +33,7 @@ Vue.use(Plugin)
 <style src="quasar-ui-qdatetimepicker/dist/index.css"></style>
 
 <script>
-import { Component as QDateTimePicker } from 'quasar-ui-qdatetimepicker'
+import { Component as QDateTimePicker } from '@toby.mosque/quasar-ui-qdatetimepicker'
 
 export default {
   components: {
@@ -47,7 +47,7 @@ export default {
 
 ```js
 import Vue from 'vue'
-import Plugin from 'quasar-ui-qdatetimepicker'
+import Plugin from '@toby.mosque/quasar-ui-qdatetimepicker'
 import 'quasar-ui-qdatetimepicker/dist/index.css'
 
 Vue.use(Plugin)
@@ -59,7 +59,7 @@ Vue.use(Plugin)
 <style src="quasar-ui-qdatetimepicker/dist/index.css"></style>
 
 <script>
-import { Component as QDateTimePicker } from 'quasar-ui-qdatetimepicker'
+import { Component as QDateTimePicker } from '@toby.mosque/quasar-ui-qdatetimepicker'
 
 export default {
   components: {

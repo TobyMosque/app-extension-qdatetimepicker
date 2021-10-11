@@ -1,5 +1,5 @@
 import { boot } from 'quasar/wrappers'
-import VuePlugin from 'quasar-ui-qdatetimepicker'
+import VuePlugin from '@toby.mosque/quasar-ui-qdatetimepicker'
 
 export default boot(({ app }) => {
   app.use(VuePlugin)
