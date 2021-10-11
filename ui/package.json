@@ -1,6 +1,6 @@
 {
-  "name": "quasar-ui-qdatetimepicker",
-  "version": "0.0.1",
+  "name": "@toby.mosque/quasar-ui-qdatetimepicker",
+  "version": "2.0.0-rc.2",
   "author": "Tobias Mesquita <tobias.mesquita@gmail.com>",
   "description": "Quasar Date Time Picker Extension",
   "license": "MIT",
@@ -44,6 +44,11 @@
     "sass": "^1.29.0",
     "uglify-js": "^3.13.3",
     "zlib": "^1.0.5"
+  },
+  "workspaces": {
+    "nohoist": [
+      "**/!quasar"
+    ]
   },
   "browserslist": [
     "last 4 Chrome versions",
